@@ -51,11 +51,10 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
             float height = (float) e * 10.0F;
             height = Mth.clamp(height, -6.0F, 32.0F);
             float swing = (float) (d * o + m * p) * (100.0F/16f*part);
+            swing += getWind(abstractClientPlayer.getY()) * 35f * (1F/16f*part);
             swing = Mth.clamp(swing, 0.0F, 150.0F * (1F/16f*part));
             float sidewaysRotationOffset = (float) (d * p - m * o) * 100.0F;
             sidewaysRotationOffset = Mth.clamp(sidewaysRotationOffset, -20.0F, 20.0F);
-            if (swing < 0.0F)
-                swing = 0.0F;
             float t = Mth.lerp(h, abstractClientPlayer.oBob, abstractClientPlayer.bob);
             height += Mth.sin(Mth.lerp(h, abstractClientPlayer.walkDistO, abstractClientPlayer.walkDist) * 6.0F) * 32.0F * t;
             if (abstractClientPlayer.isCrouching()) {
@@ -71,4 +70,19 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
             poseStack.popPose();
         }
     }
+    
+    private static int scale = 1000*60*60;
+    
+    /**
+     * Returns between 0 and 2
+     * 
+     * @param posY
+     * @return
+     */
+    public static float getWind(double posY) {
+        float x = (System.currentTimeMillis()%scale)/10000f;
+        float mod = Mth.clamp(1f/200f*(float)posY, 0f, 1f);
+        return Mth.clamp((float) (Math.sin(2 * x) + Math.sin(Math.PI * x)) * mod, 0, 2);
+    }
+    
 }
