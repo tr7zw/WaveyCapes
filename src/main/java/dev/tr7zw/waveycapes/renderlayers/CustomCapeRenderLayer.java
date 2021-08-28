@@ -51,7 +51,7 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
             float height = (float) e * 10.0F;
             height = Mth.clamp(height, -6.0F, 32.0F);
             float swing = (float) (d * o + m * p) * (100.0F/16f*part);
-            swing = Mth.clamp(swing, 0.0F, 150.0F);
+            swing = Mth.clamp(swing, 0.0F, 150.0F * (1F/16f*part));
             float sidewaysRotationOffset = (float) (d * p - m * o) * 100.0F;
             sidewaysRotationOffset = Mth.clamp(sidewaysRotationOffset, -20.0F, 20.0F);
             if (swing < 0.0F)
