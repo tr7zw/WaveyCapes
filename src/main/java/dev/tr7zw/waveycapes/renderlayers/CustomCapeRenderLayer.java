@@ -50,9 +50,9 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
             double p = -Mth.cos(n * 0.017453292F);
             float height = (float) e * 10.0F;
             height = Mth.clamp(height, -6.0F, 32.0F);
-            float swing = (float) (d * o + m * p) * (100.0F/16f*part);
-            swing += getWind(abstractClientPlayer.getY()) * 35f * (1F/16f*part);
-            swing = Mth.clamp(swing, 0.0F, 150.0F * (1F/16f*part));
+            float swing = (float) (d * o + m * p) * easeOutSine(1.0F/16f*part)*100;
+            swing += getWind(abstractClientPlayer.getY()) * 35f * easeOutSine(1F/16f*part);
+            swing = Mth.clamp(swing, 0.0F, 150.0F * easeOutSine(1F/16f*part));
             float sidewaysRotationOffset = (float) (d * p - m * o) * 100.0F;
             sidewaysRotationOffset = Mth.clamp(sidewaysRotationOffset, -20.0F, 20.0F);
             float t = Mth.lerp(h, abstractClientPlayer.oBob, abstractClientPlayer.bob);
@@ -79,10 +79,22 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
      * @param posY
      * @return
      */
-    public static float getWind(double posY) {
+    private static float getWind(double posY) {
         float x = (System.currentTimeMillis()%scale)/10000f;
         float mod = Mth.clamp(1f/200f*(float)posY, 0f, 1f);
         return Mth.clamp((float) (Math.sin(2 * x) + Math.sin(Math.PI * x)) * mod, 0, 2);
     }
+    
+    
+    /**
+     * https://easings.net/#easeOutSine
+     * 
+     * @param x
+     * @return
+     */
+    private static float easeOutSine(float x) {
+        return Mth.sin((x * Mth.PI) / 2f);
+
+      }
     
 }
