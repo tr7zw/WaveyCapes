@@ -65,7 +65,7 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
             poseStack.mulPose(Vector3f.ZP.rotationDegrees(sidewaysRotationOffset / 2.0F));
             poseStack.mulPose(Vector3f.YP.rotationDegrees(180.0F - sidewaysRotationOffset / 2.0F));
             VertexConsumer vertexConsumer = multiBufferSource
-                    .getBuffer(RenderType.entitySolid(abstractClientPlayer.getCloakTextureLocation()));
+                    .getBuffer(RenderType.entityCutout(abstractClientPlayer.getCloakTextureLocation()));
             model.render(poseStack, vertexConsumer,  i, OverlayTexture.NO_OVERLAY);
             poseStack.popPose();
         }
