@@ -27,7 +27,7 @@ public class PlayerModelMixin<T extends LivingEntity> extends HumanoidModel<T> i
         super(modelPart);
     }
 
-    private ModelPart[] customCape = new ModelPart[18];
+    private ModelPart[] customCape = new ModelPart[16];
 
     @Inject(method = "<init>*", at = @At("RETURN"))
     public void onCreate(ModelPart modelPart, boolean bl, CallbackInfo info) {
