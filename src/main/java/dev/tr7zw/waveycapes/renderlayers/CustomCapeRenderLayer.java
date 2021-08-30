@@ -5,6 +5,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
 
 import dev.tr7zw.waveycapes.accessor.PlayerEntityModelAccessor;
+import dev.tr7zw.waveycapes.sim.StickSimulation;
 import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.player.AbstractClientPlayer;
@@ -35,6 +36,8 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
         if (itemStack.is(Items.ELYTRA))
             return;
         ModelPart[] parts = ((PlayerEntityModelAccessor) getParentModel()).getCustomCapeParts();
+        StickSimulation simulation = ((PlayerEntityModelAccessor) getParentModel()).getSimulation();
+        simulation.simulate();
         for (int part = 0; part < 16; part++) {
             ModelPart model = parts[part];
             poseStack.pushPose();
@@ -50,9 +53,16 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
             double p = -Mth.cos(n * 0.017453292F);
             float height = (float) e * 10.0F;
             height = Mth.clamp(height, -6.0F, 32.0F);
-            float swing = (float) (d * o + m * p) * easeOutSine(1.0F/16f*part)*100;
-            swing += getWind(abstractClientPlayer.getY()) * 35f * easeOutSine(1F/16f*part);
-            swing = Mth.clamp(swing, 0.0F, 150.0F * easeOutSine(1F/16f*part));
+            if(part == 0) {
+                simulation.points.get(0).position.x += (d * o + m * p);
+                simulation.points.get(0).position.y = (float) (Mth.lerp(h, abstractClientPlayer.yo, abstractClientPlayer.getY())*4 + (abstractClientPlayer.isCrouching() ? -4 : 0));
+            }
+            float swing = 0;
+            model.z = simulation.points.get(part).position.x - simulation.points.get(0).position.x;
+            if(model.z > 0) {
+                model.z = 0;
+            }
+            model.y = simulation.points.get(part).position.y - simulation.points.get(0).position.y - part;
             float sidewaysRotationOffset = (float) (d * p - m * o) * 100.0F;
             sidewaysRotationOffset = Mth.clamp(sidewaysRotationOffset, -20.0F, 20.0F);
             float t = Mth.lerp(h, abstractClientPlayer.oBob, abstractClientPlayer.bob);
@@ -69,6 +79,7 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
             model.render(poseStack, vertexConsumer,  i, OverlayTexture.NO_OVERLAY);
             poseStack.popPose();
         }
+        //System.out.println((simulation.points.get(0).position.x - simulation.points.get(15).position.x) + " " + simulation.points.get(15).position.x + " " + simulation.points.get(0).position.x);
     }
     
     private static int scale = 1000*60*60;

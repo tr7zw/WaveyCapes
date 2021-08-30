@@ -1,5 +1,6 @@
 package dev.tr7zw.waveycapes.accessor;
 
+import dev.tr7zw.waveycapes.sim.StickSimulation;
 import net.minecraft.client.model.geom.ModelPart;
 
 /**
@@ -8,4 +9,5 @@ import net.minecraft.client.model.geom.ModelPart;
  */
 public interface PlayerEntityModelAccessor {
 	public ModelPart[] getCustomCapeParts();
+	public StickSimulation getSimulation();
 }

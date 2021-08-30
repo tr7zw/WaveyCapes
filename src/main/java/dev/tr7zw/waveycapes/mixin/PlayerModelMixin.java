@@ -10,6 +10,10 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 
 import dev.tr7zw.waveycapes.accessor.PlayerEntityModelAccessor;
+import dev.tr7zw.waveycapes.sim.StickSimulation;
+import dev.tr7zw.waveycapes.sim.StickSimulation.Point;
+import dev.tr7zw.waveycapes.sim.StickSimulation.Stick;
+import dev.tr7zw.waveycapes.sim.StickSimulation.Vector2;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.model.geom.ModelPart;
@@ -28,11 +32,19 @@ public class PlayerModelMixin<T extends LivingEntity> extends HumanoidModel<T> i
     }
 
     private ModelPart[] customCape = new ModelPart[18];
+    private StickSimulation simulation = new StickSimulation();
 
     @Inject(method = "<init>*", at = @At("RETURN"))
     public void onCreate(ModelPart modelPart, boolean bl, CallbackInfo info) {
         for (int i = 0; i < 16; i++) {
             this.customCape[i] = modelPart.getChild("customCape_" + i);
+            Point point = new Point();
+            point.position.y = -i;
+            point.locked = i == 0;
+            simulation.points.add(point);
+            if(i > 0) {
+                simulation.sticks.add(new Stick(simulation.points.get(i-1), point, 1f));
+            }
         }
     }
 
@@ -55,6 +67,11 @@ public class PlayerModelMixin<T extends LivingEntity> extends HumanoidModel<T> i
     @Override
     public ModelPart[] getCustomCapeParts() {
         return customCape;
+    }
+
+    @Override
+    public StickSimulation getSimulation() {
+        return simulation;
     }
 
 }
