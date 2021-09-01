@@ -1,5 +1,7 @@
 package dev.tr7zw.waveycapes.mixin;
 
+import java.util.NoSuchElementException;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -31,8 +33,12 @@ public class PlayerModelMixin<T extends LivingEntity> extends HumanoidModel<T> i
 
     @Inject(method = "<init>*", at = @At("RETURN"))
     public void onCreate(ModelPart modelPart, boolean bl, CallbackInfo info) {
-        for (int i = 0; i < 16; i++) {
-            this.customCape[i] = modelPart.getChild("customCape_" + i);
+        try {
+            for (int i = 0; i < 16; i++) {
+                this.customCape[i] = modelPart.getChild("customCape_" + i);
+            }
+        }catch(NoSuchElementException ex) {
+            // Do nothing. The "MinecraftCapes Mod" somehow causes Piglins to call this code?!?
         }
     }
 
