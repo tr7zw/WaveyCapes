@@ -1,10 +1,13 @@
 package dev.tr7zw.waveycapes.renderlayers;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
 
+import dev.tr7zw.waveycapes.CapeRenderer;
+import dev.tr7zw.waveycapes.VanillaCapeRenderer;
 import dev.tr7zw.waveycapes.accessor.PlayerEntityModelAccessor;
+import dev.tr7zw.waveycapes.support.ModSupport;
+import dev.tr7zw.waveycapes.support.SupportManager;
 import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.player.AbstractClientPlayer;
@@ -27,10 +30,8 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
 
     public void render(PoseStack poseStack, MultiBufferSource multiBufferSource, int i,
             AbstractClientPlayer abstractClientPlayer, float f, float g, float h, float j, float k, float l) {
-        if (!abstractClientPlayer.isCapeLoaded() || abstractClientPlayer.isInvisible()
-                || !abstractClientPlayer.isModelPartShown(PlayerModelPart.CAPE)
-                || abstractClientPlayer.getCloakTextureLocation() == null)
-            return;
+        CapeRenderer renderer = getCapeRenderer(abstractClientPlayer, multiBufferSource);
+        if(renderer == null) return;
         ItemStack itemStack = abstractClientPlayer.getItemBySlot(EquipmentSlot.CHEST);
         if (itemStack.is(Items.ELYTRA))
             return;
@@ -64,10 +65,27 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
             poseStack.mulPose(Vector3f.XP.rotationDegrees(6.0F + swing / 2.0F + height));
             poseStack.mulPose(Vector3f.ZP.rotationDegrees(sidewaysRotationOffset / 2.0F));
             poseStack.mulPose(Vector3f.YP.rotationDegrees(180.0F - sidewaysRotationOffset / 2.0F));
-            VertexConsumer vertexConsumer = multiBufferSource
-                    .getBuffer(RenderType.entityCutout(abstractClientPlayer.getCloakTextureLocation()));
-            model.render(poseStack, vertexConsumer,  i, OverlayTexture.NO_OVERLAY);
+            renderer.render(abstractClientPlayer, part, model, poseStack, multiBufferSource, i, OverlayTexture.NO_OVERLAY);
             poseStack.popPose();
+        }
+    }
+
+    private static VanillaCapeRenderer vanillaCape = new VanillaCapeRenderer();
+    
+    private CapeRenderer getCapeRenderer(AbstractClientPlayer abstractClientPlayer, MultiBufferSource multiBufferSource) {
+        for(ModSupport support : SupportManager.getSupportedMods()) {
+            if(support.shouldBeUsed(abstractClientPlayer)) {
+                return support.getRenderer();
+            }
+        }
+        if (!abstractClientPlayer.isCapeLoaded() || abstractClientPlayer.isInvisible()
+                || !abstractClientPlayer.isModelPartShown(PlayerModelPart.CAPE)
+                || abstractClientPlayer.getCloakTextureLocation() == null) {
+            return null;
+        }else {
+            vanillaCape.vertexConsumer = multiBufferSource
+            .getBuffer(RenderType.entityCutout(abstractClientPlayer.getCloakTextureLocation()));
+            return vanillaCape;
         }
     }
     
