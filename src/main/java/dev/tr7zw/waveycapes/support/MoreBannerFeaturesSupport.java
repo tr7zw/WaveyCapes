@@ -41,7 +41,7 @@ public class MoreBannerFeaturesSupport implements ModSupport {
 
     @Override
     public boolean shouldBeUsed(AbstractClientPlayer player) {
-        return player instanceof Bannerable && !((Bannerable) player).getBannerItem().isEmpty();
+        return player instanceof Bannerable && !((Bannerable) player).getBannerItem().isEmpty() && ((Bannerable) player).getBannerItem().getItem() instanceof BannerItem;
     }
 
     @Override
