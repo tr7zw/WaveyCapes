@@ -14,7 +14,7 @@ Since this mod is purely visual and fully clientside, so it doesn't have to be i
 
 ## Incompatible
 
-- Nothing known
+- MinecraftCapes Mod (just won't display them)
 
 ## Tested with
 
@@ -25,5 +25,7 @@ Since this mod is purely visual and fully clientside, so it doesn't have to be i
 - Optifine(also the capes)
 - Kappa(Optifine capes without using Optifine)
 - Fabric Capes
+- More Banner Features
+- Elytra Trinket (Fabric)
 
 Support via [![Discord](https://tr7zw.dev/curse/Discord.png)](https://discord.gg/2wKH8yeThf) or [Github](https://github.com/tr7zw/3d-skin-layers)!
