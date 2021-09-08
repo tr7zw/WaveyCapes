@@ -7,8 +7,8 @@ import java.util.stream.Collectors;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.datafixers.util.Pair;
 
-import de.kxmischesdomi.morebannerfeatures.client.feature.BannerCapeFeatureRenderer;
-import de.kxmischesdomi.morebannerfeatures.common.morebannerfeatures.Bannerable;
+import de.kxmischesdomi.morebannerfeatures.core.accessor.Bannerable;
+import de.kxmischesdomi.morebannerfeatures.renderer.BannerCapeFeatureRenderer;
 import de.kxmischesdomi.morebannerfeatures.utils.RendererUtils;
 import dev.tr7zw.waveycapes.CapeRenderer;
 import net.minecraft.client.model.geom.ModelPart;
