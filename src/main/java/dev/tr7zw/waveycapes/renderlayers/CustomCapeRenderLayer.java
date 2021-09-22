@@ -60,7 +60,7 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
             height += Mth.sin(Mth.lerp(h, abstractClientPlayer.walkDistO, abstractClientPlayer.walkDist) * 6.0F) * 32.0F * t;
             if (abstractClientPlayer.isCrouching()) {
                 height += 25.0F;
-                poseStack.translate(0, 0.2F, 0);
+                poseStack.translate(0, 0.15F, 0);
             }
             poseStack.mulPose(Vector3f.XP.rotationDegrees(6.0F + swing / 2.0F + height));
             poseStack.mulPose(Vector3f.ZP.rotationDegrees(sidewaysRotationOffset / 2.0F));
