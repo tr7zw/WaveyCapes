@@ -38,17 +38,6 @@ public class PlayerModelMixin<T extends LivingEntity> extends HumanoidModel<T> i
         }
     }
 
-//    @Inject(method = "createMesh", at = @At("RETURN"))
-//    private static void createMesh(CubeDeformation cubeDeformation, boolean bl,
-//            CallbackInfoReturnable<MeshDefinition> info) {
-//        PartDefinition partDefinition = info.getReturnValue().getRoot();
-//        for (int i = 0; i < 16; i++)
-//            partDefinition.addOrReplaceChild("customCape_" + i,
-//                    CubeListBuilder.create().texOffs(0, i)
-//                            .addBox(-5.0F, i, -1.0F, 10.0F, 1.0F, 1.0F, cubeDeformation, 1.0F, 0.5F),
-//                    PartPose.offset(0.0F, 0.0F, 0.0F));
-//    }
-
     @Inject(method = "renderCloak", at = @At("HEAD"), cancellable = true)
     public void renderCloak(PoseStack poseStack, VertexConsumer vertexConsumer, int i, int j, CallbackInfo info) {
         info.cancel();

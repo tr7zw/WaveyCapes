@@ -1,8 +1,11 @@
 package dev.tr7zw.waveycapes;
 
-import net.minecraftforge.fml.IExtensionPoint;
+import org.apache.commons.lang3.tuple.Pair;
+
+import net.minecraftforge.fml.ExtensionPoint;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.network.FMLNetworkConstants;
 
 @Mod("waveycapes")
 public class WaveyCapesMod extends WaveyCapesBase {
@@ -15,10 +18,8 @@ public class WaveyCapesMod extends WaveyCapesBase {
             return;
         }
 	    init();
-		ModLoadingContext.get().registerExtensionPoint(IExtensionPoint.DisplayTest.class,
-                () -> new IExtensionPoint.DisplayTest(
-                        () -> ModLoadingContext.get().getActiveContainer().getModInfo().getVersion().toString(),
-                        (remote, isServer) -> true));
+	    ModLoadingContext.get().registerExtensionPoint(ExtensionPoint.DISPLAYTEST,
+                () -> Pair.of(() -> FMLNetworkConstants.IGNORESERVERONLY, (remote, isServer) -> true));
 	}
 
     @Override

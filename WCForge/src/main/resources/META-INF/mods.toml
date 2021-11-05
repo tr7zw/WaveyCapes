@@ -5,7 +5,7 @@ issueTrackerURL="https://github.com/tr7zw/NotEnoughAnimations/issues" #optional
 license="MIT License"
 [[mods]] #mandatory
 modId="waveycapes" #mandatory
-version="1.4.0" #mandatory
+version="1.0.4" #mandatory
 displayName="WaveyCapes Mod" #mandatory
 displayURL="https://www.curseforge.com/minecraft/mc-mods/waveycapes" #optional
 # A file name (in the root of the mod JAR) containing a logo for display
@@ -24,6 +24,6 @@ The cape shouldn't be a static slab
 [[dependencies.waveycapes]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.17,)"
+    versionRange="[1.16,)"
     ordering="NONE"
     side="BOTH"
