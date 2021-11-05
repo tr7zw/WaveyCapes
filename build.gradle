@@ -25,7 +25,14 @@ dependencies {
 	mappings loom.officialMojangMappings()
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+
+	//Auth
+	modApi "curse.maven:cloth-config-319057:3329246"
+	modApi "curse.maven:auth-me-356643:3339459"
+
+	//Libs
     modImplementation "curse.maven:morebanners-515000:3453480"
+	modImplementation "curse.maven:minecraftcapes-mod-359836:3409502"
 }
 
 processResources {
