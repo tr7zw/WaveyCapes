@@ -7,7 +7,6 @@ dependencies {
     modImplementation "net.fabricmc.fabric-api:fabric-api:${rootProject.fabric_api_version}"
     
     modImplementation "curse.maven:modmenu-308702:${rootProject.mod_menu_release}"
-	modImplementation "curse.maven:morebanners-515000:3453480"
 
     sourceSets.main.java.srcDirs += (project(':WCShared').sourceSets.main.java.srcDirs)
 	sourceSets.main.resources.srcDirs += (project(':WCShared').sourceSets.main.resources.srcDirs)
