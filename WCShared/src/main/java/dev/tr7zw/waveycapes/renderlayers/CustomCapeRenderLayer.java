@@ -9,11 +9,6 @@ import dev.tr7zw.waveycapes.support.ModSupport;
 import dev.tr7zw.waveycapes.support.SupportManager;
 import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.model.geom.ModelPart;
-import net.minecraft.client.model.geom.PartPose;
-import net.minecraft.client.model.geom.builders.CubeDeformation;
-import net.minecraft.client.model.geom.builders.CubeListBuilder;
-import net.minecraft.client.model.geom.builders.MeshDefinition;
-import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -33,16 +28,9 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
     public CustomCapeRenderLayer(
             RenderLayerParent<AbstractClientPlayer, PlayerModel<AbstractClientPlayer>> renderLayerParent) {
         super(renderLayerParent);
-        MeshDefinition meshDefinition = new MeshDefinition();
-        PartDefinition partDefinition = meshDefinition.getRoot();
-        for (int i = 0; i < 16; i++)
-            partDefinition.addOrReplaceChild("customCape_" + i,
-                    CubeListBuilder.create().texOffs(0, i)
-                            .addBox(-5.0F, i, -1.0F, 10.0F, 1.0F, 1.0F, CubeDeformation.NONE, 1.0F, 0.5F),
-                    PartPose.offset(0.0F, 0.0F, 0.0F));  
-        ModelPart modelPart = partDefinition.bake(64,64);
         for (int i = 0; i < 16; i++) {
-            this.customCape[i] = modelPart.getChild("customCape_" + i);
+            ModelPart base = new ModelPart(64, 32, 0, i);
+            this.customCape[i] = base.addBox(-5.0F, (float)i, -1.0F, 10.0F, 1.0F, 1F);
         }
     }
 
