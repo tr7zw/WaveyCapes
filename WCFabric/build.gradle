@@ -8,6 +8,7 @@ dependencies {
     
     modImplementation "curse.maven:modmenu-308702:${rootProject.mod_menu_release}"
 	modImplementation "curse.maven:morebanners-515000:3453480"
+	modImplementation "curse.maven:minecraftcapes-mod-359836:3409502"
 
     sourceSets.main.java.srcDirs += (project(':WCShared').sourceSets.main.java.srcDirs)
 	sourceSets.main.resources.srcDirs += (project(':WCShared').sourceSets.main.resources.srcDirs)

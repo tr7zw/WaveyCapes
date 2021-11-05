@@ -15,4 +15,18 @@ public abstract class WaveyCapesBase {
     
     public abstract void initSupportHooks();
     
+    /**
+     * Checks if a class exists or not
+     * @param name
+     * @return
+     */
+    protected static boolean doesClassExist(String name) {
+        try {
+            if(Class.forName(name) != null) {
+                return true;
+            }
+        } catch (ClassNotFoundException e) {}
+        return false;
+    }
+    
 }
