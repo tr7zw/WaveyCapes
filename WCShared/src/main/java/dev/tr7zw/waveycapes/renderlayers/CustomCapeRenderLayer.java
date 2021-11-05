@@ -33,7 +33,7 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
         CapeRenderer renderer = getCapeRenderer(abstractClientPlayer, multiBufferSource);
         if(renderer == null) return;
         ItemStack itemStack = abstractClientPlayer.getItemBySlot(EquipmentSlot.CHEST);
-        if (itemStack.is(Items.ELYTRA))
+        if (itemStack.getItem() == Items.ELYTRA)
             return;
         ModelPart[] parts = ((PlayerEntityModelAccessor) getParentModel()).getCustomCapeParts();
         for (int part = 0; part < 16; part++) {
@@ -111,7 +111,7 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
      * @return
      */
     private static float easeOutSine(float x) {
-        return Mth.sin((x * Mth.PI) / 2f);
+        return (float) Math.sin((x * Math.PI) / 2f);
 
       }
     
