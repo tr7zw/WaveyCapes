@@ -10,6 +10,5 @@ public class WaveyCapesMod extends WaveyCapesBase implements ModInitializer {
 
     @Override
     public void initSupportHooks() {
-
     }
 }
