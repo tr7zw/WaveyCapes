@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "waveycapes",
-  "version": "${version}",
+  "version": "1.0.4",
 
   "name": "WaveyCapes",
   "description": "The cape shouldn't be a static slab",
