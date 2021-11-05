@@ -7,6 +7,8 @@ dependencies {
     modImplementation "net.fabricmc.fabric-api:fabric-api:${rootProject.fabric_api_version}"
     
     modImplementation "curse.maven:modmenu-308702:${rootProject.mod_menu_release}"
+    
+    modCompileOnly "curse.maven:minecraftcapesmod-359836:3409500"
 
     sourceSets.main.java.srcDirs += (project(':WCShared').sourceSets.main.java.srcDirs)
 	sourceSets.main.resources.srcDirs += (project(':WCShared').sourceSets.main.resources.srcDirs)

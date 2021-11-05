@@ -28,10 +28,10 @@ public class PlayerModelMixin<T extends LivingEntity> extends HumanoidModel<T> i
 
     @Inject(method = "<init>*", at = @At("RETURN"))
     public void onCreate(CallbackInfo info) {
-        ModelPart base = new ModelPart(this, 0, 0);
         try {
             for (int i = 0; i < 16; i++) {
-                this.customCape[i] = base.addBox(-5.0F, (float)i, -1.0F, 10.0F, 1.0F, 1F).setTexSize(64, 32).texOffs(0, i+2);
+                ModelPart base = new ModelPart(64, 32, 0, i);
+                this.customCape[i] = base.addBox(-5.0F, (float)i, -1.0F, 10.0F, 1.0F, 1F);
             }
         }catch(NoSuchElementException ex) {
             // Do nothing. The "MinecraftCapes Mod" somehow causes Piglins to call this code?!?
