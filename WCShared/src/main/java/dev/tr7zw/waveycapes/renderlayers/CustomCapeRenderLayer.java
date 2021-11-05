@@ -82,7 +82,7 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
                 || !abstractClientPlayer.isModelPartShown(PlayerModelPart.CAPE)
                 || abstractClientPlayer.getCloakTextureLocation() == null) {
             return null;
-        }else {
+        } else {
             vanillaCape.vertexConsumer = multiBufferSource
             .getBuffer(RenderType.entityCutout(abstractClientPlayer.getCloakTextureLocation()));
             return vanillaCape;
