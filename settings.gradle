@@ -9,6 +9,6 @@ pluginManagement {
 
 include("WCShared")
 include("WCFabric")
-include("WCForge")
+//include("WCForge")
 
 rootProject.name = "WaveyCapes"
