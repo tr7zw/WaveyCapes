@@ -1,8 +1,8 @@
 package dev.tr7zw.waveycapes;
 
-import org.apache.commons.lang3.tuple.Pair;
-
-import net.minecraftforge.fml.ExtensionPoint;
+import dev.tr7zw.waveycapes.support.MinecraftCapesSupport;
+import dev.tr7zw.waveycapes.support.SupportManager;
+import net.minecraftforge.fml.IExtensionPoint;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.network.FMLNetworkConstants;
@@ -24,7 +24,11 @@ public class WaveyCapesMod extends WaveyCapesBase {
 
     @Override
     public void initSupportHooks() {
-        // no forge mods here for now
+
+        if(doesClassExist("net.minecraftcapes.MinecraftCapes")) {
+            SupportManager.mods.add(new MinecraftCapesSupport());
+            LOGGER.info("Wavey Capes loaded MinecraftCapes support!");
+        }
     }
 	
 }
