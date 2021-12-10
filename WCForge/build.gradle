@@ -5,6 +5,8 @@ archivesBaseName = rootProject.archives_base_name + "-forge"
 dependencies {
     forge "net.minecraftforge:forge:${rootProject.minecraft_version}-${rootProject.forge_version}"
 
+    modImplementation "curse.maven:minecraftcapes-mod-359836:3398888"
+
     sourceSets.main.java.srcDirs += (project(':WCShared').sourceSets.main.java.srcDirs)
 	sourceSets.main.resources.srcDirs += (project(':WCShared').sourceSets.main.resources.srcDirs)
 }
