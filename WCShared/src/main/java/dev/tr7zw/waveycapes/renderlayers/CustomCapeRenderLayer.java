@@ -23,14 +23,22 @@ import net.minecraft.world.item.Items;
 
 public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, PlayerModel<AbstractClientPlayer>> {
     
-    private final ModelPart[] customCape = new ModelPart[16];
+    private final int partCount = 16;
+    private final ModelPart[] customCape = new ModelPart[partCount];
     
     public CustomCapeRenderLayer(
             RenderLayerParent<AbstractClientPlayer, PlayerModel<AbstractClientPlayer>> renderLayerParent) {
         super(renderLayerParent);
-        for (int i = 0; i < 16; i++) {
-            ModelPart base = new ModelPart(64, 32, 0, i);
-            this.customCape[i] = base.addBox(-5.0F, (float)i, -1.0F, 10.0F, 1.0F, 1F);
+        MeshDefinition meshDefinition = new MeshDefinition();
+        PartDefinition partDefinition = meshDefinition.getRoot();
+        for (int i = 0; i < partCount; i++)
+            partDefinition.addOrReplaceChild("customCape_" + i,
+                    CubeListBuilder.create().texOffs(0, (int) (i * (16f / partCount)))
+                            .addBox(-5.0F, i * (16f / partCount), -1.0F, 10.0F, (16f / partCount), 1.0F, CubeDeformation.NONE, 1.0F, 0.5F),
+                    PartPose.offset(0.0F, 0.0F, 0.0F));  
+        ModelPart modelPart = partDefinition.bake(64,64);
+        for (int i = 0; i < partCount; i++) {
+            this.customCape[i] = modelPart.getChild("customCape_" + i);
         }
     }
 
@@ -42,7 +50,7 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
         if (itemStack.getItem() == Items.ELYTRA)
             return;
         ModelPart[] parts = customCape;
-        for (int part = 0; part < 16; part++) {
+        for (int part = 0; part < partCount; part++) {
             ModelPart model = parts[part];
             poseStack.pushPose();
             poseStack.translate(0.0D, 0.0D, 0.125D);
@@ -57,9 +65,9 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
             double p = -Mth.cos(n * 0.017453292F);
             float height = (float) e * 10.0F;
             height = Mth.clamp(height, -6.0F, 32.0F);
-            float swing = (float) (d * o + m * p) * easeOutSine(1.0F/16f*part)*100;
-            swing += getWind(abstractClientPlayer.getY()) * 35f * easeOutSine(1F/16f*part);
-            swing = Mth.clamp(swing, 0.0F, 150.0F * easeOutSine(1F/16f*part));
+            float swing = (float) (d * o + m * p) * easeOutSine(1.0F/partCount*part)*100;
+            swing += getWind(abstractClientPlayer.getY()) * 35f * easeOutSine(1F/partCount*part);
+            swing = Mth.clamp(swing, 0.0F, 150.0F * easeOutSine(1F/partCount*part));
             float sidewaysRotationOffset = (float) (d * p - m * o) * 100.0F;
             sidewaysRotationOffset = Mth.clamp(sidewaysRotationOffset, -20.0F, 20.0F);
             float t = Mth.lerp(h, abstractClientPlayer.oBob, abstractClientPlayer.bob);
@@ -68,7 +76,17 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
                 height += 25.0F;
                 poseStack.translate(0, 0.15F, 0);
             }
-            poseStack.mulPose(Vector3f.XP.rotationDegrees(6.0F + swing / 2.0F + height));
+            
+            long highlightedPart = (System.currentTimeMillis() / 100) % partCount;
+
+            float maxSwing = 12f;
+            float swingSteps = 1f;
+            float naturalWindSwing = Math.max(maxSwing - (Math.abs(highlightedPart - part) * swingSteps), Math.max(maxSwing - (Math.abs((highlightedPart + partCount) - part) * swingSteps), maxSwing - (Math.abs((highlightedPart - partCount) - part) * swingSteps)));
+            if (naturalWindSwing < 0) {
+                naturalWindSwing = 0;
+            }
+            
+            poseStack.mulPose(Vector3f.XP.rotationDegrees(6.0F + swing / 2.0F + height + naturalWindSwing));
             poseStack.mulPose(Vector3f.ZP.rotationDegrees(sidewaysRotationOffset / 2.0F));
             poseStack.mulPose(Vector3f.YP.rotationDegrees(180.0F - sidewaysRotationOffset / 2.0F));
             renderer.render(abstractClientPlayer, part, model, poseStack, multiBufferSource, i, OverlayTexture.NO_OVERLAY);
