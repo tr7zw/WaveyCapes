@@ -15,6 +15,10 @@ subprojects {
 		minecraft "com.mojang:minecraft:${rootProject.minecraft_version}"
 		mappings loom.officialMojangMappings()
 	}
+
+	processResources {
+		from "${project.rootDir}/LICENSE"
+	}
 }
 
 allprojects {
