@@ -5,6 +5,8 @@ import com.mojang.math.Vector3f;
 
 import dev.tr7zw.waveycapes.CapeRenderer;
 import dev.tr7zw.waveycapes.VanillaCapeRenderer;
+import dev.tr7zw.waveycapes.WaveyCapesBase;
+import dev.tr7zw.waveycapes.WindMode;
 import dev.tr7zw.waveycapes.support.ModSupport;
 import dev.tr7zw.waveycapes.support.SupportManager;
 import net.minecraft.client.model.PlayerModel;
@@ -28,12 +30,18 @@ import net.minecraft.world.item.Items;
 
 public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, PlayerModel<AbstractClientPlayer>> {
     
-    private final int partCount = 16;
-    private final ModelPart[] customCape = new ModelPart[partCount];
+    private int partCount = 16;
+    private ModelPart[] customCape = new ModelPart[partCount];
     
     public CustomCapeRenderLayer(
             RenderLayerParent<AbstractClientPlayer, PlayerModel<AbstractClientPlayer>> renderLayerParent) {
         super(renderLayerParent);
+        partCount = WaveyCapesBase.config.capeParts;
+        buildMesh();
+    }
+    
+    private void buildMesh() {
+        customCape = new ModelPart[partCount];
         MeshDefinition meshDefinition = new MeshDefinition();
         PartDefinition partDefinition = meshDefinition.getRoot();
         for (int i = 0; i < partCount; i++)
@@ -54,6 +62,10 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
         ItemStack itemStack = abstractClientPlayer.getItemBySlot(EquipmentSlot.CHEST);
         if (itemStack.is(Items.ELYTRA))
             return;
+        if(partCount != WaveyCapesBase.config.capeParts) {
+            partCount = WaveyCapesBase.config.capeParts;
+            buildMesh();
+        }
         ModelPart[] parts = customCape;
         for (int part = 0; part < partCount; part++) {
             ModelPart model = parts[part];
@@ -88,6 +100,10 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
             float swingSteps = 1f;
             float naturalWindSwing = Math.max(maxSwing - (Math.abs(highlightedPart - part) * swingSteps), Math.max(maxSwing - (Math.abs((highlightedPart + partCount) - part) * swingSteps), maxSwing - (Math.abs((highlightedPart - partCount) - part) * swingSteps)));
             if (naturalWindSwing < 0) {
+                naturalWindSwing = 0;
+            }
+            //TODO: clean this logic up
+            if(WaveyCapesBase.config.windMode == WindMode.NONE) {
                 naturalWindSwing = 0;
             }
             
