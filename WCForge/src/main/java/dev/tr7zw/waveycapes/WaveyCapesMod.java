@@ -2,6 +2,7 @@ package dev.tr7zw.waveycapes;
 
 import dev.tr7zw.waveycapes.support.MinecraftCapesSupport;
 import dev.tr7zw.waveycapes.support.SupportManager;
+import net.minecraftforge.client.ConfigGuiHandler.ConfigGuiFactory;
 import net.minecraftforge.fml.IExtensionPoint;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
@@ -18,8 +19,13 @@ public class WaveyCapesMod extends WaveyCapesBase {
             return;
         }
 	    init();
-	    ModLoadingContext.get().registerExtensionPoint(ExtensionPoint.DISPLAYTEST,
-                () -> Pair.of(() -> FMLNetworkConstants.IGNORESERVERONLY, (remote, isServer) -> true));
+        ModLoadingContext.get().registerExtensionPoint(ConfigGuiFactory.class, () -> new ConfigGuiFactory((mc, screen) -> {
+            return createConfigScreen(screen);
+        }));
+		ModLoadingContext.get().registerExtensionPoint(IExtensionPoint.DisplayTest.class,
+                () -> new IExtensionPoint.DisplayTest(
+                        () -> ModLoadingContext.get().getActiveContainer().getModInfo().getVersion().toString(),
+                        (remote, isServer) -> true));
 	}
 
     @Override

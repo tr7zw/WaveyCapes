@@ -13,13 +13,16 @@
     "sources": "https://github.com/tr7zw/waveycapes"
   },
 
-  "license": "MIT",
+  "license": "tr7zw Protective License",
   "icon": "assets/waveycapes/icon.png",
 
   "environment": "CLIENT",
   "entrypoints": {
     "main": [
       "dev.tr7zw.waveycapes.WaveyCapesMod"
+    ],
+    "modmenu": [
+      "dev.tr7zw.waveycapes.WaveyCapesModMenu"
     ]
   },
   "mixins": [
