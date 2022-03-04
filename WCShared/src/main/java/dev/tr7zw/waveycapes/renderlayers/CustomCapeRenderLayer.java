@@ -5,8 +5,6 @@ import com.mojang.math.Vector3f;
 
 import dev.tr7zw.waveycapes.CapeRenderer;
 import dev.tr7zw.waveycapes.VanillaCapeRenderer;
-import dev.tr7zw.waveycapes.WaveyCapesBase;
-import dev.tr7zw.waveycapes.WindMode;
 import dev.tr7zw.waveycapes.support.ModSupport;
 import dev.tr7zw.waveycapes.support.SupportManager;
 import net.minecraft.client.model.PlayerModel;
@@ -30,27 +28,20 @@ import net.minecraft.world.item.Items;
 
 public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, PlayerModel<AbstractClientPlayer>> {
     
-    private int partCount = 16;
-    private ModelPart[] customCape = new ModelPart[partCount];
+    private final ModelPart[] customCape = new ModelPart[16];
     
     public CustomCapeRenderLayer(
             RenderLayerParent<AbstractClientPlayer, PlayerModel<AbstractClientPlayer>> renderLayerParent) {
         super(renderLayerParent);
-        partCount = WaveyCapesBase.config.capeParts;
-        buildMesh();
-    }
-    
-    private void buildMesh() {
-        customCape = new ModelPart[partCount];
         MeshDefinition meshDefinition = new MeshDefinition();
         PartDefinition partDefinition = meshDefinition.getRoot();
-        for (int i = 0; i < partCount; i++)
+        for (int i = 0; i < 16; i++)
             partDefinition.addOrReplaceChild("customCape_" + i,
-                    CubeListBuilder.create().texOffs(0, (int) (i * (16f / partCount)))
-                            .addBox(-5.0F, i * (16f / partCount), -1.0F, 10.0F, (16f / partCount), 1.0F, CubeDeformation.NONE, 1.0F, 0.5F),
+                    CubeListBuilder.create().texOffs(0, i)
+                            .addBox(-5.0F, i, -1.0F, 10.0F, 1.0F, 1.0F, CubeDeformation.NONE, 1.0F, 0.5F),
                     PartPose.offset(0.0F, 0.0F, 0.0F));  
         ModelPart modelPart = partDefinition.bake(64,64);
-        for (int i = 0; i < partCount; i++) {
+        for (int i = 0; i < 16; i++) {
             this.customCape[i] = modelPart.getChild("customCape_" + i);
         }
     }
@@ -62,12 +53,8 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
         ItemStack itemStack = abstractClientPlayer.getItemBySlot(EquipmentSlot.CHEST);
         if (itemStack.is(Items.ELYTRA))
             return;
-        if(partCount != WaveyCapesBase.config.capeParts) {
-            partCount = WaveyCapesBase.config.capeParts;
-            buildMesh();
-        }
         ModelPart[] parts = customCape;
-        for (int part = 0; part < partCount; part++) {
+        for (int part = 0; part < 16; part++) {
             ModelPart model = parts[part];
             poseStack.pushPose();
             poseStack.translate(0.0D, 0.0D, 0.125D);
@@ -82,9 +69,9 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
             double p = -Mth.cos(n * 0.017453292F);
             float height = (float) e * 10.0F;
             height = Mth.clamp(height, -6.0F, 32.0F);
-            float swing = (float) (d * o + m * p) * easeOutSine(1.0F/partCount*part)*100;
-            swing += getWind(abstractClientPlayer.getY()) * 35f * easeOutSine(1F/partCount*part);
-            swing = Mth.clamp(swing, 0.0F, 150.0F * easeOutSine(1F/partCount*part));
+            float swing = (float) (d * o + m * p) * easeOutSine(1.0F/16f*part)*100;
+            swing += getWind(abstractClientPlayer.getY()) * 35f * easeOutSine(1F/16f*part);
+            swing = Mth.clamp(swing, 0.0F, 150.0F * easeOutSine(1F/16f*part));
             float sidewaysRotationOffset = (float) (d * p - m * o) * 100.0F;
             sidewaysRotationOffset = Mth.clamp(sidewaysRotationOffset, -20.0F, 20.0F);
             float t = Mth.lerp(h, abstractClientPlayer.oBob, abstractClientPlayer.bob);
@@ -93,21 +80,7 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
                 height += 25.0F;
                 poseStack.translate(0, 0.15F, 0);
             }
-            
-            long highlightedPart = (System.currentTimeMillis() / 100) % partCount;
-
-            float maxSwing = 12f;
-            float swingSteps = 1f;
-            float naturalWindSwing = Math.max(maxSwing - (Math.abs(highlightedPart - part) * swingSteps), Math.max(maxSwing - (Math.abs((highlightedPart + partCount) - part) * swingSteps), maxSwing - (Math.abs((highlightedPart - partCount) - part) * swingSteps)));
-            if (naturalWindSwing < 0) {
-                naturalWindSwing = 0;
-            }
-            //TODO: clean this logic up
-            if(WaveyCapesBase.config.windMode == WindMode.NONE) {
-                naturalWindSwing = 0;
-            }
-            
-            poseStack.mulPose(Vector3f.XP.rotationDegrees(6.0F + swing / 2.0F + height + naturalWindSwing));
+            poseStack.mulPose(Vector3f.XP.rotationDegrees(6.0F + swing / 2.0F + height));
             poseStack.mulPose(Vector3f.ZP.rotationDegrees(sidewaysRotationOffset / 2.0F));
             poseStack.mulPose(Vector3f.YP.rotationDegrees(180.0F - sidewaysRotationOffset / 2.0F));
             renderer.render(abstractClientPlayer, part, model, poseStack, multiBufferSource, i, OverlayTexture.NO_OVERLAY);

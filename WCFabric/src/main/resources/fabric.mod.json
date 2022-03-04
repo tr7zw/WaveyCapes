@@ -13,16 +13,13 @@
     "sources": "https://github.com/tr7zw/waveycapes"
   },
 
-  "license": "tr7zw Protective License",
+  "license": "MIT",
   "icon": "assets/waveycapes/icon.png",
 
   "environment": "CLIENT",
   "entrypoints": {
     "main": [
       "dev.tr7zw.waveycapes.WaveyCapesMod"
-    ],
-    "modmenu": [
-      "dev.tr7zw.waveycapes.WaveyCapesModMenu"
     ]
   },
   "mixins": [
@@ -30,7 +27,7 @@
   ],
 
   "depends": {
-    "minecraft": "1.18.x",
+    "minecraft": "1.17.x",
     "java": ">=16"
   }
 }
