@@ -3,8 +3,9 @@
 
     "text.wc.setting.capestyle": "Cape Style",
     "text.wc.setting.capestyle.BLOCKY": "Blocky",
+    "text.wc.setting.capestyle.SMOOTH": "Smooth",
     "text.wc.setting.windmode": "Wind Mode",
     "text.wc.setting.windmode.NONE": "No Wind",
     "text.wc.setting.windmode.STEPS": "Steps",
     "text.wc.setting.capeparts": "Cape Parts"
-  }
+}
