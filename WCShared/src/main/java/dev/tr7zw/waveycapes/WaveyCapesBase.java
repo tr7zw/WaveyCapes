@@ -24,7 +24,6 @@ import dev.tr7zw.waveycapes.config.CustomConfigScreen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Option;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.world.entity.LivingEntity;
@@ -81,8 +80,9 @@ public abstract class WaveyCapesBase {
                 List<Option> options = new ArrayList<>();
                 options.add(getEnumOption("text.wc.setting.capestyle", CapeStyle.class, () -> config.capeStyle, (v) -> config.capeStyle = v));
                 options.add(getEnumOption("text.wc.setting.windmode", WindMode.class, () -> config.windMode, (v) -> config.windMode = v));
-                options.add(getIntOption("text.wc.setting.capeparts", 16, 200, () -> config.capeParts, (v) -> config.capeParts = v));
-                
+                options.add(getEnumOption("text.wc.setting.capemovement", CapeMovement.class, () -> config.capeMovement, (v) -> config.capeMovement = v));
+                //options.add(getIntOption("text.wc.setting.capeparts", 16, 64, () -> config.capeParts, (v) -> config.capeParts = v));
+                options.add(getIntOption("text.wc.setting.gravity", -32, -1, () -> config.gravity, (v) -> config.gravity = v));
 
                 getOptions().addSmall(options.toArray(new Option[0]));
 
