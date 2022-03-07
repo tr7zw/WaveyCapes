@@ -18,6 +18,7 @@ public class StickSimulation {
     public float gravity = -20f;
     public int numIterations = 32;
     private long lastUpdate = System.currentTimeMillis();
+    private final float maxBend = 20;
 
     public void simulate() {
         gravity = WaveyCapesBase.config.gravity;
@@ -45,6 +46,27 @@ public class StickSimulation {
                 p.position.x = basePoint.position.x - 0.1f;
             }
         }
+        
+        for(int i = sticks.size()-1; i >= 1; i--) {
+            double angle = getAngle(points.get(i).position, points.get(i-1).position, points.get(i+1).position);
+            angle *= 57.2958;
+            if(angle > 360) {
+                angle -= 360;
+            }
+            if(angle < -360) {
+                angle += 360;
+            }
+            //System.out.println(angle);
+            double abs = Math.abs(angle);
+            if(abs < 180-maxBend) {
+                Vector2 replacement = getReplacement(points.get(i).position, points.get(i-1).position, angle,  180-maxBend+1);
+                points.get(i+1).position = replacement;
+            }
+            if(abs > 180+maxBend) {
+                Vector2 replacement = getReplacement(points.get(i).position, points.get(i-1).position, angle,  189+maxBend-1);
+                points.get(i+1).position = replacement;
+            }
+        }
 
         for(int i = 0; i < numIterations; i++) {
             for(int x = sticks.size()-1; x >= 0; x--) {
@@ -59,6 +81,22 @@ public class StickSimulation {
                 }
             }
         }
+    }
+    
+    private Vector2 getReplacement(Vector2 middle, Vector2 prev, double angle, double target) {
+        double theta = target / 57.2958;
+        float x = prev.x-middle.x;
+        float y = prev.y-middle.y;
+        if(angle < 0) {
+            theta *= -1;
+        }
+        double cs = Math.cos(theta);
+        double sn = Math.sin(theta);
+        return new Vector2((float)((x*cs)-(y*sn)+middle.x), (float)((x*sn)+(y*cs)+middle.y));
+    }
+    
+    private double getAngle(Vector2 middle, Vector2 prev, Vector2 next) {
+        return Math.atan2(next.y-middle.y, next.x-middle.x) - Math.atan2(prev.y-middle.y, prev.x-middle.x);
     }
 
     public static class Point{
@@ -130,6 +168,11 @@ public class StickSimulation {
                 this.y /= f;
             }
             return this;
+        }
+
+        @Override
+        public String toString() {
+            return "Vector2 [x=" + x + ", y=" + y + "]";
         }
 
     }
