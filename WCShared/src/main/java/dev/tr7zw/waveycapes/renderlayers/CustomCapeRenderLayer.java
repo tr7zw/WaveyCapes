@@ -226,8 +226,9 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
         }
         float y = simulation.points.get(part).position.y - simulation.points.get(0).position.y - part;
         
-        float sidewaysRotationOffset = (float) (d * p - m * o) * 100.0F;
-        sidewaysRotationOffset = Mth.clamp(sidewaysRotationOffset, -20.0F, 20.0F);
+//        float sidewaysRotationOffset = (float) (d * p - m * o) * 100.0F;
+//        sidewaysRotationOffset = Mth.clamp(sidewaysRotationOffset, -20.0F, 20.0F);
+        float sidewaysRotationOffset = 0;
         float t = Mth.lerp(delta, abstractClientPlayer.oBob, abstractClientPlayer.bob);
         height += Mth.sin(Mth.lerp(delta, abstractClientPlayer.walkDistO, abstractClientPlayer.walkDist) * 6.0F) * 32.0F * t;
         if (abstractClientPlayer.isCrouching()) {
