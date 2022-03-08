@@ -12,5 +12,5 @@ public class Config {
     public CapeMovement capeMovement = CapeMovement.BASIC_SIMULATION;
     public int capeParts = 16;
     public int gravity = -16;
-
+    public int maxBend = 20;
 }
