@@ -12,5 +12,6 @@
     "text.wc.setting.capemovement.VANILLA": "Classic",
     "text.wc.setting.capemovement.BASIC_SIMULATION": "Simulation",
     "text.wc.setting.capeparts": "Cape Parts",
-    "text.wc.setting.gravity": "Gravity"
+    "text.wc.setting.gravity": "Gravity",
+    "text.wc.setting.maxBend": "Max. Bend Angle"
 }
