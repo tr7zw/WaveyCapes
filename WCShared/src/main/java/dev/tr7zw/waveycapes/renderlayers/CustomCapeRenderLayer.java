@@ -22,6 +22,7 @@ import dev.tr7zw.waveycapes.sim.StickSimulation.Point;
 import dev.tr7zw.waveycapes.sim.StickSimulation.Stick;
 import dev.tr7zw.waveycapes.support.ModSupport;
 import dev.tr7zw.waveycapes.support.SupportManager;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.player.AbstractClientPlayer;
@@ -214,7 +215,7 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
             simulation.points.get(0).position.x += (d * o + m * p);
             simulation.points.get(0).position.y = (float) (Mth.lerp(delta, abstractClientPlayer.yo, abstractClientPlayer.getY())*-16 + (abstractClientPlayer.isCrouching() ? 0 : -4));
         }
-        float swing = 0;
+        
         float z = simulation.points.get(part).position.x - simulation.points.get(0).position.x;
         if(z > 0) {
             z = 0;
@@ -224,6 +225,13 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
 //        float sidewaysRotationOffset = (float) (d * p - m * o) * 100.0F;
 //        sidewaysRotationOffset = Mth.clamp(sidewaysRotationOffset, -20.0F, 20.0F);
         float sidewaysRotationOffset = 0;
+        float swing = (float) -Mth.atan2(y, z);
+        swing = Math.max(swing, 0);
+        if(swing != 0)
+            swing = Mth.PI-swing;
+        swing *= 57.2958;
+        swing *= 2;
+        
         float t = Mth.lerp(delta, abstractClientPlayer.oBob, abstractClientPlayer.bob);
         height += Mth.sin(Mth.lerp(delta, abstractClientPlayer.walkDistO, abstractClientPlayer.walkDist) * 6.0F) * 32.0F * t;
         if (abstractClientPlayer.isCrouching()) {
@@ -233,11 +241,21 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
 
         float naturalWindSwing = getNatrualWindSwing(part);
 
-        poseStack.mulPose(Vector3f.XP.rotationDegrees(6.0F + swing / 2.0F + height + naturalWindSwing));
+        
+        // vanilla rotating and wind
+        poseStack.mulPose(Vector3f.XP.rotationDegrees(6.0F + height + naturalWindSwing));
         poseStack.mulPose(Vector3f.ZP.rotationDegrees(sidewaysRotationOffset / 2.0F));
         poseStack.mulPose(Vector3f.YP.rotationDegrees(180.0F - sidewaysRotationOffset / 2.0F));
-        //TODO do this properly, so the cape doesn't become squished together
-        poseStack.translate(0, y/partCount, z/partCount);
+        poseStack.translate(0, y/partCount, z/partCount); // movement from the simulation
+        //offsetting so the rotation is on the cape part
+        //float offset = (float) (part * (16 / partCount))/16; // to fold the entire cape into one position for debugging
+        poseStack.translate(0, /*-offset*/ + (0.48/16) , - (0.48/16)); // (0.48/16)
+        poseStack.translate(0, part * 1f/partCount, part * (0)/partCount);
+        poseStack.mulPose(Vector3f.XP.rotationDegrees(-swing)); // apply actual rotation
+        // undoing the rotation
+        poseStack.translate(0, -part * 1f/partCount, -part * (0)/partCount);
+        poseStack.translate(0, -(0.48/16), (0.48/16));
+        
     }
     
     private void modifyPoseStackVanilla(PoseStack poseStack, AbstractClientPlayer abstractClientPlayer, float h, int part) {
