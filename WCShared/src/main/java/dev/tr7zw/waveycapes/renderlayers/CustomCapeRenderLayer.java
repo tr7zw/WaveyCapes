@@ -87,6 +87,10 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
             buildMesh();
         }
 
+        if(WaveyCapesBase.config.capeMovement == CapeMovement.BASIC_SIMULATION) {
+            updateSimulation(abstractClientPlayer, delta);
+        }
+        
         if (WaveyCapesBase.config.capeStyle == CapeStyle.SMOOTH) {
             renderSmoothCape(poseStack, abstractClientPlayer, delta);
         } else if (WaveyCapesBase.config.capeStyle == CapeStyle.BLOCKY) {
@@ -100,6 +104,33 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
         }
     }
 
+    private void updateSimulation(AbstractClientPlayer abstractClientPlayer, float delta) {
+        StickSimulation simulation = ((CapeHolder)abstractClientPlayer).getSimulation();
+        if(simulation.points.size() != partCount) {
+            simulation.points.clear();
+            simulation.sticks.clear();
+            for (int i = 0; i < partCount; i++) {
+                Point point = new Point();
+                point.position.y = -i;
+                point.locked = i == 0;
+                simulation.points.add(point);
+                if(i > 0) {
+                    simulation.sticks.add(new Stick(simulation.points.get(i-1), point, 1f));
+                }
+            }
+        }
+        double d = Mth.lerp(delta, abstractClientPlayer.xCloakO, abstractClientPlayer.xCloak)
+                - Mth.lerp(delta, abstractClientPlayer.xo, abstractClientPlayer.getX());
+        double m = Mth.lerp(delta, abstractClientPlayer.zCloakO, abstractClientPlayer.zCloak)
+                - Mth.lerp(delta, abstractClientPlayer.zo, abstractClientPlayer.getZ());
+        float n = abstractClientPlayer.yBodyRotO + abstractClientPlayer.yBodyRot - abstractClientPlayer.yBodyRotO;
+        double o = Mth.sin(n * 0.017453292F);
+        double p = -Mth.cos(n * 0.017453292F);
+        simulation.points.get(0).position.x += (d * o + m * p);
+        simulation.points.get(0).position.y = (float) (Mth.lerp(delta, abstractClientPlayer.yo, abstractClientPlayer.getY())*-16 + (abstractClientPlayer.isCrouching() ? 0 : -4));
+        simulation.simulate();
+    }
+    
     private void renderSmoothCape(PoseStack poseStack, AbstractClientPlayer abstractClientPlayer, float delta) {
         BufferBuilder bufferBuilder = Tesselator.getInstance().getBuilder();
         RenderSystem.enableBlend();
@@ -189,37 +220,8 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
     
     private void modifyPoseStackSimulation(PoseStack poseStack, AbstractClientPlayer abstractClientPlayer, float delta, int part) {
         StickSimulation simulation = ((CapeHolder)abstractClientPlayer).getSimulation();
-        if(simulation.points.size() != partCount) {
-            simulation.points.clear();
-            simulation.sticks.clear();
-            for (int i = 0; i < partCount; i++) {
-                Point point = new Point();
-                point.position.y = -i;
-                point.locked = i == 0;
-                simulation.points.add(point);
-                if(i > 0) {
-                    simulation.sticks.add(new Stick(simulation.points.get(i-1), point, 1f));
-                }
-            }
-        }
-        simulation.simulate();
         poseStack.pushPose();
         poseStack.translate(0.0D, 0.0D, 0.125D);
-        double d = Mth.lerp(delta, abstractClientPlayer.xCloakO, abstractClientPlayer.xCloak)
-                - Mth.lerp(delta, abstractClientPlayer.xo, abstractClientPlayer.getX());
-        double e = Mth.lerp(delta, abstractClientPlayer.yCloakO, abstractClientPlayer.yCloak)
-                - Mth.lerp(delta, abstractClientPlayer.yo, abstractClientPlayer.getY());
-        double m = Mth.lerp(delta, abstractClientPlayer.zCloakO, abstractClientPlayer.zCloak)
-                - Mth.lerp(delta, abstractClientPlayer.zo, abstractClientPlayer.getZ());
-        float n = abstractClientPlayer.yBodyRotO + abstractClientPlayer.yBodyRot - abstractClientPlayer.yBodyRotO;
-        double o = Mth.sin(n * 0.017453292F);
-        double p = -Mth.cos(n * 0.017453292F);
-        float height = (float) e * 10.0F;
-        height = Mth.clamp(height, -6.0F, 32.0F);
-        if(part == 0) {
-            simulation.points.get(0).position.x += (d * o + m * p);
-            simulation.points.get(0).position.y = (float) (Mth.lerp(delta, abstractClientPlayer.yo, abstractClientPlayer.getY())*-16 + (abstractClientPlayer.isCrouching() ? 0 : -4));
-        }
         
         float z = simulation.points.get(part).position.x - simulation.points.get(0).position.x;
         if(z > 0) {
@@ -230,15 +232,14 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
 //        float sidewaysRotationOffset = (float) (d * p - m * o) * 100.0F;
 //        sidewaysRotationOffset = Mth.clamp(sidewaysRotationOffset, -20.0F, 20.0F);
         float sidewaysRotationOffset = 0;
-        float swing = (float) -Mth.atan2(y, z);
-        swing = Math.max(swing, 0);
-        if(swing != 0)
-            swing = Mth.PI-swing;
-        swing *= 57.2958;
-        swing *= 2;
+        float partRotation = (float) -Mth.atan2(y, z);
+        partRotation = Math.max(partRotation, 0);
+        if(partRotation != 0)
+            partRotation = Mth.PI-partRotation;
+        partRotation *= 57.2958;
+        partRotation *= 2;
         
-        float t = Mth.lerp(delta, abstractClientPlayer.oBob, abstractClientPlayer.bob);
-        height += Mth.sin(Mth.lerp(delta, abstractClientPlayer.walkDistO, abstractClientPlayer.walkDist) * 6.0F) * 32.0F * t;
+        float height = 0;
         if (abstractClientPlayer.isCrouching()) {
             height += 25.0F;
             poseStack.translate(0, 0.15F, 0);
@@ -256,7 +257,7 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
         //float offset = (float) (part * (16 / partCount))/16; // to fold the entire cape into one position for debugging
         poseStack.translate(0, /*-offset*/ + (0.48/16) , - (0.48/16)); // (0.48/16)
         poseStack.translate(0, part * 1f/partCount, part * (0)/partCount);
-        poseStack.mulPose(Vector3f.XP.rotationDegrees(-swing)); // apply actual rotation
+        poseStack.mulPose(Vector3f.XP.rotationDegrees(-partRotation)); // apply actual rotation
         // undoing the rotation
         poseStack.translate(0, -part * 1f/partCount, -part * (0)/partCount);
         poseStack.translate(0, -(0.48/16), (0.48/16));
