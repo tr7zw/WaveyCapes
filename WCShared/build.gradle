@@ -5,6 +5,10 @@ dependencies {
 
 }
 
+loom {
+	accessWidenerPath = file("${project.rootDir}/WCShared/src/main/resources/waveycapes.accesswidener")
+}
+
 // The shared project doesn't need to be built
 
 tasks.withType(JavaCompile) {
