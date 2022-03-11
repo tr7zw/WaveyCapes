@@ -1,11 +1,11 @@
 package dev.tr7zw.waveycapes.renderlayers;
 
+import java.util.function.Function;
+
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.BufferUploader;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import com.mojang.math.Matrix4f;
 import com.mojang.math.Vector3f;
@@ -22,16 +22,20 @@ import dev.tr7zw.waveycapes.sim.StickSimulation.Point;
 import dev.tr7zw.waveycapes.sim.StickSimulation.Stick;
 import dev.tr7zw.waveycapes.support.ModSupport;
 import dev.tr7zw.waveycapes.support.SupportManager;
-import net.minecraft.client.Minecraft;
+import net.minecraft.Util;
 import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.player.AbstractClientPlayer;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderStateShard;
+import net.minecraft.client.renderer.RenderStateShard.TextureStateShard;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderType.CompositeRenderType;
+import net.minecraft.client.renderer.RenderType.CompositeState;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.PlayerModelPart;
@@ -42,6 +46,15 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
     
     private static int partCount;
     private ModelPart[] customCape = new ModelPart[partCount];
+    
+    private final static Function<ResourceLocation, CompositeRenderType> CAPE_RENDERING = Util.memoize(resourceLocation -> {
+        CompositeState compositeState = CompositeState.builder().setShaderState(RenderStateShard.POSITION_TEX_SHADER)
+                .setTextureState(new TextureStateShard(resourceLocation, false, false))
+                .setTransparencyState(RenderType.NO_TRANSPARENCY).setLightmapState(RenderType.LIGHTMAP).setOverlayState(RenderType.NO_OVERLAY)
+                .createCompositeState(false);
+        return RenderType.create("wavey_cape", DefaultVertexFormat.POSITION_TEX, VertexFormat.Mode.QUADS, 256, false, true,
+                compositeState);
+    });
     
     public CustomCapeRenderLayer(
             RenderLayerParent<AbstractClientPlayer, PlayerModel<AbstractClientPlayer>> renderLayerParent) {
@@ -87,7 +100,7 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
         }
         
         if (WaveyCapesBase.config.capeStyle == CapeStyle.SMOOTH) {
-            renderSmoothCape(poseStack, abstractClientPlayer, delta);
+            renderSmoothCape(poseStack, multiBufferSource, abstractClientPlayer, delta);
         } else if (WaveyCapesBase.config.capeStyle == CapeStyle.BLOCKY) {
             ModelPart[] parts = customCape;
             for (int part = 0; part < partCount; part++) {
@@ -126,14 +139,15 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
         simulation.simulate();
     }
     
-    private void renderSmoothCape(PoseStack poseStack, AbstractClientPlayer abstractClientPlayer, float delta) {
-        BufferBuilder bufferBuilder = Tesselator.getInstance().getBuilder();
+    private void renderSmoothCape(PoseStack poseStack, MultiBufferSource multiBufferSource, AbstractClientPlayer abstractClientPlayer, float delta) {
+        BufferBuilder bufferBuilder = (BufferBuilder) multiBufferSource
+                .getBuffer(CAPE_RENDERING.apply(abstractClientPlayer.getCloakTextureLocation()));
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
-        RenderSystem.enableDepthTest();
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderTexture(0, abstractClientPlayer.getCloakTextureLocation());
-        bufferBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+//        RenderSystem.enableDepthTest();
+//        RenderSystem.setShader(GameRenderer::getRendertypeEyesShader);
+//        RenderSystem.setShaderTexture(0, abstractClientPlayer.getCloakTextureLocation());
+//        bufferBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
 
         Matrix4f oldPositionMatrix = null;
         for (int part = 0; part < partCount; part++) {
@@ -199,10 +213,10 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
             poseStack.popPose();
         }
 
-        bufferBuilder.end();
-        BufferUploader.end(bufferBuilder);
-        RenderSystem.disableDepthTest();
-        RenderSystem.disableBlend();
+//        bufferBuilder.end();
+//        BufferUploader.end(bufferBuilder);
+        //RenderSystem.disableDepthTest();
+        //RenderSystem.disableBlend();
     }
 
     private void modifyPoseStack(PoseStack poseStack, AbstractClientPlayer abstractClientPlayer, float h, int part) {
