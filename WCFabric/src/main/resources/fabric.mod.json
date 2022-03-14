@@ -17,7 +17,6 @@
   "icon": "assets/waveycapes/icon.png",
 
   "environment": "CLIENT",
-  "accessWidener" : "waveycapes.accesswidener",
   "entrypoints": {
     "main": [
       "dev.tr7zw.waveycapes.WaveyCapesMod"
