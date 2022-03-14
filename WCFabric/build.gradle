@@ -14,10 +14,6 @@ dependencies {
 	sourceSets.main.resources.srcDirs += (project(':WCShared').sourceSets.main.resources.srcDirs)
 }
 
-loom {
-	accessWidenerPath = file("${project.rootDir}/WCShared/src/main/resources/waveycapes.accesswidener")
-}
-
 processResources {
 	duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
 	inputs.property "version", project.version

@@ -18,7 +18,7 @@ public class StickSimulation {
     public List<Point> points = new ArrayList<>();
     public List<Stick> sticks = new ArrayList<>();
     public float gravity = -20f;
-    public int numIterations = 64;
+    public int numIterations = 128;
     private long lastUpdate = System.currentTimeMillis();
     private float maxBend = 20;
 
