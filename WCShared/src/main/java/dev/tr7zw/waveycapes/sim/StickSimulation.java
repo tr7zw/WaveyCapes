@@ -25,9 +25,9 @@ public class StickSimulation {
     public void simulate() {
         gravity = WaveyCapesBase.config.gravity;
         maxBend = WaveyCapesBase.config.maxBend;
-        if (WaveyCapesBase.config.capeStyle != CapeStyle.SMOOTH) {
-            gravity *= WaveyCapesBase.config.capeParts / 16f;
-        }
+//        if (WaveyCapesBase.config.capeStyle != CapeStyle.SMOOTH) {
+//            gravity *= WaveyCapesBase.config.capeParts / 16f;
+//        }
 
         float deltaTime = (System.currentTimeMillis() - lastUpdate) / 1000f;
         lastUpdate = System.currentTimeMillis();

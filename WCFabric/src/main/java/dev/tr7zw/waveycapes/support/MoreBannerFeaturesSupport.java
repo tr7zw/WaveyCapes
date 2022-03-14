@@ -61,6 +61,11 @@ public class MoreBannerFeaturesSupport implements ModSupport {
             RendererUtils.renderCanvas(poseStack, multiBufferSource, light, OverlayTexture.NO_OVERLAY, customCape[part],
                     ModelBakery.BANNER_BASE, true, patterns);
         }
+        
+        @Override
+        public boolean vanillaUvValues() {
+            return false;
+        }
 
     }
 
