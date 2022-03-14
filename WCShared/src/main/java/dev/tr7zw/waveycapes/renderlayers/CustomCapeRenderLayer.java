@@ -45,7 +45,7 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
     public CustomCapeRenderLayer(
             RenderLayerParent<AbstractClientPlayer, PlayerModel<AbstractClientPlayer>> renderLayerParent) {
         super(renderLayerParent);
-        partCount = WaveyCapesBase.config.capeParts;
+        partCount = 16;
         buildMesh();
     }
     
@@ -71,23 +71,23 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
         if (itemStack.is(Items.ELYTRA))
             return;
         // smooth doesn't need more than 16
-        if(WaveyCapesBase.config.capeStyle == CapeStyle.SMOOTH) {
-            if(partCount != 16) {
-                partCount = 16;
-                buildMesh();
-            }
-        } else if(partCount != WaveyCapesBase.config.capeParts) {
-            partCount = WaveyCapesBase.config.capeParts;
-            buildMesh();
-        }
+//        if(WaveyCapesBase.config.capeStyle == CapeStyle.SMOOTH) {
+//            if(partCount != 16) {
+//                partCount = 16;
+//                buildMesh();
+//            }
+//        } else if(partCount != WaveyCapesBase.config.capeParts) {
+//            partCount = WaveyCapesBase.config.capeParts;
+//            buildMesh();
+//        }
 
         if(WaveyCapesBase.config.capeMovement == CapeMovement.BASIC_SIMULATION) {
             updateSimulation(abstractClientPlayer, delta);
         }
         
-        if (WaveyCapesBase.config.capeStyle == CapeStyle.SMOOTH) {
-            renderSmoothCape(poseStack, multiBufferSource, abstractClientPlayer, delta, i);
-        } else if (WaveyCapesBase.config.capeStyle == CapeStyle.BLOCKY) {
+        if (WaveyCapesBase.config.capeStyle == CapeStyle.SMOOTH && renderer.vanillaUvValues()) {
+            renderSmoothCape(poseStack, multiBufferSource, renderer, abstractClientPlayer, delta, i);
+        } else {
             ModelPart[] parts = customCape;
             for (int part = 0; part < partCount; part++) {
                 ModelPart model = parts[part];
@@ -125,9 +125,8 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
         simulation.simulate();
     }
     
-    private void renderSmoothCape(PoseStack poseStack, MultiBufferSource multiBufferSource, AbstractClientPlayer abstractClientPlayer, float delta, int light) {
-        BufferBuilder bufferBuilder = (BufferBuilder) multiBufferSource
-                .getBuffer(RenderType.entityCutout(abstractClientPlayer.getCloakTextureLocation()));
+    private void renderSmoothCape(PoseStack poseStack, MultiBufferSource multiBufferSource, CapeRenderer capeRenderer, AbstractClientPlayer abstractClientPlayer, float delta, int light) {
+        BufferBuilder bufferBuilder = (BufferBuilder) capeRenderer.getVertexConsumer(multiBufferSource, abstractClientPlayer);
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
 

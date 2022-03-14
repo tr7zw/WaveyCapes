@@ -42,10 +42,27 @@ public class MinecraftCapesSupport implements ModSupport {
             }
             model.render(poseStack, vertexConsumer, light, OverlayTexture.NO_OVERLAY);
         }
+        
+        @Override
+        public VertexConsumer getVertexConsumer(MultiBufferSource multiBufferSource, AbstractClientPlayer player) {
+            PlayerHandler playerHandler = PlayerHandler.getFromPlayer(player);
+            if(MinecraftCapesConfig.isCapeVisible() && playerHandler.getCapeLocation() != null) {
+                return ItemRenderer.getArmorFoilBuffer(multiBufferSource, RenderType.armorCutoutNoCull(playerHandler.getCapeLocation()), false, playerHandler.getHasCapeGlint());
+            } else {
+                return ItemRenderer.getArmorFoilBuffer(multiBufferSource, RenderType.armorCutoutNoCull(player.getCloakTextureLocation()), false, false);
+            }
+        }
+        
+        @Override
+        public boolean vanillaUvValues() {
+            return true;
+        }
+        
     }
 
     @Override
     public boolean blockFeatureRenderer(Object feature) {
         return false;
     }
+
 }
