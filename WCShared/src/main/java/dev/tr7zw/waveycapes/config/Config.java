@@ -10,7 +10,7 @@ public class Config {
     public WindMode windMode = WindMode.NONE;
     public CapeStyle capeStyle = CapeStyle.SMOOTH;
     public CapeMovement capeMovement = CapeMovement.BASIC_SIMULATION;
-    public int capeParts = 16;
+    //public int capeParts = 16;
     public int gravity = -25;
     public int maxBend = 5;
 }
