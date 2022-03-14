@@ -95,6 +95,7 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
 
     private void updateSimulation(AbstractClientPlayer abstractClientPlayer, float delta) {
         StickSimulation simulation = ((CapeHolder)abstractClientPlayer).getSimulation();
+        boolean dirty = false;
         if(simulation.points.size() != partCount) {
             simulation.points.clear();
             simulation.sticks.clear();
@@ -107,6 +108,7 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
                     simulation.sticks.add(new Stick(simulation.points.get(i-1), point, 1f));
                 }
             }
+            dirty = true;
         }
         double d = Mth.lerp(delta, abstractClientPlayer.xCloakO, abstractClientPlayer.xCloak)
                 - Mth.lerp(delta, abstractClientPlayer.xo, abstractClientPlayer.getX());
@@ -118,6 +120,11 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
         simulation.points.get(0).position.x += (d * o + m * p);
         simulation.points.get(0).position.y = (float) (Mth.lerp(delta, abstractClientPlayer.yo, abstractClientPlayer.getY())*-16 + (abstractClientPlayer.isCrouching() ? 0 : -4));
         simulation.simulate();
+        if(dirty) {
+            for(int i = 0; i < 5; i++) {
+                simulation.simulate();
+            }
+        }
     }
     
     private void renderSmoothCape(PoseStack poseStack, MultiBufferSource multiBufferSource, CapeRenderer capeRenderer, AbstractClientPlayer abstractClientPlayer, float delta, int light) {
