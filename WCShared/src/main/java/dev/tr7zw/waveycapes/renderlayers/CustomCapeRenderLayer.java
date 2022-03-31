@@ -60,6 +60,7 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
     }
 
     public void render(PoseStack poseStack, MultiBufferSource multiBufferSource, int i, AbstractClientPlayer abstractClientPlayer, float f, float g, float delta, float j, float k, float l) {
+        if(abstractClientPlayer.isInvisible())return;
         CapeRenderer renderer = getCapeRenderer(abstractClientPlayer, multiBufferSource);
         if(renderer == null) return;
         ItemStack itemStack = abstractClientPlayer.getItemBySlot(EquipmentSlot.CHEST);
