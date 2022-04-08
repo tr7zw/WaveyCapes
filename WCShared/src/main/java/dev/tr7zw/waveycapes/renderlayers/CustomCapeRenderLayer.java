@@ -46,16 +46,9 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
     
     private void buildMesh() {
         customCape = new ModelPart[partCount];
-        MeshDefinition meshDefinition = new MeshDefinition();
-        PartDefinition partDefinition = meshDefinition.getRoot();
-        for (int i = 0; i < partCount; i++)
-            partDefinition.addOrReplaceChild("customCape_" + i,
-                    CubeListBuilder.create().texOffs(0, (int) (i * (16f / partCount)))
-                            .addBox(-5.0F, i * (16f / partCount), -1.0F, 10.0F, (16f / partCount), 1.0F, CubeDeformation.NONE, 1.0F, 0.5F),
-                    PartPose.offset(0.0F, 0.0F, 0.0F));  
-        ModelPart modelPart = partDefinition.bake(64,64);
         for (int i = 0; i < partCount; i++) {
-            this.customCape[i] = modelPart.getChild("customCape_" + i);
+            ModelPart base = new ModelPart(64, 32, 0, i);
+            this.customCape[i] = base.addBox(-5.0F, (float)i, -1.0F, 10.0F, 1.0F, 1F);
         }
     }
 
@@ -224,7 +217,7 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
         float partRotation = (float) -Mth.atan2(y, z);
         partRotation = Math.max(partRotation, 0);
         if(partRotation != 0)
-            partRotation = Mth.PI-partRotation;
+            partRotation = (float) (Math.PI-partRotation);
         partRotation *= 57.2958;
         partRotation *= 2;
         

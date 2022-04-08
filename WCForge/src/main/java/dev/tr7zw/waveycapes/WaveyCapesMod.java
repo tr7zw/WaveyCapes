@@ -1,9 +1,14 @@
 package dev.tr7zw.waveycapes;
 
+import java.util.function.BiFunction;
+
+import org.apache.commons.lang3.tuple.Pair;
+
 import dev.tr7zw.waveycapes.support.MinecraftCapesSupport;
 import dev.tr7zw.waveycapes.support.SupportManager;
-import net.minecraftforge.client.ConfigGuiHandler.ConfigGuiFactory;
-import net.minecraftforge.fml.IExtensionPoint;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraftforge.fml.ExtensionPoint;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.network.FMLNetworkConstants;
@@ -19,13 +24,17 @@ public class WaveyCapesMod extends WaveyCapesBase {
             return;
         }
 	    init();
-        ModLoadingContext.get().registerExtensionPoint(ConfigGuiFactory.class, () -> new ConfigGuiFactory((mc, screen) -> {
-            return createConfigScreen(screen);
-        }));
-		ModLoadingContext.get().registerExtensionPoint(IExtensionPoint.DisplayTest.class,
-                () -> new IExtensionPoint.DisplayTest(
-                        () -> ModLoadingContext.get().getActiveContainer().getModInfo().getVersion().toString(),
-                        (remote, isServer) -> true));
+        ModLoadingContext.get().registerExtensionPoint(ExtensionPoint.DISPLAYTEST,
+                () -> Pair.of(() -> FMLNetworkConstants.IGNORESERVERONLY, (remote, isServer) -> true));
+        ModLoadingContext.get().registerExtensionPoint(
+                ExtensionPoint.CONFIGGUIFACTORY,
+                () -> new BiFunction<Minecraft, Screen, Screen>() {
+                    @Override
+                    public Screen apply(Minecraft t, Screen screen) {
+                        return createConfigScreen(screen);
+                    }
+                }
+        );
 	}
 
     @Override
