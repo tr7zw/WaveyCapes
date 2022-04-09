@@ -3,7 +3,6 @@ package dev.tr7zw.waveycapes.sim;
 import java.util.ArrayList;
 import java.util.List;
 
-import dev.tr7zw.waveycapes.CapeStyle;
 import dev.tr7zw.waveycapes.WaveyCapesBase;
 import net.minecraft.util.Mth;
 
@@ -18,8 +17,7 @@ public class StickSimulation {
     public List<Point> points = new ArrayList<>();
     public List<Stick> sticks = new ArrayList<>();
     public float gravity = -20f;
-    public int numIterations = 128;
-    private long lastUpdate = System.currentTimeMillis();
+    public int numIterations = 150;
     private float maxBend = 20;
 
     public void simulate() {
@@ -29,16 +27,15 @@ public class StickSimulation {
 //            gravity *= WaveyCapesBase.config.capeParts / 16f;
 //        }
 
-        float deltaTime = (System.currentTimeMillis() - lastUpdate) / 1000f;
-        lastUpdate = System.currentTimeMillis();
+        float deltaTime = 50f/1000f; // fixed timescale
         Vector2 down = new Vector2(0, gravity * deltaTime);
-        // Vector2 tmp = new Vector2(0, 0);
+        Vector2 tmp = new Vector2(0, 0);
         for (Point p : points) {
             if (!p.locked) {
-                // tmp.copy(p.position);
+                tmp.copy(p.position);
                 // p.position.add(p.position).subtract(p.prevPosition);
                 p.position.subtract(down);
-                // p.prevPosition.copy(tmp);
+                p.prevPosition.copy(tmp);
             }
         }
 
@@ -105,8 +102,16 @@ public class StickSimulation {
 
     public static class Point {
         public Vector2 position = new Vector2(0, 0);
-        // public Vector2 prevPosition = new Vector2(0, 0);
+        public Vector2 prevPosition = new Vector2(0, 0);
         public boolean locked;
+        
+        public float getLerpX(float delta) {
+            return Mth.lerp(delta, prevPosition.x, position.x);
+        }
+        
+        public float getLerpY(float delta) {
+            return Mth.lerp(delta, prevPosition.y, position.y);
+        }
     }
 
     public static class Stick {
