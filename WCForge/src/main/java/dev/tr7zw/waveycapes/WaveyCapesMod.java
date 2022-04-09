@@ -2,10 +2,10 @@ package dev.tr7zw.waveycapes;
 
 import dev.tr7zw.waveycapes.support.MinecraftCapesSupport;
 import dev.tr7zw.waveycapes.support.SupportManager;
-import net.minecraftforge.client.ConfigGuiHandler.ConfigGuiFactory;
 import net.minecraftforge.fml.IExtensionPoint;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fmlclient.ConfigGuiHandler.ConfigGuiFactory;
 
 @Mod("waveycapes")
 public class WaveyCapesMod extends WaveyCapesBase {
@@ -18,7 +18,7 @@ public class WaveyCapesMod extends WaveyCapesBase {
             return;
         }
 	    init();
-        ModLoadingContext.get().registerExtensionPoint(ConfigGuiFactory.class, () -> new ConfigGuiFactory((mc, screen) -> {
+	    ModLoadingContext.get().registerExtensionPoint(ConfigGuiFactory.class, () -> new ConfigGuiFactory((mc, screen) -> {
             return createConfigScreen(screen);
         }));
 		ModLoadingContext.get().registerExtensionPoint(IExtensionPoint.DisplayTest.class,
