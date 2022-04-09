@@ -14,8 +14,6 @@ import dev.tr7zw.waveycapes.VanillaCapeRenderer;
 import dev.tr7zw.waveycapes.WaveyCapesBase;
 import dev.tr7zw.waveycapes.WindMode;
 import dev.tr7zw.waveycapes.sim.StickSimulation;
-import dev.tr7zw.waveycapes.sim.StickSimulation.Point;
-import dev.tr7zw.waveycapes.sim.StickSimulation.Stick;
 import dev.tr7zw.waveycapes.support.ModSupport;
 import dev.tr7zw.waveycapes.support.SupportManager;
 import net.minecraft.client.model.PlayerModel;
@@ -71,7 +69,8 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
 //        }
 
         if(WaveyCapesBase.config.capeMovement == CapeMovement.BASIC_SIMULATION) {
-            updateSimulation(abstractClientPlayer, delta);
+            CapeHolder holder = (CapeHolder) abstractClientPlayer;
+            holder.updateSimulation(abstractClientPlayer, partCount);
         }
         
         if (WaveyCapesBase.config.capeStyle == CapeStyle.SMOOTH && renderer.vanillaUvValues()) {
@@ -83,40 +82,6 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
                 modifyPoseStack(poseStack, abstractClientPlayer, delta, part);
                 renderer.render(abstractClientPlayer, part, model, poseStack, multiBufferSource, i, OverlayTexture.NO_OVERLAY);
                 poseStack.popPose();
-            }
-        }
-    }
-
-    private void updateSimulation(AbstractClientPlayer abstractClientPlayer, float delta) {
-        StickSimulation simulation = ((CapeHolder)abstractClientPlayer).getSimulation();
-        boolean dirty = false;
-        if(simulation.points.size() != partCount) {
-            simulation.points.clear();
-            simulation.sticks.clear();
-            for (int i = 0; i < partCount; i++) {
-                Point point = new Point();
-                point.position.y = -i;
-                point.locked = i == 0;
-                simulation.points.add(point);
-                if(i > 0) {
-                    simulation.sticks.add(new Stick(simulation.points.get(i-1), point, 1f));
-                }
-            }
-            dirty = true;
-        }
-        double d = Mth.lerp(delta, abstractClientPlayer.xCloakO, abstractClientPlayer.xCloak)
-                - Mth.lerp(delta, abstractClientPlayer.xo, abstractClientPlayer.getX());
-        double m = Mth.lerp(delta, abstractClientPlayer.zCloakO, abstractClientPlayer.zCloak)
-                - Mth.lerp(delta, abstractClientPlayer.zo, abstractClientPlayer.getZ());
-        float n = abstractClientPlayer.yBodyRotO + abstractClientPlayer.yBodyRot - abstractClientPlayer.yBodyRotO;
-        double o = Mth.sin(n * 0.017453292F);
-        double p = -Mth.cos(n * 0.017453292F);
-        simulation.points.get(0).position.x += (d * o + m * p);
-        simulation.points.get(0).position.y = (float) (Mth.lerp(delta, abstractClientPlayer.yo, abstractClientPlayer.getY())*-16 + (abstractClientPlayer.isCrouching() ? 0 : -4));
-        simulation.simulate();
-        if(dirty) {
-            for(int i = 0; i < 5; i++) {
-                simulation.simulate();
             }
         }
     }
@@ -205,11 +170,11 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
         poseStack.pushPose();
         poseStack.translate(0.0D, 0.0D, 0.125D);
         
-        float z = simulation.points.get(part).position.x - simulation.points.get(0).position.x;
+        float z = simulation.points.get(part).getLerpX(delta) - simulation.points.get(0).getLerpX(delta);
         if(z > 0) {
             z = 0;
         }
-        float y = simulation.points.get(part).position.y - simulation.points.get(0).position.y - part;
+        float y = simulation.points.get(part).getLerpY(delta) - simulation.points.get(0).getLerpY(delta) - part;
         
 //        float sidewaysRotationOffset = (float) (d * p - m * o) * 100.0F;
 //        sidewaysRotationOffset = Mth.clamp(sidewaysRotationOffset, -20.0F, 20.0F);
