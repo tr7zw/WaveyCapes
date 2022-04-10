@@ -174,7 +174,7 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
         if(z > 0) {
             z = 0;
         }
-        float y = simulation.points.get(part).getLerpY(delta) - simulation.points.get(0).getLerpY(delta) - part;
+        float y = simulation.points.get(0).getLerpY(delta) - part - simulation.points.get(part).getLerpY(delta);
         
 //        float sidewaysRotationOffset = (float) (d * p - m * o) * 100.0F;
 //        sidewaysRotationOffset = Mth.clamp(sidewaysRotationOffset, -20.0F, 20.0F);
