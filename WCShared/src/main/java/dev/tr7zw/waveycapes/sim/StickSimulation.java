@@ -9,14 +9,14 @@ import net.minecraft.util.Mth;
 /**
  * Java port of https://www.youtube.com/watch?v=PGk0rnyTa1U by Sebastian Lague
  * Has some changes like maximizing bends, only designed to simulate a single
- * "rope"(cape) and it's running upside down(trust me, totally intended)
+ * "rope"(cape)
  *
  */
 public class StickSimulation {
 
     public List<Point> points = new ArrayList<>();
     public List<Stick> sticks = new ArrayList<>();
-    public float gravity = -20f;
+    public float gravity = 20f;
     public int numIterations = 150;
     private float maxBend = 20;
 

@@ -46,7 +46,7 @@ public interface CapeHolder {
         double o = Mth.sin(n * 0.017453292F);
         double p = -Mth.cos(n * 0.017453292F);
         simulation.points.get(0).position.x += (d * o + m * p);
-        simulation.points.get(0).position.y = (float) (abstractClientPlayer.getY()*-16 + (abstractClientPlayer.isCrouching() ? 0 : -4));
+        simulation.points.get(0).position.y = (float) (abstractClientPlayer.getY()*16 + (abstractClientPlayer.isCrouching() ? -4 : 0));
         simulation.simulate();
     }
     
