@@ -92,8 +92,9 @@ public abstract class WaveyCapesBase {
                 options.add(getEnumOption("text.wc.setting.windmode", WindMode.class, () -> config.windMode, (v) -> config.windMode = v));
                 options.add(getEnumOption("text.wc.setting.capemovement", CapeMovement.class, () -> config.capeMovement, (v) -> config.capeMovement = v));
                 //options.add(getIntOption("text.wc.setting.capeparts", 16, 64, () -> config.capeParts, (v) -> config.capeParts = v));
-                options.add(getIntOption("text.wc.setting.gravity", 1, 32, () -> config.gravity, (v) -> config.gravity = v));
-                options.add(getIntOption("text.wc.setting.maxBend", 5, 20, () -> config.maxBend, (v) -> config.maxBend = v));
+                options.add(getIntOption("text.wc.setting.gravity", 5, 32, () -> config.gravity, (v) -> config.gravity = v));
+                options.add(getIntOption("text.wc.setting.heightMultiplier", 4, 16, () -> config.heightMultiplier, (v) -> config.heightMultiplier = v));
+                //options.add(getIntOption("text.wc.setting.maxBend", 1, 20, () -> config.maxBend, (v) -> config.maxBend = v));
 
                 getOptions().addSmall(options.toArray(new Option[0]));
 
