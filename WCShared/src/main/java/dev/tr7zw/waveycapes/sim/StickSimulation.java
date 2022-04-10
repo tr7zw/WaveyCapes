@@ -9,7 +9,7 @@ import net.minecraft.util.Mth;
 /**
  * Java port of https://www.youtube.com/watch?v=PGk0rnyTa1U by Sebastian Lague
  * Has some changes like maximizing bends, only designed to simulate a single
- * "rope"(cape)
+ * "rope"(cape). Point 0 is the part fixed to the player
  *
  */
 public class StickSimulation {
@@ -17,15 +17,12 @@ public class StickSimulation {
     public List<Point> points = new ArrayList<>();
     public List<Stick> sticks = new ArrayList<>();
     public float gravity = 20f;
-    public int numIterations = 150;
-    private float maxBend = 20;
+    public int numIterations = 30;
+    private float maxBend = 5;
 
     public void simulate() {
         gravity = WaveyCapesBase.config.gravity;
-        maxBend = WaveyCapesBase.config.maxBend;
-//        if (WaveyCapesBase.config.capeStyle != CapeStyle.SMOOTH) {
-//            gravity *= WaveyCapesBase.config.capeParts / 16f;
-//        }
+        //maxBend = WaveyCapesBase.config.maxBend;
 
         float deltaTime = 50f/1000f; // fixed timescale
         Vector2 down = new Vector2(0, gravity * deltaTime);
@@ -39,15 +36,16 @@ public class StickSimulation {
             }
         }
 
+        // prevent the cape from clipping into the player
         Point basePoint = points.get(0);
-
         for (Point p : points) {
             if (p != basePoint && p.position.x - basePoint.position.x > 0) {
                 p.position.x = basePoint.position.x - 0.1f;
             }
         }
 
-        for (int i = sticks.size() - 1; i >= 1; i--) {
+        // Doesnt work like it should at all, but it prevents some folding into itself, so it stays for now
+        for (int i = points.size() - 2; i >= 1; i--) {
             double angle = getAngle(points.get(i).position, points.get(i - 1).position, points.get(i + 1).position);
             angle *= 57.2958;
             if (angle > 360) {
@@ -64,11 +62,12 @@ public class StickSimulation {
             }
             if (abs > 180 + maxBend) {
                 Vector2 replacement = getReplacement(points.get(i).position, points.get(i - 1).position, angle,
-                        189 + maxBend - 1);
+                        180 + maxBend - 1);
                 points.get(i + 1).position = replacement;
             }
         }
 
+        // move into correct direction
         for (int i = 0; i < numIterations; i++) {
             for (int x = sticks.size() - 1; x >= 0; x--) {
                 Stick stick = sticks.get(x);
@@ -80,6 +79,14 @@ public class StickSimulation {
                 if (!stick.pointB.locked) {
                     stick.pointB.position = stickCentre.clone().subtract(stickDir.clone().mul(stick.length / 2));
                 }
+            }
+        }
+        // fix in the position/length, this prevents it from acting like a spring/stretchy
+        for (int x = 0; x < sticks.size(); x++) {
+            Stick stick = sticks.get(x);
+            Vector2 stickDir = stick.pointA.position.clone().subtract(stick.pointB.position).normalize();
+            if (!stick.pointB.locked) {
+                stick.pointB.position = stick.pointA.position.clone().subtract(stickDir.mul(stick.length));
             }
         }
     }

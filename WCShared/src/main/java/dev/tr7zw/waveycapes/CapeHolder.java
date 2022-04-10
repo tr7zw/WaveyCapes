@@ -45,8 +45,11 @@ public interface CapeHolder {
         float n = abstractClientPlayer.yBodyRotO + abstractClientPlayer.yBodyRot - abstractClientPlayer.yBodyRotO;
         double o = Mth.sin(n * 0.017453292F);
         double p = -Mth.cos(n * 0.017453292F);
-        simulation.points.get(0).position.x += (d * o + m * p);
-        simulation.points.get(0).position.y = (float) (abstractClientPlayer.getY()*16 + (abstractClientPlayer.isCrouching() ? -4 : 0));
+        float heightMul = WaveyCapesBase.config.heightMultiplier;
+        // gives the cape a small swing when jumping/falling to not clip with itself/simulate some air getting under it
+        double fallHack = Mth.clamp((simulation.points.get(0).position.y - (abstractClientPlayer.getY()*heightMul)), 0, 1); 
+        simulation.points.get(0).position.x += (d * o + m * p) + fallHack;
+        simulation.points.get(0).position.y = (float) (abstractClientPlayer.getY()*heightMul + (abstractClientPlayer.isCrouching() ? -4 : 0));
         simulation.simulate();
     }
     
