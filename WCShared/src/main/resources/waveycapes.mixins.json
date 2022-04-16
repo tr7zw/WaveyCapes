@@ -9,7 +9,8 @@
     "PlayerRendererMixin",
     "PlayerModelMixin",
     "LivingEntityRendererMixin",
-    "PlayerMixin"
+    "PlayerMixin",
+    "DonorAbstractClientPlayerMixin"
   ],
   "injectors": {
     "defaultRequire": 1
