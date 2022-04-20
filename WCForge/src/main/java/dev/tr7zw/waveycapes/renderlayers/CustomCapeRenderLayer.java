@@ -5,6 +5,7 @@ import dev.tr7zw.waveycapes.CapeMovement;
 import dev.tr7zw.waveycapes.WaveyCapesBase;
 import dev.tr7zw.waveycapes.WindMode;
 import dev.tr7zw.waveycapes.sim.StickSimulation;
+import dev.tr7zw.waveycapes.util.Mth;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
@@ -196,35 +197,35 @@ public class CustomCapeRenderLayer implements LayerRenderer<AbstractClientPlayer
     }
     
     private void modifyPoseStackVanilla(AbstractClientPlayer abstractClientPlayer, float h, int part) {
-//        GlStateManager.translate(0.0D, 0.0D, 0.125D);
-//        double d = Mth.lerp(h, abstractClientPlayer.xCloakO, abstractClientPlayer.xCloak)
-//                - Mth.lerp(h, abstractClientPlayer.xo, abstractClientPlayer.getX());
-//        double e = Mth.lerp(h, abstractClientPlayer.yCloakO, abstractClientPlayer.yCloak)
-//                - Mth.lerp(h, abstractClientPlayer.yo, abstractClientPlayer.getY());
-//        double m = Mth.lerp(h, abstractClientPlayer.zCloakO, abstractClientPlayer.zCloak)
-//                - Mth.lerp(h, abstractClientPlayer.zo, abstractClientPlayer.getZ());
-//        float n = abstractClientPlayer.yBodyRotO + abstractClientPlayer.yBodyRot - abstractClientPlayer.yBodyRotO;
-//        double o = Math.sin(n * 0.017453292F);
-//        double p = -Math.cos(n * 0.017453292F);
-//        float height = (float) e * 10.0F;
-//        height = MathHelper.clamp_float(height, -6.0F, 32.0F);
-//        float swing = (float) (d * o + m * p) * easeOutSine(1.0F/partCount*part)*100;
-//        swing = MathHelper.clamp_float(swing, 0.0F, 150.0F * easeOutSine(1F/partCount*part));
-//        float sidewaysRotationOffset = (float) (d * p - m * o) * 100.0F;
-//        sidewaysRotationOffset = MathHelper.clamp_float(sidewaysRotationOffset, -20.0F, 20.0F);
-//        float t = Mth.lerp(h, abstractClientPlayer.oBob, abstractClientPlayer.bob);
-//        height += Mth.sin(Mth.lerp(h, abstractClientPlayer.walkDistO, abstractClientPlayer.walkDist) * 6.0F) * 32.0F * t;
-//        if (abstractClientPlayer.isSneaking()) {
-//            height += 25.0F;
-//            poseStack.translate(0, 0.15F, 0);
-//        }
-//
-//        float naturalWindSwing = getNatrualWindSwing(part);
-//        
-//        GlStateManager.rotate(6.0F + swing / 2.0F + height + naturalWindSwing, 1.0F, 0.0F, 0.0F);
-//        GlStateManager.rotate(sidewaysRotationOffset / 2.0F, 0.0F, 0.0F, 1.0F);
-//        GlStateManager.rotate(-sidewaysRotationOffset / 2.0F, 0.0F, 1.0F, 0.0F);
-//        GlStateManager.rotate(180.0F, 0.0F, 1.0F, 0.0F);
+        GlStateManager.translate(0.0D, 0.0D, 0.125D);
+        double d = Mth.lerp(h, abstractClientPlayer.prevChasingPosX, abstractClientPlayer.chasingPosX)
+                - Mth.lerp(h, abstractClientPlayer.prevPosX, abstractClientPlayer.posX);
+        double e = Mth.lerp(h, abstractClientPlayer.prevChasingPosY, abstractClientPlayer.chasingPosY)
+                - Mth.lerp(h, abstractClientPlayer.prevPosY, abstractClientPlayer.posY);
+        double m = Mth.lerp(h, abstractClientPlayer.prevChasingPosZ, abstractClientPlayer.chasingPosZ)
+                - Mth.lerp(h, abstractClientPlayer.prevPosZ, abstractClientPlayer.posZ);
+        float n = abstractClientPlayer.prevRenderYawOffset + abstractClientPlayer.renderYawOffset - abstractClientPlayer.prevRenderYawOffset;
+        double o = Math.sin(n * 0.017453292F);
+        double p = -Math.cos(n * 0.017453292F);
+        float height = (float) e * 10.0F;
+        height = MathHelper.clamp_float(height, -6.0F, 32.0F);
+        float swing = (float) (d * o + m * p) * easeOutSine(1.0F/partCount*part)*100;
+        swing = MathHelper.clamp_float(swing, 0.0F, 150.0F * easeOutSine(1F/partCount*part));
+        float sidewaysRotationOffset = (float) (d * p - m * o) * 100.0F;
+        sidewaysRotationOffset = MathHelper.clamp_float(sidewaysRotationOffset, -20.0F, 20.0F);
+        float t = Mth.lerp(h, abstractClientPlayer.prevCameraYaw, abstractClientPlayer.cameraYaw);
+        height += Math.sin(Mth.lerp(h, abstractClientPlayer.prevDistanceWalkedModified, abstractClientPlayer.distanceWalkedModified) * 6.0F) * 32.0F * t;
+        if (abstractClientPlayer.isSneaking()) {
+            height += 25.0F;
+            GlStateManager.translate(0, 0.15F, 0);
+        }
+
+        float naturalWindSwing = getNatrualWindSwing(part);
+        
+        GlStateManager.rotate(6.0F + swing / 2.0F + height + naturalWindSwing, 1.0F, 0.0F, 0.0F);
+        GlStateManager.rotate(sidewaysRotationOffset / 2.0F, 0.0F, 0.0F, 1.0F);
+        GlStateManager.rotate(-sidewaysRotationOffset / 2.0F, 0.0F, 1.0F, 0.0F);
+        GlStateManager.rotate(180.0F, 0.0F, 1.0F, 0.0F);
     }
     
     private float getNatrualWindSwing(int part) {
