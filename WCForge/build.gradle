@@ -1,39 +1,158 @@
-project.evaluationDependsOn(':WCShared')
+plugins {
+    id "java"
+    id "com.github.johnrengelman.shadow" version "6.1.0"
+    id "net.minecraftforge.gradle.forge" version "ddb1eb0"
+    id 'org.spongepowered.mixin' version "d5f9873"
+}
 
-archivesBaseName = rootProject.archives_base_name + "-forge"
+repositories {
+    mavenCentral()
+    maven { url 'https://jitpack.io/' }
+    maven { url 'https://repo.spongepowered.org/repository/maven-public/' }
+    maven { url 'https://repo.sk1er.club/repository/maven-releases/' }
+}
+
+archivesBaseName = "waveycapes-forge" + "-mc" + project.minecraft_version
+version = project.mod_version
+group = project.maven_group
+
+sourceCompatibility = targetCompatibility = 1.8
+compileJava.options.encoding = 'UTF-8'
+
+minecraft {
+    version = "1.8.9-11.15.1.2318-1.8.9"
+    mappings = "stable_22"
+    runDir = "run"
+    replace('@NAME@', "waveycapes")
+    replace('@VER@': project.mod_version)
+    replace('@ID@', "waveycapes")
+    makeObfSourceJar = false
+    clientRunArgs += "--tweakClass" 
+    clientRunArgs += "org.spongepowered.asm.launch.MixinTweaker"
+    clientRunArgs += "--mixin" 
+    clientRunArgs += "waveycapes.mixins.json"
+}
+
+configurations {
+    // Creates an extra configuration that implements `implementation` to be used later as the configuration that shades libraries
+    include
+    implementation.extendsFrom(include)
+    configurations.runtimeOnly.canBeResolved = true
+}
+
+
+repositories {
+    jcenter()
+    maven {
+        url "https://repo.codemc.io/repository/maven-public/"
+    }
+    maven {
+        name "spongepowered"
+        url "https://repo.spongepowered.org/maven/"
+    }
+    maven { url 'https://jitpack.io' } //fabric asm
+    maven { url 'https://repo.sk1er.club/repository/maven-releases/' }
+    maven {
+        url "https://repo.codemc.io/repository/maven-public/"
+    }
+	maven { url "https://maven.legacyfabric.net"}
+}
 
 dependencies {
-    forge "net.minecraftforge:forge:${rootProject.minecraft_version}-${rootProject.forge_version}"
+    annotationProcessor 'org.spongepowered:mixin:0.7.11-SNAPSHOT'
 
-    modImplementation "curse.maven:minecraftcapes-mod-359836:3542122"
+    include 'org.spongepowered:mixin:0.7.11-SNAPSHOT'
 
-    sourceSets.main.java.srcDirs += (project(':WCShared').sourceSets.main.java.srcDirs)
-	sourceSets.main.resources.srcDirs += (project(':WCShared').sourceSets.main.resources.srcDirs)
+}
+
+mixin {
+    defaultObfuscationEnv = "notch"
+}
+
+shadowJar {
+    archiveClassifier.set('')
+    configurations = [project.configurations.include]
+    duplicatesStrategy DuplicatesStrategy.EXCLUDE
+    exclude 'pack.mcmeta'
+    exclude 'dummyThing'
+    exclude '**/module-info.class'
+    exclude '*.so'
+    exclude '*.dylib'
+    exclude '*.dll'
+    exclude '*.jnilib'
+    exclude 'ibxm/**'
+    exclude 'com/jcraft/**'
+    exclude 'org/lwjgl/**'
+    exclude 'net/java/**'
+
+    exclude 'META-INF/proguard/**'
+    exclude 'META-INF/maven/**'
+    exclude 'META-INF/versions/**'
+    exclude 'META-INF/com.android.tools/**'
+
+    exclude 'fabric.mod.json'
 }
 
 processResources {
-    inputs.property "version", project.version
+    inputs.property 'version', project.version
+    inputs.property 'mcversion', project.minecraft.version
+    inputs.property 'name', 'waveycapes'
+    inputs.property 'modid', 'waveycapes'
+    from(sourceSets.main.resources.srcDirs) {
+        include 'mcmod.info'
+        expand (
+                'version':project.version,
+                'mcversion':project.minecraft.version,
+                'name':'waveycapes',
+                'modid': 'waveycapes'
+        )
+    }
+    from(sourceSets.main.resources.srcDirs) {
+        exclude 'mcmod.info'
+    }
+    from "${project.rootDir}/LICENSE"
+}
 
-    filesMatching("META-INF/mods.toml") {
-        expand "version": project.version
+// move resources so they can be accessed at runtime
+task moveResources {
+    doLast {
+        ant.move file: "${buildDir}/resources/main",
+                todir: "${buildDir}/classes/java"
     }
 }
 
-loom {
-    forge.mixinConfigs "${modid}.mixins.json"
-}
+moveResources.dependsOn processResources
+classes.dependsOn moveResources
 
 jar {
-    manifest {
-        attributes([
-                "Specification-Title": "${rootProject.modid}",
-                "Specification-Vendor": "${rootProject.author}",
-                "Specification-Version": "1", // We are version 1 of ourselves
-                "Implementation-Title": project.name,
-                "Implementation-Version": "${version}",
-                "Implementation-Vendor" :"${rootProject.author}",
-                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
-                "MixinConfigs": "${rootProject.modid}.mixins.json"
-        ])
+    manifest.attributes(
+            "ForceLoadAsMod": true,
+            "ModSide": "CLIENT",
+            "MixinConfigs": 'waveycapes.mixins.json',
+            "TweakClass": "org.spongepowered.asm.launch.MixinTweaker",
+            "TweakOrder": 0,
+            "Manifest-Version": 1.0
+    )
+
+    enabled = false
+}
+
+mixin {
+    disableRefMapWarning = true
+    defaultObfuscationEnv searge
+    add sourceSets.main, "waveycapes.refmap.json"
+}
+
+reobf {
+    shadowJar {
+        mappingType = "SEARGE"
     }
 }
+
+sourceSets {
+    main {
+        ext.refMap = "waveycapes.refmap.json"
+    }
+}
+
+tasks.reobfJar.dependsOn(shadowJar)

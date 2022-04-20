@@ -1,0 +1,16 @@
+[
+{
+  "modid": "waveycapes",
+  "name": "WaveyCapes",
+  "description": "The cape shouldn't be a static slab",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["tr7zw"],
+  "credits": "",
+  "logoFile": "waveycapes/icon.png",
+  "screenshots": [],
+  "dependencies": []
+}
+]

@@ -1,0 +1,17 @@
+{
+  "required": true,
+  "verbose": true,
+  "package": "dev.tr7zw.waveycapes.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "refmap": "waveycapes.refmap.json",
+  "mixins": [
+  ],
+  "client": [
+    "PlayerRendererMixin",
+    "PlayerModelMixin",
+    "PlayerMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

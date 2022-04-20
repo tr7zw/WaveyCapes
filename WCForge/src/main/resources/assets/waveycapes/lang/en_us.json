@@ -1,0 +1,18 @@
+{
+    "text.wc.title": "WaveyCapes Settings",
+
+    "text.wc.setting.capestyle": "Cape Style",
+    "text.wc.setting.capestyle.BLOCKY": "Blocky",
+    "text.wc.setting.capestyle.SMOOTH": "Smooth",
+    "text.wc.setting.windmode": "Wind Mode",
+    "text.wc.setting.windmode.NONE": "No Wind",
+    "text.wc.setting.windmode.WAVES": "Waves",
+    "text.wc.setting.windmode.SLIGHT": "Random",
+    "text.wc.setting.capemovement": "Cape Movement",
+    "text.wc.setting.capemovement.VANILLA": "Classic",
+    "text.wc.setting.capemovement.BASIC_SIMULATION": "Simulation",
+    "text.wc.setting.capeparts": "Cape Parts",
+    "text.wc.setting.gravity": "Gravity",
+    "text.wc.setting.maxBend": "Max. Bend Angle",
+    "text.wc.setting.heightMultiplier": "Height Multiplier"
+}
