@@ -12,7 +12,7 @@ jobs:
       matrix:
         # Use these Java versions
         java: [
-          16    # Minimum supported by Minecraft
+          8    # Minimum supported by Minecraft
         ]
         # and run on Linux
         os: [ubuntu-20.04]
@@ -37,5 +37,4 @@ jobs:
         with:
           name: Artifacts
           path: |
-            WCFabric/build/libs/
             WCForge/build/libs/
