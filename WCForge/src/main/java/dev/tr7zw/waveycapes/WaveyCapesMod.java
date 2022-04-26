@@ -2,7 +2,7 @@ package dev.tr7zw.waveycapes;
 
 import net.minecraftforge.fml.common.Mod;
 
-@Mod(modid = "waveycapes", name = "waveycapes", version = "@VER@", clientSideOnly = true)
+@Mod(modid = "waveycapes", name = "waveycapes", version = "@VER@", clientSideOnly = true, guiFactory = "dev.tr7zw.waveycapes.config.WaveyCapesModGuiFactory")
 public class WaveyCapesMod extends WaveyCapesBase {
 
 	public WaveyCapesMod() {
@@ -13,17 +13,7 @@ public class WaveyCapesMod extends WaveyCapesBase {
             return;
         }
 	    init();
-//        ModLoadingContext.get().registerExtensionPoint(ExtensionPoint.DISPLAYTEST,
-//                () -> Pair.of(() -> FMLNetworkConstants.IGNORESERVERONLY, (remote, isServer) -> true));
-//        ModLoadingContext.get().registerExtensionPoint(
-//                ExtensionPoint.CONFIGGUIFACTORY,
-//                () -> new BiFunction<Minecraft, Screen, Screen>() {
-//                    @Override
-//                    public Screen apply(Minecraft t, Screen screen) {
-//                        return createConfigScreen(screen);
-//                    }
-//                }
-//        );
+	    
 	}
 
     @Override

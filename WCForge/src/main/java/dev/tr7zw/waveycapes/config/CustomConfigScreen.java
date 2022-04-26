@@ -1,86 +1,94 @@
-//package dev.tr7zw.waveycapes.config;
+package dev.tr7zw.waveycapes.config;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
+
+import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.GuiOptionsRowList;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.resources.I18n;
+
+
+public abstract class CustomConfigScreen extends GuiScreen {
+
+    protected final GuiScreen lastScreen;
+    protected String screenTitle = "Settings";
+    private Map<GuiButton, Runnable> buttonActions = new HashMap<>();
+    private GuiButtonRowList optionsRowList;
+
+    public CustomConfigScreen(GuiScreen lastScreen, String title) {
+        this.screenTitle = title;
+        this.lastScreen = lastScreen;
+    }
+
+    @Override
+    public void initGui() {
+        this.screenTitle = I18n.format(screenTitle, new Object[0]);
+        this.buttonList.clear();
+        this.buttonActions.clear();
+        addButton(new GuiButton(200, this.width / 2 - 100, this.height - 27, I18n.format("gui.done", new Object[0])), () -> onClose());
+
+        initialize();
+    }
+    
+    public void addOptionsList(List<GuiButton> options) {
+        this.optionsRowList = new GuiButtonRowList(this.mc, this.width, this.height, 32, this.height - 32, 25,
+                options);
+    }
+    
+    public void addButton(GuiButton button, Runnable action) {
+        this.buttonList.add(button);
+        buttonActions.put(button, action);
+    }
+    
+    @Override
+    protected void actionPerformed(GuiButton p_actionPerformed_1_) throws IOException {
+        if (!p_actionPerformed_1_.enabled)
+            return;
+        buttonActions.get(p_actionPerformed_1_).run();
+    }
+    
+    public void onClose() {
+        save();
+        this.mc.displayGuiScreen(this.lastScreen);
+    }
+
+    public abstract void initialize();
+
+    public abstract void save();
+
+    public void handleMouseInput() throws IOException {
+        super.handleMouseInput();
+        this.optionsRowList.handleMouseInput();
+    }
+
+    protected void mouseClicked(int p_mouseClicked_1_, int p_mouseClicked_2_, int p_mouseClicked_3_)
+            throws IOException {
+        super.mouseClicked(p_mouseClicked_1_, p_mouseClicked_2_, p_mouseClicked_3_);
+        this.optionsRowList.mouseClicked(p_mouseClicked_1_, p_mouseClicked_2_, p_mouseClicked_3_);
+    }
+
+    protected void mouseReleased(int p_mouseReleased_1_, int p_mouseReleased_2_, int p_mouseReleased_3_) {
+        super.mouseReleased(p_mouseReleased_1_, p_mouseReleased_2_, p_mouseReleased_3_);
+        this.optionsRowList.mouseReleased(p_mouseReleased_1_, p_mouseReleased_2_, p_mouseReleased_3_);
+    }
+
+    public void drawScreen(int p_drawScreen_1_, int p_drawScreen_2_, float p_drawScreen_3_) {
+        drawDefaultBackground();
+        this.optionsRowList.drawScreen(p_drawScreen_1_, p_drawScreen_2_, p_drawScreen_3_);
+        drawCenteredString(this.fontRendererObj, this.screenTitle, this.width / 2, 5, 16777215);
+        super.drawScreen(p_drawScreen_1_, p_drawScreen_2_, p_drawScreen_3_);
+    }
+
 //
-//import java.util.concurrent.atomic.AtomicReference;
-//import java.util.function.Consumer;
-//import java.util.function.Supplier;
-//
-//import com.mojang.blaze3d.vertex.PoseStack;
-//
-//import net.minecraft.client.BooleanOption;
-//import net.minecraft.client.CycleOption;
-//import net.minecraft.client.Minecraft;
-//import net.minecraft.client.ProgressOption;
-//import net.minecraft.client.gui.components.AbstractWidget;
-//import net.minecraft.client.gui.components.Button;
-//import net.minecraft.client.gui.components.Button.OnPress;
-//import net.minecraft.client.gui.components.OptionsList;
-//import net.minecraft.client.gui.components.SliderButton;
-//import net.minecraft.client.gui.screens.Screen;
-//import net.minecraft.network.chat.CommonComponents;
-//import net.minecraft.network.chat.TextComponent;
-//import net.minecraft.network.chat.TranslatableComponent;
-//
-//public abstract class CustomConfigScreen extends Screen {
-//
-//    protected final Screen lastScreen;
-//    private OptionsList list;
-//
-//    public CustomConfigScreen(Screen lastScreen, String title) {
-//        super(new TranslatableComponent(title));
-//        this.lastScreen = lastScreen;
-//    }
-//
-//    @Override
-//    public void removed() {
-//        save();
-//    }
-//
-//    @Override
-//    public void onClose() {
-//        this.minecraft.setScreen(this.lastScreen);
-//    }
-//
-//    public OptionsList getOptions() {
-//        return list;
-//    }
-//
-//    protected void init() {
-//        this.list = new OptionsList(this.minecraft, this.width, this.height, 32, this.height - 32, 25);
-//        this.addWidget(this.list);
-//        this.createFooter();
-//        initialize();
-//    }
-//
-//    public abstract void initialize();
-//
-//    public abstract void save();
-//
-//    protected void createFooter() {
-//        this.addButton(
-//                new Button(this.width / 2 - 100, this.height - 27, 200, 20, CommonComponents.GUI_DONE, new OnPress() {
-//
-//                    @Override
-//                    public void onPress(Button button) {
-//                        CustomConfigScreen.this.onClose();
-//                    }
-//                }));
-//    }
-//
-//    public void render(PoseStack poseStack, int i, int j, float f) {
-//        this.renderBackground(poseStack);
-//        this.list.render(poseStack, i, j, f);
-//        drawCenteredString(poseStack, this.font, this.title, this.width / 2, 20, 16777215);
-//        super.render(poseStack, i, j, f);
-//    }
-//
-//    private void updateText(ProgressOption option) {
-//        AbstractWidget widget = getOptions().findOption(option);
-//        if (widget instanceof SliderButton) {
-//            ((SliderButton) widget).setMessage(option.getMessage(Minecraft.getInstance().options));
-//        }
-//    }
-//
-//    public BooleanOption getBooleanOption(String translationKey, Supplier<Boolean> current, Consumer<Boolean> update) {
+//    public GuiButton getBooleanOption(String translationKey, Supplier<Boolean> current, Consumer<Boolean> update) {
+//        
 //        return new BooleanOption(translationKey, title, (options) -> current.get(), (options, b) -> update.accept(b));
 //    }
 //
@@ -88,32 +96,26 @@
 //        return getBooleanOption(translationKey, current, update);
 //    }
 //
-//    public ProgressOption getDoubleOption(String translationKey, float min, float max, float steps,
-//            Supplier<Double> current, Consumer<Double> update) {
+    public GuiButton getDoubleOption(String translationKey, float min, float max, float steps,
+            Supplier<Double> current, Consumer<Double> update) {
 //        TranslatableComponent comp = new TranslatableComponent(translationKey);
 //        return new ProgressOption(translationKey, min, max, steps, (options) -> current.get(),
 //                (options, val) -> update.accept(val),
 //                (options, opt) -> comp.append(new TextComponent(": " + opt.get(options))));
-//    }
-//
-//    public ProgressOption getIntOption(String translationKey, float min, float max, Supplier<Integer> current,
-//            Consumer<Integer> update) {
-//        TranslatableComponent comp = new TranslatableComponent(translationKey);
-//        AtomicReference<ProgressOption> option = new AtomicReference<>();
-//        option.set(
-//                new ProgressOption(translationKey, min, max, 1, (options) -> (double) current.get(), (options, val) -> {
-//                    update.accept(val.intValue());
-//                    updateText(option.get());
-//                }, (options, opt) -> comp.copy().append(": " + current.get())));
-//        return option.get();
-//    }
-//
-//    public <T extends Enum> CycleOption getEnumOption(String translationKey, Class<T> targetEnum, Supplier<T> current,
-//            Consumer<T> update) {
-//        return new CycleOption(translationKey, (options,
-//                integer) -> update.accept(targetEnum.getEnumConstants()[(current.get().ordinal() + integer.intValue())
-//                        % targetEnum.getEnumConstants().length]),
-//                (options, cycleOption) -> new TranslatableComponent(translationKey + "." + current.get().name()));
-//    }
-//
-//}
+        GuiSliderButton slider = new GuiSliderButton(translationKey, min, max, steps, current, update);
+        return slider;
+    }
+
+    public GuiButton getIntOption(String translationKey, float min, float max, Supplier<Integer> current,
+            Consumer<Integer> update) {
+        GuiSliderButton slider = new GuiSliderButton(translationKey, min, max, 1, () -> (double)current.get(), (d) -> update.accept(d.intValue()));
+        return slider;
+    }
+
+    public <T extends Enum> GuiButton getEnumOption(String translationKey, Class<T> targetEnum, Supplier<T> current,
+            Consumer<T> update) {
+        GuiEnumButton<T> button = new GuiEnumButton<>(translationKey, targetEnum, current, update);
+        return button;
+    }
+
+}

@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -13,6 +15,9 @@ import com.google.gson.GsonBuilder;
 
 import dev.tr7zw.waveycapes.config.Config;
 import dev.tr7zw.waveycapes.config.ConfigUpgrader;
+import dev.tr7zw.waveycapes.config.CustomConfigScreen;
+import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.GuiScreen;
 
 public abstract class WaveyCapesBase {
 
@@ -43,14 +48,6 @@ public abstract class WaveyCapesBase {
             }
         }
         initSupportHooks();
-        try {
-            Class optifine = Class.forName("net.optifine.Config");
-            optifinePresent = true;
-            config.capeStyle = CapeStyle.BLOCKY;
-            LOGGER.warn("Optifine detected, disabling smooth cape.");
-        }catch(Throwable ex) {
-            return;
-        }
     }
     
     public void writeConfig() {
@@ -63,54 +60,37 @@ public abstract class WaveyCapesBase {
         }
     }
     
-    /*public Screen createConfigScreen(Screen parent) {
-        CustomConfigScreen screen = new CustomConfigScreen(parent, "text.wc.title") {
+    public GuiScreen createConfigScreen(GuiScreen parent) {
+        return new ConfigScreen(parent);
+    }
+    
+    public static class ConfigScreen extends CustomConfigScreen {
 
-            private int rotationX = 164;
-            private int rotationY = 5;
-            
-            @Override
-            public void initialize() {
-                List<Option> options = new ArrayList<>();
-                if(!optifinePresent)
-                    options.add(getEnumOption("text.wc.setting.capestyle", CapeStyle.class, () -> config.capeStyle, (v) -> config.capeStyle = v));
-                options.add(getEnumOption("text.wc.setting.windmode", WindMode.class, () -> config.windMode, (v) -> config.windMode = v));
-                options.add(getEnumOption("text.wc.setting.capemovement", CapeMovement.class, () -> config.capeMovement, (v) -> config.capeMovement = v));
-                //options.add(getIntOption("text.wc.setting.capeparts", 16, 64, () -> config.capeParts, (v) -> config.capeParts = v));
-                options.add(getIntOption("text.wc.setting.gravity", 5, 32, () -> config.gravity, (v) -> config.gravity = v));
-                options.add(getIntOption("text.wc.setting.heightMultiplier", 4, 16, () -> config.heightMultiplier, (v) -> config.heightMultiplier = v));
-                //options.add(getIntOption("text.wc.setting.maxBend", 1, 20, () -> config.maxBend, (v) -> config.maxBend = v));
+        public ConfigScreen(GuiScreen lastScreen) {
+            super(lastScreen, "text.wc.title");
+        }
+        
+        @Override
+        public void initialize() {
+            List<GuiButton> options = new ArrayList<>();
+            options.add(getEnumOption("text.wc.setting.capestyle", CapeStyle.class, () -> config.capeStyle, (v) -> config.capeStyle = v));
+            options.add(getEnumOption("text.wc.setting.windmode", WindMode.class, () -> config.windMode, (v) -> config.windMode = v));
+            options.add(getEnumOption("text.wc.setting.capemovement", CapeMovement.class, () -> config.capeMovement, (v) -> config.capeMovement = v));
+            //options.add(getIntOption("text.wc.setting.capeparts", 16, 64, () -> config.capeParts, (v) -> config.capeParts = v));
+            options.add(getIntOption("text.wc.setting.gravity", 5, 32, () -> config.gravity, (v) -> config.gravity = v));
+            options.add(getIntOption("text.wc.setting.heightMultiplier", 4, 16, () -> config.heightMultiplier, (v) -> config.heightMultiplier = v));
+            //options.add(getIntOption("text.wc.setting.maxBend", 1, 20, () -> config.maxBend, (v) -> config.maxBend = v));
 
-                getOptions().addSmall(options.toArray(new Option[0]));
+            addOptionsList(options);
 
-            }
+        }
 
-            @Override
-            public void save() {
-                writeConfig();
-            }
-            
-            @Override
-            public boolean keyPressed(int i, int j, int k) {
-                if(i == 263) { //left
-                    rotationX--;
-                }
-                if(i == 262) { //right
-                    rotationX++;
-                }
-                if(i == 264) { //down
-                    rotationY--;
-                }
-                if(i == 265) { //up
-                    rotationY++;
-                }
-                return super.keyPressed(i, j, k);
-            }
-
-        };
-
-        return screen;
-    }*/
+        @Override
+        public void save() {
+            INSTANCE.writeConfig();
+        }
+        
+    }
     
     public abstract void initSupportHooks();
     

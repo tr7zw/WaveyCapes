@@ -5,13 +5,16 @@ import dev.tr7zw.waveycapes.CapeMovement;
 import dev.tr7zw.waveycapes.WaveyCapesBase;
 import dev.tr7zw.waveycapes.sim.StickSimulation;
 import dev.tr7zw.waveycapes.util.Matrix4f;
+import dev.tr7zw.waveycapes.util.Mth;
 import dev.tr7zw.waveycapes.util.PoseStack;
 import dev.tr7zw.waveycapes.util.Vector3f;
 import dev.tr7zw.waveycapes.util.Vector4f;
 import net.minecraft.client.entity.AbstractClientPlayer;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.util.MathHelper;
 
 public class SmoothCapeRenderer {
 
@@ -92,7 +95,7 @@ public class SmoothCapeRenderer {
             modifyPoseStackSimulation(layer, poseStack, abstractClientPlayer, h, part);
             return;
         }
-        layer.modifyPoseStackVanilla(abstractClientPlayer, h, part);
+        modifyPoseStackVanilla(layer, poseStack, abstractClientPlayer, h, part);
     }
     
     private void modifyPoseStackSimulation(CustomCapeRenderLayer layer, PoseStack poseStack, AbstractClientPlayer abstractClientPlayer, float delta, int part) {
@@ -137,6 +140,38 @@ public class SmoothCapeRenderer {
         poseStack.translate(0, -part * 1f/CustomCapeRenderLayer.partCount, -part * (0)/CustomCapeRenderLayer.partCount);
         poseStack.translate(0, -(0.48/16), (0.48/16));
         
+    }
+    
+    private void modifyPoseStackVanilla(CustomCapeRenderLayer layer, PoseStack poseStack, AbstractClientPlayer abstractClientPlayer, float h, int part) {
+        poseStack.pushPose();
+        poseStack.translate(0.0D, 0.0D, 0.125D);
+        double d = Mth.lerp(h, abstractClientPlayer.prevChasingPosX, abstractClientPlayer.chasingPosX)
+                - Mth.lerp(h, abstractClientPlayer.prevPosX, abstractClientPlayer.posX);
+        double e = Mth.lerp(h, abstractClientPlayer.prevChasingPosY, abstractClientPlayer.chasingPosY)
+                - Mth.lerp(h, abstractClientPlayer.prevPosY, abstractClientPlayer.posY);
+        double m = Mth.lerp(h, abstractClientPlayer.prevChasingPosZ, abstractClientPlayer.chasingPosZ)
+                - Mth.lerp(h, abstractClientPlayer.prevPosZ, abstractClientPlayer.posZ);
+        float n = abstractClientPlayer.prevRenderYawOffset + abstractClientPlayer.renderYawOffset - abstractClientPlayer.prevRenderYawOffset;
+        double o = Math.sin(n * 0.017453292F);
+        double p = -Math.cos(n * 0.017453292F);
+        float height = (float) e * 10.0F;
+        height = MathHelper.clamp_float(height, -6.0F, 32.0F);
+        float swing = (float) (d * o + m * p) * easeOutSine(1.0F/CustomCapeRenderLayer.partCount*part)*100;
+        swing = MathHelper.clamp_float(swing, 0.0F, 150.0F * easeOutSine(1F/CustomCapeRenderLayer.partCount*part));
+        float sidewaysRotationOffset = (float) (d * p - m * o) * 100.0F;
+        sidewaysRotationOffset = MathHelper.clamp_float(sidewaysRotationOffset, -20.0F, 20.0F);
+        float t = Mth.lerp(h, abstractClientPlayer.prevCameraYaw, abstractClientPlayer.cameraYaw);
+        height += Math.sin(Mth.lerp(h, abstractClientPlayer.prevDistanceWalkedModified, abstractClientPlayer.distanceWalkedModified) * 6.0F) * 32.0F * t;
+        if (abstractClientPlayer.isSneaking()) {
+            height += 25.0F;
+            poseStack.translate(0, 0.15F, 0);
+        }
+
+        float naturalWindSwing = layer.getNatrualWindSwing(part);
+        
+        poseStack.mulPose(Vector3f.XP.rotationDegrees(6.0F + swing / 2.0F + height + naturalWindSwing));
+        poseStack.mulPose(Vector3f.ZP.rotationDegrees(sidewaysRotationOffset / 2.0F));
+        poseStack.mulPose(Vector3f.YP.rotationDegrees(180.0F - sidewaysRotationOffset / 2.0F));
     }
     
     private static void addBackVertex(WorldRenderer worldrenderer, Matrix4f matrix, Matrix4f oldMatrix, float x1, float y1, float z1, float x2, float y2, float z2, int part) {
@@ -359,5 +394,14 @@ public class SmoothCapeRenderer {
         vertex(worldrenderer, matrix, x1, y1, z2).tex(maxU, minV).normal(0, 1, 0).endVertex();
    }
 
+    /**
+     * https://easings.net/#easeOutSine
+     * 
+     * @param x
+     * @return
+     */
+    private static float easeOutSine(float x) {
+        return (float) Math.sin((x * Math.PI) / 2f);
+      }
     
 }

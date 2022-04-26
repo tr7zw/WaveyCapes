@@ -6,20 +6,13 @@ import dev.tr7zw.waveycapes.CapeStyle;
 import dev.tr7zw.waveycapes.WaveyCapesBase;
 import dev.tr7zw.waveycapes.WindMode;
 import dev.tr7zw.waveycapes.sim.StickSimulation;
-import dev.tr7zw.waveycapes.util.Matrix4f;
 import dev.tr7zw.waveycapes.util.Mth;
-import dev.tr7zw.waveycapes.util.PoseStack;
-import dev.tr7zw.waveycapes.util.Vector3f;
-import dev.tr7zw.waveycapes.util.Vector4f;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.player.EnumPlayerModelParts;
 import net.minecraft.util.MathHelper;
 
@@ -180,8 +173,7 @@ public class CustomCapeRenderLayer implements LayerRenderer<AbstractClientPlayer
      */
     private static float easeOutSine(float x) {
         return (float) Math.sin((x * Math.PI) / 2f);
-
-      }
+    }
 
     @Override
     public boolean shouldCombineTextures() {
