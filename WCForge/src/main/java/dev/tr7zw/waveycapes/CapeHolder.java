@@ -4,7 +4,7 @@ import dev.tr7zw.waveycapes.sim.StickSimulation;
 import dev.tr7zw.waveycapes.sim.StickSimulation.Point;
 import dev.tr7zw.waveycapes.sim.StickSimulation.Stick;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.math.MathHelper;
 
 public interface CapeHolder {
     public StickSimulation getSimulation();
@@ -47,7 +47,7 @@ public interface CapeHolder {
         double p = -Math.cos(n * 0.017453292F);
         float heightMul = WaveyCapesBase.config.heightMultiplier;
         // gives the cape a small swing when jumping/falling to not clip with itself/simulate some air getting under it
-        double fallHack = MathHelper.clamp_double((simulation.points.get(0).position.y - (abstractClientPlayer.posY*heightMul)), 0d, 1d); 
+        double fallHack = MathHelper.clamp((simulation.points.get(0).position.y - (abstractClientPlayer.posY*heightMul)), 0d, 1d); 
         simulation.points.get(0).position.x += (d * o + m * p) + fallHack;
         simulation.points.get(0).position.y = (float) (abstractClientPlayer.posY*heightMul + (abstractClientPlayer.isSneaking() ? -4 : 0));
         simulation.simulate();

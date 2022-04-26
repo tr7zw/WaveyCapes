@@ -22,10 +22,10 @@ public class GuiEnumButton<T extends Enum> extends GuiButton {
     }
 
     @Override
-    public void drawButton(Minecraft p_drawButton_1_, int p_drawButton_2_, int p_drawButton_3_) {
+    public void drawButton(Minecraft p_drawButton_1_, int p_drawButton_2_, int p_drawButton_3_, float delta) {
         this.displayString = I18n.format(translationKey) + ": "
                 + I18n.format(translationKey + "." + current.get().name(), new Object[0]);
-        super.drawButton(p_drawButton_1_, p_drawButton_2_, p_drawButton_3_);
+        super.drawButton(p_drawButton_1_, p_drawButton_2_, p_drawButton_3_, delta);
     }
 
     @Override

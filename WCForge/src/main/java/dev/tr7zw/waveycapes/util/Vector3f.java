@@ -1,6 +1,6 @@
 package dev.tr7zw.waveycapes.util;
 
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.math.MathHelper;
 
 public final class Vector3f {
 
@@ -82,15 +82,15 @@ public final class Vector3f {
     }
 
     public void clamp(Vector3f vector3f, Vector3f vector3f2) {
-        this.x = MathHelper.clamp_float(this.x, vector3f.x(), vector3f2.x());
-        this.y = MathHelper.clamp_float(this.y, vector3f.x(), vector3f2.y());
-        this.z = MathHelper.clamp_float(this.z, vector3f.z(), vector3f2.z());
+        this.x = MathHelper.clamp(this.x, vector3f.x(), vector3f2.x());
+        this.y = MathHelper.clamp(this.y, vector3f.x(), vector3f2.y());
+        this.z = MathHelper.clamp(this.z, vector3f.z(), vector3f2.z());
     }
 
     public void clamp(float f, float g) {
-        this.x = MathHelper.clamp_float(this.x, f, g);
-        this.y = MathHelper.clamp_float(this.y, f, g);
-        this.z = MathHelper.clamp_float(this.z, f, g);
+        this.x = MathHelper.clamp(this.x, f, g);
+        this.y = MathHelper.clamp(this.y, f, g);
+        this.z = MathHelper.clamp(this.z, f, g);
     }
 
     public void set(float f, float g, float h) {

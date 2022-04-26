@@ -8,12 +8,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import dev.tr7zw.waveycapes.renderlayers.CustomCapeRenderLayer;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.model.ModelBase;
+import net.minecraft.client.renderer.entity.RenderLivingBase;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.entity.RenderPlayer;
-import net.minecraft.client.renderer.entity.RendererLivingEntity;
 
 @Mixin(RenderPlayer.class)
-public abstract class PlayerRendererMixin extends RendererLivingEntity<AbstractClientPlayer> {
+public abstract class PlayerRendererMixin extends RenderLivingBase<AbstractClientPlayer> {
 
     public PlayerRendererMixin(RenderManager p_i46156_1_, ModelBase p_i46156_2_, float p_i46156_3_) {
         super(p_i46156_1_, p_i46156_2_, p_i46156_3_);

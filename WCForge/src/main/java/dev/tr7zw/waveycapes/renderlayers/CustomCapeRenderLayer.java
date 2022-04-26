@@ -14,7 +14,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.entity.player.EnumPlayerModelParts;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.math.MathHelper;
 
 public class CustomCapeRenderLayer implements LayerRenderer<AbstractClientPlayer> {
     
@@ -132,11 +132,11 @@ public class CustomCapeRenderLayer implements LayerRenderer<AbstractClientPlayer
         double o = Math.sin(n * 0.017453292F);
         double p = -Math.cos(n * 0.017453292F);
         float height = (float) e * 10.0F;
-        height = MathHelper.clamp_float(height, -6.0F, 32.0F);
+        height = MathHelper.clamp(height, -6.0F, 32.0F);
         float swing = (float) (d * o + m * p) * easeOutSine(1.0F/partCount*part)*100;
-        swing = MathHelper.clamp_float(swing, 0.0F, 150.0F * easeOutSine(1F/partCount*part));
+        swing = MathHelper.clamp(swing, 0.0F, 150.0F * easeOutSine(1F/partCount*part));
         float sidewaysRotationOffset = (float) (d * p - m * o) * 100.0F;
-        sidewaysRotationOffset = MathHelper.clamp_float(sidewaysRotationOffset, -20.0F, 20.0F);
+        sidewaysRotationOffset = MathHelper.clamp(sidewaysRotationOffset, -20.0F, 20.0F);
         float t = Mth.lerp(h, abstractClientPlayer.prevCameraYaw, abstractClientPlayer.cameraYaw);
         height += Math.sin(Mth.lerp(h, abstractClientPlayer.prevDistanceWalkedModified, abstractClientPlayer.distanceWalkedModified) * 6.0F) * 32.0F * t;
         if (abstractClientPlayer.isSneaking()) {
