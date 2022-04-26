@@ -1,5 +1,7 @@
 package dev.tr7zw.waveycapes.config;
 
+import dev.tr7zw.waveycapes.CapeStyle;
+
 public class ConfigUpgrader {
 
     public static boolean upgradeConfig(Config config) {
@@ -10,6 +12,10 @@ public class ConfigUpgrader {
             config.configVersion = 2;
             if(config.gravity < 0)
                 config.gravity *= -1;//fixed gravity
+        }
+        if(config.configVersion == 2) {
+            config.configVersion = 3;
+            config.capeStyle = CapeStyle.SMOOTH;
         }
         
         return changed;
