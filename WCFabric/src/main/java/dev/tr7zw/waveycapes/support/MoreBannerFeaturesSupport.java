@@ -1,11 +1,9 @@
 package dev.tr7zw.waveycapes.support;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.stream.Collectors;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.datafixers.util.Pair;
 
 import de.kxmischesdomi.morebannerfeatures.core.accessor.Bannerable;
 import de.kxmischesdomi.morebannerfeatures.renderer.BannerCapeFeatureRenderer;
@@ -16,13 +14,8 @@ import net.minecraft.client.model.geom.builders.CubeDeformation;
 import net.minecraft.client.model.geom.builders.CubeListBuilder;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.world.item.BannerItem;
-import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.entity.BannerBlockEntity;
-import net.minecraft.world.level.block.entity.BannerPattern;
 
 public class MoreBannerFeaturesSupport implements ModSupport {
 
@@ -55,11 +48,8 @@ public class MoreBannerFeaturesSupport implements ModSupport {
         public void render(AbstractClientPlayer player, int part, ModelPart model, PoseStack poseStack,
                 MultiBufferSource multiBufferSource, int light, int overlay) {
             ItemStack bannerItem = ((Bannerable) player).getBannerItem();
-            List<Pair<BannerPattern, DyeColor>> patterns = BannerBlockEntity.createPatterns(
-                    ((BannerItem) bannerItem.getItem()).getColor(), BannerBlockEntity.getItemPatterns(bannerItem));
 
-            RendererUtils.renderCanvas(poseStack, multiBufferSource, light, OverlayTexture.NO_OVERLAY, customCape[part],
-                    ModelBakery.BANNER_BASE, true, patterns);
+            RendererUtils.renderCanvasFromItem(bannerItem, poseStack, multiBufferSource, light, overlay, model);
         }
         
         @Override

@@ -22,7 +22,7 @@ import dev.tr7zw.config.CustomConfigScreen;
 import dev.tr7zw.waveycapes.config.Config;
 import dev.tr7zw.waveycapes.config.ConfigUpgrader;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.Option;
+import net.minecraft.client.OptionInstance;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
@@ -86,7 +86,7 @@ public abstract class WaveyCapesBase {
             
             @Override
             public void initialize() {
-                List<Option> options = new ArrayList<>();
+                List<OptionInstance<?>> options = new ArrayList<>();
                 if(!optifinePresent)
                     options.add(getEnumOption("text.wc.setting.capestyle", CapeStyle.class, () -> config.capeStyle, (v) -> config.capeStyle = v));
                 options.add(getEnumOption("text.wc.setting.windmode", WindMode.class, () -> config.windMode, (v) -> config.windMode = v));
@@ -96,7 +96,7 @@ public abstract class WaveyCapesBase {
                 options.add(getIntOption("text.wc.setting.heightMultiplier", 4, 16, () -> config.heightMultiplier, (v) -> config.heightMultiplier = v));
                 //options.add(getIntOption("text.wc.setting.maxBend", 1, 20, () -> config.maxBend, (v) -> config.maxBend = v));
 
-                getOptions().addSmall(options.toArray(new Option[0]));
+                getOptions().addSmall(options.toArray(new OptionInstance[0]));
 
             }
 
