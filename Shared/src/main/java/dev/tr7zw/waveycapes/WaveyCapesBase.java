@@ -18,9 +18,9 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3f;
 
+import dev.tr7zw.config.CustomConfigScreen;
 import dev.tr7zw.waveycapes.config.Config;
 import dev.tr7zw.waveycapes.config.ConfigUpgrader;
-import dev.tr7zw.waveycapes.config.CustomConfigScreen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Option;
 import net.minecraft.client.gui.screens.Screen;
@@ -131,6 +131,12 @@ public abstract class WaveyCapesBase {
                     int size = (int) (40f * (minecraft.getWindow().getGuiScaledHeight() / 200f));
                     drawEntity(x, y, size, rotationX, rotationY, this.minecraft.player, f);
                 }
+            }
+
+            @Override
+            public void reset() {
+                config = new Config();
+                writeConfig();
             }
 
         };
