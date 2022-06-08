@@ -1,0 +1,29 @@
+version: '0.0.1'
+source: "https://github.com/tr7zw/ForgeFabricComposeTemplate/tree/1.18.2-shared/"
+replacements:
+  group: "dev.tr7zw"
+  name: "WaveyCapes"
+  id: "waveycapes"
+  version: "1.2.0"
+  author: "tr7zw"
+  relocationpackage: "dev.tr7zw.waveycapes"
+  dependencies: '
+  '
+  licensename: "LICENSE"
+rootProject:
+  template: "."
+subProjects:
+  WCFabric:
+    template: "Fabric"
+    replacements:
+      dependencies: '
+      modCompileOnly "curse.maven:morebanners-515000:3453480"
+      
+      modCompileOnly "curse.maven:minecraftcapes-mod-359836:3409502"
+      '
+  WCForge:
+    template: "Forge"
+    replacements:
+      dependencies: '
+      modImplementation "curse.maven:minecraftcapes-mod-359836:3542122"
+      '

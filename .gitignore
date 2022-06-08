@@ -31,3 +31,10 @@ bin/
 # fabric
 
 run/
+
+# compose
+
+*.gradle
+*.properties
+gradle/wrapper
+VersionShared
