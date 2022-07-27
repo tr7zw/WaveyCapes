@@ -1,0 +1,18 @@
+{
+    "text.wc.title": "飘扬披风设置",
+
+    "text.wc.setting.capestyle": "披风样式",
+    "text.wc.setting.capestyle.BLOCKY": "块状",
+    "text.wc.setting.capestyle.SMOOTH": "平滑",
+    "text.wc.setting.windmode": "风模式",
+    "text.wc.setting.windmode.NONE": "无缝",
+    "text.wc.setting.windmode.WAVES": "波浪",
+    "text.wc.setting.windmode.SLIGHT": "随机",
+    "text.wc.setting.capemovement": "披风移动",
+    "text.wc.setting.capemovement.VANILLA": "经典",
+    "text.wc.setting.capemovement.BASIC_SIMULATION": "模拟",
+    "text.wc.setting.capeparts": "披风部分",
+    "text.wc.setting.gravity": "重力",
+    "text.wc.setting.maxBend": "最大弯曲角度",
+    "text.wc.setting.heightMultiplier": "高度乘数"
+}
