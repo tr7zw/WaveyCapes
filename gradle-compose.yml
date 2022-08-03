@@ -1,10 +1,10 @@
 version: '0.0.1'
-source: "https://github.com/tr7zw/ForgeFabricComposeTemplate/tree/1.19/"
+source: "https://github.com/tr7zw/ForgeFabricComposeTemplate/tree/1.19.1/"
 replacements:
   group: "dev.tr7zw"
   name: "WaveyCapes"
   id: "waveycapes"
-  version: "1.2.0"
+  version: "1.2.1"
   author: "tr7zw"
   relocationpackage: "dev.tr7zw.waveycapes"
   dependencies: '
