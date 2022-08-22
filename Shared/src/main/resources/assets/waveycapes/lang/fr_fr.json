@@ -1,0 +1,18 @@
+{
+    "text.wc.title": "Options de WaveyCapes",
+
+    "text.wc.setting.capestyle": "Style de cape",
+    "text.wc.setting.capestyle.BLOCKY": "Cubique",
+    "text.wc.setting.capestyle.SMOOTH": "Lisse",
+    "text.wc.setting.windmode": "Type de vent",
+    "text.wc.setting.windmode.NONE": "Pas de vent",
+    "text.wc.setting.windmode.WAVES": "Vagues",
+    "text.wc.setting.windmode.SLIGHT": "Aléatoire",
+    "text.wc.setting.capemovement": "Mouvement de cape",
+    "text.wc.setting.capemovement.VANILLA": "Classique",
+    "text.wc.setting.capemovement.BASIC_SIMULATION": "Simulation",
+    "text.wc.setting.capeparts": "Parties de cape",
+    "text.wc.setting.gravity": "Gravité",
+    "text.wc.setting.maxBend": "Angle de courbure max.",
+    "text.wc.setting.heightMultiplier": "Multiplicateur de hauteur"
+}
