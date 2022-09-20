@@ -1,0 +1,18 @@
+{
+    "text.wc.title": "Definições de WaveyCapes",
+
+    "text.wc.setting.capestyle": "Estilo da Capa",
+    "text.wc.setting.capestyle.BLOCKY": "Com Cubos",
+    "text.wc.setting.capestyle.SMOOTH": "Plano",
+    "text.wc.setting.windmode": "Com Vento",
+    "text.wc.setting.windmode.NONE": "Sem Vento",
+    "text.wc.setting.windmode.WAVES": "Ondas",
+    "text.wc.setting.windmode.SLIGHT": "Aleatório",
+    "text.wc.setting.capemovement": "Movimento da Capa",
+    "text.wc.setting.capemovement.VANILLA": "Clássico",
+    "text.wc.setting.capemovement.BASIC_SIMULATION": "Simulação",
+    "text.wc.setting.capeparts": "Partes da Capa",
+    "text.wc.setting.gravity": "Gravidade",
+    "text.wc.setting.maxBend": "Ângulo Máximo da Dobra",
+    "text.wc.setting.heightMultiplier": "Multiplicador de Altura"
+}
