@@ -10,6 +10,7 @@ import dev.tr7zw.waveycapes.CapeHolder;
 import dev.tr7zw.waveycapes.CapeMovement;
 import dev.tr7zw.waveycapes.CapeRenderer;
 import dev.tr7zw.waveycapes.CapeStyle;
+import dev.tr7zw.waveycapes.PlayerModelAccess;
 import dev.tr7zw.waveycapes.VanillaCapeRenderer;
 import dev.tr7zw.waveycapes.WaveyCapesBase;
 import dev.tr7zw.waveycapes.WindMode;
@@ -69,6 +70,9 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
         ItemStack itemStack = abstractClientPlayer.getItemBySlot(EquipmentSlot.CHEST);
         if (itemStack.is(Items.ELYTRA))
             return;
+        if(getParentModel() instanceof PlayerModelAccess pma && !pma.getCloak().visible) {
+            return;
+        }
         // smooth doesn't need more than 16
 //        if(WaveyCapesBase.config.capeStyle == CapeStyle.SMOOTH) {
 //            if(partCount != 16) {
