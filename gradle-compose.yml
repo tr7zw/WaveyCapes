@@ -1,15 +1,17 @@
 version: '0.0.1'
-source: "https://github.com/tr7zw/ForgeFabricComposeTemplate/tree/1.19.1/"
+source: "https://github.com/tr7zw/ForgeFabricComposeTemplate/tree/1.19.2-mcpublish/"
 replacements:
   group: "dev.tr7zw"
   name: "WaveyCapes"
   id: "waveycapes"
-  version: "1.2.1"
+  version: "1.2.2"
   author: "tr7zw"
   relocationpackage: "dev.tr7zw.waveycapes"
   dependencies: '
   '
   licensename: "LICENSE"
+  modrinthid: kYuIpRLv
+  curseforgeid: 521594
 rootProject:
   template: "."
 subProjects:
