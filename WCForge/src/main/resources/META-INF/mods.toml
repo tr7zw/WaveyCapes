@@ -24,6 +24,6 @@ The cape shouldn't be a static slab
 [[dependencies.waveycapes]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.19,)"
+    versionRange="[1.19.3,)"
     ordering="NONE"
     side="BOTH"

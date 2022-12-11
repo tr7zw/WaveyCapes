@@ -9,14 +9,14 @@ import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.joml.Quaternionf;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Quaternion;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 
 import dev.tr7zw.config.CustomConfigScreen;
 import dev.tr7zw.waveycapes.config.Config;
@@ -155,8 +155,8 @@ public abstract class WaveyCapesBase {
         PoseStack matrixStack = new PoseStack();
         matrixStack.translate(0.0D, 1, 1000.0D);
         matrixStack.scale((float) size, (float) size, (float) size);
-        Quaternion quaternion = Vector3f.ZP.rotationDegrees(180.0F);
-        Quaternion quaternion2 = Vector3f.XP.rotationDegrees(lookY * rotationModifyer);
+        Quaternionf quaternion = Axis.ZP.rotationDegrees(180.0F);
+        Quaternionf quaternion2 = Axis.XP.rotationDegrees(lookY * rotationModifyer);
         quaternion.mul(quaternion2);
         matrixStack.mulPose(quaternion);
         matrixStack.translate(0.0D, -1, 0D);
@@ -180,7 +180,7 @@ public abstract class WaveyCapesBase {
         livingEntity.yHeadRotO = livingEntity.getYRot();
         Lighting.setupForEntityInInventory();
         EntityRenderDispatcher entityRenderDispatcher = Minecraft.getInstance().getEntityRenderDispatcher();
-        quaternion2.conj();
+        quaternion2.conjugate();
         entityRenderDispatcher.overrideCameraOrientation(quaternion2);
         entityRenderDispatcher.setRenderShadow(false);
         MultiBufferSource.BufferSource bufferSource = Minecraft.getInstance().renderBuffers().bufferSource();
