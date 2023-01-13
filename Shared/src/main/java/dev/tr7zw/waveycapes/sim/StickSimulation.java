@@ -16,6 +16,7 @@ public class StickSimulation {
 
     public List<Point> points = new ArrayList<>();
     public List<Stick> sticks = new ArrayList<>();
+    public Vector2 gravityDirection = new Vector2(0, -1);
     public float gravity = 20f;
     public int numIterations = 30;
     private float maxBend = 5;
@@ -25,13 +26,13 @@ public class StickSimulation {
         //maxBend = WaveyCapesBase.config.maxBend;
 
         float deltaTime = 50f/1000f; // fixed timescale
-        Vector2 down = new Vector2(0, gravity * deltaTime);
+        Vector2 down = gravityDirection.clone().mul(gravity * deltaTime);
         Vector2 tmp = new Vector2(0, 0);
         for (Point p : points) {
             if (!p.locked) {
                 tmp.copy(p.position);
                 // p.position.add(p.position).subtract(p.prevPosition);
-                p.position.subtract(down);
+                p.position.add(down);
                 p.prevPosition.copy(tmp);
             }
         }
