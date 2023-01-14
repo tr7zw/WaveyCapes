@@ -20,6 +20,7 @@ public class StickSimulation {
     public float gravity = WaveyCapesBase.config.gravity;
     public int numIterations = 30;
     private float maxBend = 5;
+    public boolean sneaking = false;
 
     public void simulate() {
         //maxBend = WaveyCapesBase.config.maxBend;

@@ -57,8 +57,9 @@ public interface CapeHolder {
         
         simulation.gravityDirection.x = 0;
         simulation.gravityDirection.y = -1;
-        double changeX = (d * o + m * p) + fallHack;
-        double changeY = ((abstractClientPlayer.getY() - abstractClientPlayer.yo)*heightMul + (abstractClientPlayer.isCrouching() ? -4 : 0));
+        double changeX = (d * o + m * p) + fallHack + (abstractClientPlayer.isCrouching() && !simulation.sneaking ? 3 : 0);
+        double changeY = ((abstractClientPlayer.getY() - abstractClientPlayer.yo)*heightMul) + (abstractClientPlayer.isCrouching() && !simulation.sneaking ? 1 : 0);
+        simulation.sneaking = abstractClientPlayer.isCrouching();
         Vector2 change = new Vector2((float)changeX, (float)changeY);
         if(abstractClientPlayer.isVisuallySwimming()) {
             float rotation = abstractClientPlayer.getXRot(); // -90 = swimming up, 0 = straight, 90 = down
