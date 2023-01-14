@@ -3,6 +3,7 @@ package dev.tr7zw.waveycapes;
 import dev.tr7zw.waveycapes.sim.StickSimulation;
 import dev.tr7zw.waveycapes.sim.StickSimulation.Point;
 import dev.tr7zw.waveycapes.sim.StickSimulation.Stick;
+import dev.tr7zw.waveycapes.sim.StickSimulation.Vector2;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.util.Mth;
 
@@ -47,9 +48,30 @@ public interface CapeHolder {
         double p = -Mth.cos(n * 0.017453292F);
         float heightMul = WaveyCapesBase.config.heightMultiplier;
         // gives the cape a small swing when jumping/falling to not clip with itself/simulate some air getting under it
-        double fallHack = Mth.clamp((simulation.points.get(0).position.y - (abstractClientPlayer.getY()*heightMul)), 0, 1); 
-        simulation.points.get(0).position.x += (d * o + m * p) + fallHack;
-        simulation.points.get(0).position.y = (float) (abstractClientPlayer.getY()*heightMul + (abstractClientPlayer.isCrouching() ? -4 : 0));
+        double fallHack = Mth.clamp((abstractClientPlayer.yo - abstractClientPlayer.getY())*10, 0, 1); 
+        if(abstractClientPlayer.isUnderWater()) {
+            simulation.gravity = WaveyCapesBase.config.gravity/10;
+        }else {
+            simulation.gravity = WaveyCapesBase.config.gravity;
+        }
+        
+        simulation.gravityDirection.x = 0;
+        simulation.gravityDirection.y = -1;
+        double changeX = (d * o + m * p) + fallHack;
+        double changeY = ((abstractClientPlayer.getY() - abstractClientPlayer.yo)*heightMul + (abstractClientPlayer.isCrouching() ? -4 : 0));
+        Vector2 change = new Vector2((float)changeX, (float)changeY);
+        if(abstractClientPlayer.isVisuallySwimming()) {
+            float rotation = abstractClientPlayer.getXRot(); // -90 = swimming up, 0 = straight, 90 = down
+            // the simulation has the body as reference, so if the player is swimming straight down, gravity needs to point up(the cape should move into the direction of the head, not the feet)
+            // offset the rotation to swimming up doesn't rotate the vector at all
+            rotation += 90;
+            // apply rotation
+            simulation.gravityDirection.rotateDegrees(rotation);
+            
+            change.rotateDegrees(rotation);
+        }
+
+        simulation.points.get(0).position.add(change);
         simulation.simulate();
     }
     

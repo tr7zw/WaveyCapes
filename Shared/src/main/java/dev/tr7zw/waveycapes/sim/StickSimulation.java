@@ -17,12 +17,11 @@ public class StickSimulation {
     public List<Point> points = new ArrayList<>();
     public List<Stick> sticks = new ArrayList<>();
     public Vector2 gravityDirection = new Vector2(0, -1);
-    public float gravity = 20f;
+    public float gravity = WaveyCapesBase.config.gravity;
     public int numIterations = 30;
     private float maxBend = 5;
 
     public void simulate() {
-        gravity = WaveyCapesBase.config.gravity;
         //maxBend = WaveyCapesBase.config.maxBend;
 
         float deltaTime = 50f/1000f; // fixed timescale
@@ -42,6 +41,7 @@ public class StickSimulation {
         for (Point p : points) {
             if (p != basePoint && p.position.x - basePoint.position.x > 0) {
                 p.position.x = basePoint.position.x - 0.1f;
+                p.prevPosition.x = p.position.x;
             }
         }
 
@@ -184,6 +184,15 @@ public class StickSimulation {
                 this.x /= f;
                 this.y /= f;
             }
+            return this;
+        }
+        
+        public Vector2 rotateDegrees(float deg) {
+            float ox = x;
+            float oy = y;
+            deg = (float) Math.toRadians(deg);
+            x = Mth.cos(deg) * ox - Mth.sin(deg)*oy;
+            y = Mth.sin(deg) * ox + Mth.cos(deg)*oy;
             return this;
         }
 
