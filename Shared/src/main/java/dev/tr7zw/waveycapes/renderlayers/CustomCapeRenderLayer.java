@@ -1,7 +1,6 @@
 package dev.tr7zw.waveycapes.renderlayers;
 
 import org.joml.Matrix4f;
-import org.joml.Vector3f;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -16,7 +15,7 @@ import dev.tr7zw.waveycapes.PlayerModelAccess;
 import dev.tr7zw.waveycapes.VanillaCapeRenderer;
 import dev.tr7zw.waveycapes.WaveyCapesBase;
 import dev.tr7zw.waveycapes.WindMode;
-import dev.tr7zw.waveycapes.sim.StickSimulation;
+import dev.tr7zw.waveycapes.sim.BasicSimulation;
 import dev.tr7zw.waveycapes.support.ModSupport;
 import dev.tr7zw.waveycapes.support.SupportManager;
 import net.minecraft.client.model.PlayerModel;
@@ -85,11 +84,9 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
 //            partCount = WaveyCapesBase.config.capeParts;
 //            buildMesh();
 //        }
-
-        if(WaveyCapesBase.config.capeMovement == CapeMovement.BASIC_SIMULATION) {
-            CapeHolder holder = (CapeHolder) abstractClientPlayer;
-            holder.updateSimulation(abstractClientPlayer, partCount);
-        }
+        
+        CapeHolder holder = (CapeHolder) abstractClientPlayer;
+        holder.updateSimulation(abstractClientPlayer, partCount);
         
         if (WaveyCapesBase.config.capeStyle == CapeStyle.SMOOTH && renderer.vanillaUvValues()) {
             renderSmoothCape(poseStack, multiBufferSource, renderer, abstractClientPlayer, delta, i);
@@ -176,7 +173,7 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
     }
 
     private void modifyPoseStack(PoseStack poseStack, AbstractClientPlayer abstractClientPlayer, float h, int part) {
-        if(WaveyCapesBase.config.capeMovement == CapeMovement.BASIC_SIMULATION) {
+        if(WaveyCapesBase.config.capeMovement != CapeMovement.VANILLA) {
             modifyPoseStackSimulation(poseStack, abstractClientPlayer, h, part);
             return;
         }
@@ -184,20 +181,21 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
     }
     
     private void modifyPoseStackSimulation(PoseStack poseStack, AbstractClientPlayer abstractClientPlayer, float delta, int part) {
-        StickSimulation simulation = ((CapeHolder)abstractClientPlayer).getSimulation();
+        BasicSimulation simulation = ((CapeHolder)abstractClientPlayer).getSimulation();
         poseStack.pushPose();
         poseStack.translate(0.0D, 0.0D, 0.125D);
         
-        float z = simulation.points.get(part).getLerpX(delta) - simulation.points.get(0).getLerpX(delta);
-        if(z > 0) {
-            z = 0;
+        float x = simulation.getPoints().get(part).getLerpX(delta) - simulation.getPoints().get(0).getLerpX(delta);
+        if(x > 0) {
+            x = 0;
         }
-        float y = simulation.points.get(0).getLerpY(delta) - part - simulation.points.get(part).getLerpY(delta);
+        float y = simulation.getPoints().get(0).getLerpY(delta) - part - simulation.getPoints().get(part).getLerpY(delta);
+        float z = simulation.getPoints().get(0).getLerpZ(delta) - simulation.getPoints().get(part).getLerpZ(delta);
         
 //        float sidewaysRotationOffset = (float) (d * p - m * o) * 100.0F;
 //        sidewaysRotationOffset = Mth.clamp(sidewaysRotationOffset, -20.0F, 20.0F);
         float sidewaysRotationOffset = 0;
-        float partRotation = (float) -Mth.atan2(y, z);
+        float partRotation = (float) -Mth.atan2(y, x);
         partRotation = Math.max(partRotation, 0);
         if(partRotation != 0)
             partRotation = Mth.PI-partRotation;
@@ -217,7 +215,7 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
         poseStack.mulPose(Axis.XP.rotationDegrees(6.0F + height + naturalWindSwing));
         poseStack.mulPose(Axis.ZP.rotationDegrees(sidewaysRotationOffset / 2.0F));
         poseStack.mulPose(Axis.YP.rotationDegrees(180.0F - sidewaysRotationOffset / 2.0F));
-        poseStack.translate(0, y/partCount, z/partCount); // movement from the simulation
+        poseStack.translate(-z/partCount, y/partCount, x/partCount); // movement from the simulation
         //offsetting so the rotation is on the cape part
         //float offset = (float) (part * (16 / partCount))/16; // to fold the entire cape into one position for debugging
         poseStack.translate(0, /*-offset*/ + (0.48/16) , - (0.48/16)); // (0.48/16)
@@ -496,11 +494,11 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
      * @param posY
      * @return
      */
-    private static float getWind(double posY) {
-        float x = (System.currentTimeMillis()%scale)/10000f;
-        float mod = Mth.clamp(1f/200f*(float)posY, 0f, 1f);
-        return Mth.clamp((float) (Math.sin(2 * x) + Math.sin(Math.PI * x)) * mod, 0, 2);
-    }
+//    private static float getWind(double posY) {
+//        float x = (System.currentTimeMillis()%scale)/10000f;
+//        float mod = Mth.clamp(1f/200f*(float)posY, 0f, 1f);
+//        return Mth.clamp((float) (Math.sin(2 * x) + Math.sin(Math.PI * x)) * mod, 0, 2);
+//    }
     
     
     /**
