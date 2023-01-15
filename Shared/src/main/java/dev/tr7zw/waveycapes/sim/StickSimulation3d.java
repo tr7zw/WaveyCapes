@@ -14,11 +14,11 @@ import net.minecraft.util.Mth;
  * "rope"(cape). Point 0 is the part fixed to the player
  *
  */
-public class StickSimulation implements BasicSimulation {
+public class StickSimulation3d implements BasicSimulation {
 
     public List<Point> points = new ArrayList<>();
     public List<Stick> sticks = new ArrayList<>();
-    public Vector2 gravityDirection = new Vector2(0, -1);
+    public Vector3 gravityDirection = new Vector3(0, -1, 0);
     public float gravity = WaveyCapesBase.config.gravity;
     public int numIterations = 30;
     private float maxBend = 5;
@@ -43,12 +43,13 @@ public class StickSimulation implements BasicSimulation {
         return false;
     }
     
+    @Override
     public void simulate() {
         //maxBend = WaveyCapesBase.config.maxBend;
 
         float deltaTime = 50f/1000f; // fixed timescale
-        Vector2 down = gravityDirection.clone().mul(gravity * deltaTime);
-        Vector2 tmp = new Vector2(0, 0);
+        Vector3 down = gravityDirection.clone().mul(gravity * deltaTime);
+        Vector3 tmp = new Vector3(0, 0, 0);
         for (Point p : points) {
             if (!p.locked) {
                 tmp.copy(p.position);
@@ -79,12 +80,12 @@ public class StickSimulation implements BasicSimulation {
             }
             double abs = Math.abs(angle);
             if (abs < 180 - maxBend) {
-                Vector2 replacement = getReplacement(points.get(i).position, points.get(i - 1).position, angle,
+                Vector3 replacement = getReplacement(points.get(i).position, points.get(i - 1).position, angle,
                         180 - maxBend + 1);
                 points.get(i + 1).position = replacement;
             }
             if (abs > 180 + maxBend) {
-                Vector2 replacement = getReplacement(points.get(i).position, points.get(i - 1).position, angle,
+                Vector3 replacement = getReplacement(points.get(i).position, points.get(i - 1).position, angle,
                         180 + maxBend - 1);
                 points.get(i + 1).position = replacement;
             }
@@ -94,8 +95,8 @@ public class StickSimulation implements BasicSimulation {
         for (int i = 0; i < numIterations; i++) {
             for (int x = sticks.size() - 1; x >= 0; x--) {
                 Stick stick = sticks.get(x);
-                Vector2 stickCentre = stick.pointA.position.clone().add(stick.pointB.position).div(2);
-                Vector2 stickDir = stick.pointA.position.clone().subtract(stick.pointB.position).normalize();
+                Vector3 stickCentre = stick.pointA.position.clone().add(stick.pointB.position).div(2);
+                Vector3 stickDir = stick.pointA.position.clone().subtract(stick.pointB.position).normalize();
                 if (!stick.pointA.locked) {
                     stick.pointA.position = stickCentre.clone().add(stickDir.clone().mul(stick.length / 2));
                 }
@@ -107,59 +108,64 @@ public class StickSimulation implements BasicSimulation {
         // fix in the position/length, this prevents it from acting like a spring/stretchy
         for (int x = 0; x < sticks.size(); x++) {
             Stick stick = sticks.get(x);
-            Vector2 stickDir = stick.pointA.position.clone().subtract(stick.pointB.position).normalize();
+            Vector3 stickDir = stick.pointA.position.clone().subtract(stick.pointB.position).normalize();
             if (!stick.pointB.locked) {
                 stick.pointB.position = stick.pointA.position.clone().subtract(stickDir.mul(stick.length));
             }
         }
     }
 
-    private Vector2 getReplacement(Vector2 middle, Vector2 prev, double angle, double target) {
+    private Vector3 getReplacement(Vector3 middle, Vector3 prev, double angle, double target) {
         double theta = target / 57.2958;
         float x = prev.x - middle.x;
         float y = prev.y - middle.y;
+        float z = middle.z;
         if (angle < 0) {
             theta *= -1;
         }
         double cs = Math.cos(theta);
         double sn = Math.sin(theta);
-        return new Vector2((float) ((x * cs) - (y * sn) + middle.x), (float) ((x * sn) + (y * cs) + middle.y));
+        return new Vector3((float) ((x * cs) - (y * sn) + middle.x), (float) ((x * sn) + (y * cs) + middle.y), z);
     }
 
-    private double getAngle(Vector2 middle, Vector2 prev, Vector2 next) {
+    private double getAngle(Vector3 middle, Vector3 prev, Vector3 next) {
         return Math.atan2(next.y - middle.y, next.x - middle.x) - Math.atan2(prev.y - middle.y, prev.x - middle.x);
     }
-
+    
+    @Override
     public void setGravityDirection(Vector3 gravityDirection) {
-        this.gravityDirection.x = gravityDirection.x;
-        this.gravityDirection.y = gravityDirection.y;
+        this.gravityDirection = gravityDirection;
     }
 
+    @Override
     public float getGravity() {
         return gravity;
     }
 
+    @Override
     public void setGravity(float gravity) {
         this.gravity = gravity;
     }
 
+    @Override
     public boolean isSneaking() {
         return sneaking;
     }
-
+    
+    @Override
     public void setSneaking(boolean sneaking) {
         this.sneaking = sneaking;
     }
     
     @Override
-    public void applyMovement(Vector3 movement) {
-        points.get(0).prevPosition.copy(points.get(0).position);
-        points.get(0).position.add(new Vector2(movement.x, movement.y));
-    }
-
-    @Override
     public boolean empty() {
         return sticks.isEmpty();
+    }
+    
+    @Override
+    public void applyMovement(Vector3 movement) {
+        points.get(0).prevPosition.copy(points.get(0).position);
+        points.get(0).position.add(movement);
     }
     
     @SuppressWarnings("unchecked")
@@ -167,23 +173,25 @@ public class StickSimulation implements BasicSimulation {
     public List<CapePoint> getPoints() {
         return (List<CapePoint>)(Object)points;
     }
-    
+
     public static class Point implements CapePoint {
-        public Vector2 position = new Vector2(0, 0);
-        public Vector2 prevPosition = new Vector2(0, 0);
+        public Vector3 position = new Vector3(0, 0, 0);
+        public Vector3 prevPosition = new Vector3(0, 0, 0);
         public boolean locked;
         
+        @Override
         public float getLerpX(float delta) {
             return Mth.lerp(delta, prevPosition.x, position.x);
         }
         
+        @Override
         public float getLerpY(float delta) {
             return Mth.lerp(delta, prevPosition.y, position.y);
         }
-
+        
         @Override
         public float getLerpZ(float delta) {
-            return 0;
+            return Mth.lerp(delta, prevPosition.z, position.z);
         }
     }
 
@@ -195,75 +203,6 @@ public class StickSimulation implements BasicSimulation {
             this.pointA = pointA;
             this.pointB = pointB;
             this.length = length;
-        }
-
-    }
-
-    public static class Vector2 {
-        public float x, y;
-
-        public Vector2(float x, float y) {
-            this.x = x;
-            this.y = y;
-        }
-
-        public Vector2 clone() {
-            return new Vector2(x, y);
-        }
-
-        public void copy(Vector2 vec) {
-            this.x = vec.x;
-            this.y = vec.y;
-        }
-
-        public Vector2 add(Vector2 vec) {
-            this.x += vec.x;
-            this.y += vec.y;
-            return this;
-        }
-
-        public Vector2 subtract(Vector2 vec) {
-            this.x -= vec.x;
-            this.y -= vec.y;
-            return this;
-        }
-
-        public Vector2 div(float amount) {
-            this.x /= amount;
-            this.y /= amount;
-            return this;
-        }
-
-        public Vector2 mul(float amount) {
-            this.x *= amount;
-            this.y *= amount;
-            return this;
-        }
-
-        public Vector2 normalize() {
-            float f = Mth.sqrt(this.x * this.x + this.y * this.y);
-            if (f < 1.0E-4F) {
-                this.x = 0;
-                this.y = 0;
-            } else {
-                this.x /= f;
-                this.y /= f;
-            }
-            return this;
-        }
-        
-        public Vector2 rotateDegrees(float deg) {
-            float ox = x;
-            float oy = y;
-            deg = (float) Math.toRadians(deg);
-            x = Mth.cos(deg) * ox - Mth.sin(deg)*oy;
-            y = Mth.sin(deg) * ox + Mth.cos(deg)*oy;
-            return this;
-        }
-
-        @Override
-        public String toString() {
-            return "Vector2 [x=" + x + ", y=" + y + "]";
         }
 
     }

@@ -13,5 +13,6 @@ public class Config {
     //public int capeParts = 16;
     public int gravity = 25;
     public int heightMultiplier = 6;
+    public int straveMultiplier = 2;
     //public int maxBend = 5;
 }
