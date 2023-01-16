@@ -77,4 +77,8 @@ public class Vector3 {
         return "Vector2 [x=" + x + ", y=" + y + "]";
     }
 
+    public float sqrMagnitude() {
+        return x*x+y*y+z*z;
+    }
+
 }
