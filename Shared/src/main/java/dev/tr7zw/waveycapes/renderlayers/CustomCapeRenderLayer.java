@@ -185,9 +185,9 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
         poseStack.translate(0.0D, 0.0D, 0.125D);
         
         float x = simulation.getPoints().get(part).getLerpX(delta) - simulation.getPoints().get(0).getLerpX(delta);
-        if(x > 0) {
-            x = 0;
-        }
+//        if(x > 0) {
+//            x = 0;
+//        }
         float y = simulation.getPoints().get(0).getLerpY(delta) - part - simulation.getPoints().get(part).getLerpY(delta);
         float z = simulation.getPoints().get(0).getLerpZ(delta) - simulation.getPoints().get(part).getLerpZ(delta);
         

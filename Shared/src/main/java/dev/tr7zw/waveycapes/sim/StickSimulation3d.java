@@ -47,6 +47,20 @@ public class StickSimulation3d implements BasicSimulation {
     public void simulate() {
         //maxBend = WaveyCapesBase.config.maxBend;
 
+        applyGravity();
+
+        preventClipping();
+
+//        preventHardBends();
+
+//        preventSelfClipping();
+        applyMotion();
+        preventSelfClipping();
+        preventHardBends();
+        limitLength();
+    }
+
+    private void applyGravity() {
         float deltaTime = 50f/1000f; // fixed timescale
         Vector3 down = gravityDirection.clone().mul(gravity * deltaTime);
         Vector3 tmp = new Vector3(0, 0, 0);
@@ -58,16 +72,58 @@ public class StickSimulation3d implements BasicSimulation {
                 p.prevPosition.copy(tmp);
             }
         }
+    }
 
-        // prevent the cape from clipping into the player
-        Point basePoint = points.get(0);
-        for (Point p : points) {
-            if (p != basePoint && p.position.x - basePoint.position.x > 0) {
-                p.position.x = basePoint.position.x - 0.1f;
-                p.prevPosition.x = p.position.x;
+    private void applyMotion() {
+        // move into correct direction
+        for (int i = 0; i < numIterations; i++) {
+            for (int x = sticks.size() - 1; x >= 0; x--) {
+                Stick stick = sticks.get(x);
+                Vector3 stickCentre = stick.pointA.position.clone().add(stick.pointB.position).div(2);
+                Vector3 stickDir = stick.pointA.position.clone().subtract(stick.pointB.position).normalize();
+                if (!stick.pointA.locked) {
+                    stick.pointA.position = stickCentre.clone().add(stickDir.clone().mul(stick.length / 2));
+                }
+                if (!stick.pointB.locked) {
+                    stick.pointB.position = stickCentre.clone().subtract(stickDir.clone().mul(stick.length / 2));
+                }
             }
         }
+    }
 
+    private void limitLength() {
+        // fix in the position/length, this prevents it from acting like a spring/stretchy
+        for (int x = 0; x < sticks.size(); x++) {
+            Stick stick = sticks.get(x);
+            Vector3 stickDir = stick.pointA.position.clone().subtract(stick.pointB.position).normalize();
+            if (!stick.pointB.locked) {
+                stick.pointB.position = stick.pointA.position.clone().subtract(stickDir.mul(stick.length));
+            }
+        }
+    }
+    
+    private void preventSelfClipping() {
+        // check the cape parts against each other. Bad implementation
+        for (int a = 0; a < points.size(); a++) {
+            for(int b = a + 1; b < points.size(); b++) {
+                Point pA = points.get(a);
+                Point pB = points.get(b);
+                Vector3 stickDir = pA.position.clone().subtract(pB.position);
+                if(stickDir.sqrMagnitude() < 1.1) {
+                    stickDir.normalize();
+                    Vector3 centre = pA.position.clone().add(pB.position).div(2);
+                    if (!pA.locked) {
+                        pA.position = centre.clone().add(stickDir.clone().mul(1f / 2f));
+                    }
+                    if (!pB.locked) {
+                        pB.position = centre.clone().subtract(stickDir.clone().mul(1f / 2f));
+                    }
+                }
+            }
+        }
+    }
+
+    private void preventHardBends() {
         // Doesnt work like it should at all, but it prevents some folding into itself, so it stays for now
         for (int i = points.size() - 2; i >= 1; i--) {
             double angle = getAngle(points.get(i).position, points.get(i - 1).position, points.get(i + 1).position);
@@ -90,27 +146,14 @@ public class StickSimulation3d implements BasicSimulation {
                 points.get(i + 1).position = replacement;
             }
         }
+    }
 
-        // move into correct direction
-        for (int i = 0; i < numIterations; i++) {
-            for (int x = sticks.size() - 1; x >= 0; x--) {
-                Stick stick = sticks.get(x);
-                Vector3 stickCentre = stick.pointA.position.clone().add(stick.pointB.position).div(2);
-                Vector3 stickDir = stick.pointA.position.clone().subtract(stick.pointB.position).normalize();
-                if (!stick.pointA.locked) {
-                    stick.pointA.position = stickCentre.clone().add(stickDir.clone().mul(stick.length / 2));
-                }
-                if (!stick.pointB.locked) {
-                    stick.pointB.position = stickCentre.clone().subtract(stickDir.clone().mul(stick.length / 2));
-                }
-            }
-        }
-        // fix in the position/length, this prevents it from acting like a spring/stretchy
-        for (int x = 0; x < sticks.size(); x++) {
-            Stick stick = sticks.get(x);
-            Vector3 stickDir = stick.pointA.position.clone().subtract(stick.pointB.position).normalize();
-            if (!stick.pointB.locked) {
-                stick.pointB.position = stick.pointA.position.clone().subtract(stickDir.mul(stick.length));
+    private void preventClipping() {
+        // prevent the cape from clipping into the player
+        Point basePoint = points.get(0);
+        for (Point p : points) {
+            if (p != basePoint && p.position.x - basePoint.position.x > 0) {
+                p.position.x = basePoint.position.x - 0.1f;
             }
         }
     }
