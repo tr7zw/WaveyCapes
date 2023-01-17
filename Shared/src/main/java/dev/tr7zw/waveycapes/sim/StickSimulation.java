@@ -62,8 +62,7 @@ public class StickSimulation implements BasicSimulation {
         Point basePoint = points.get(0);
         for (Point p : points) {
             if (p != basePoint && p.position.x - basePoint.position.x > 0) {
-                p.position.x = basePoint.position.x - 0.1f;
-                p.prevPosition.x = p.position.x;
+                p.position.x = basePoint.position.x;
             }
         }
 
