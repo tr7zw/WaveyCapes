@@ -6,6 +6,7 @@ import java.util.List;
 import dev.tr7zw.waveycapes.WaveyCapesBase;
 import dev.tr7zw.waveycapes.math.CapePoint;
 import dev.tr7zw.waveycapes.math.Vector3;
+import dev.tr7zw.waveycapes.sim.StickSimulation3d.Point;
 import net.minecraft.util.Mth;
 
 /**
@@ -21,7 +22,7 @@ public class StickSimulation3d implements BasicSimulation {
     public Vector3 gravityDirection = new Vector3(0, -1, 0);
     public float gravity = WaveyCapesBase.config.gravity;
     public int numIterations = 30;
-    private float maxBend = 40;
+    private float maxBend = 20;
     public boolean sneaking = false;
 
     @Override
@@ -135,16 +136,12 @@ public class StickSimulation3d implements BasicSimulation {
         for (int i = 1; i < points.size() - 2; i++) {
             double angle = getAngle(points.get(i).position, points.get(i - 1).position, points.get(i + 1).position);
             if (angle < -maxBend) {
-                Vector3 replacement = getReplacement(points.get(i).position, points.get(i - 1).position, -maxBend);
+                Vector3 replacement = getReplacement(points.get(i).position, points.get(i - 1).position, -maxBend*2);
                 points.get(i + 1).position = replacement;
-                System.out.println(angle + " "
-                        + getAngle(points.get(i).position, points.get(i - 1).position, points.get(i + 1).position));
             }
             if (angle > maxBend) {
-                Vector3 replacement = getReplacement(points.get(i).position, points.get(i - 1).position, maxBend);
+                Vector3 replacement = getReplacement(points.get(i).position, points.get(i - 1).position, maxBend*2);
                 points.get(i + 1).position = replacement;
-                System.out.println(angle + " "
-                        + getAngle(points.get(i).position, points.get(i - 1).position, points.get(i + 1).position));
             }
         }
     }
@@ -176,7 +173,7 @@ public class StickSimulation3d implements BasicSimulation {
 
         double alpha = Mth.atan2(cross, dot);
 
-        return alpha * 180;
+        return alpha * 180/ Math.PI;
     }
     
     @Override
