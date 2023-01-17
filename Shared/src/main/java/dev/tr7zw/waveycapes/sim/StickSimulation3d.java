@@ -21,7 +21,7 @@ public class StickSimulation3d implements BasicSimulation {
     public Vector3 gravityDirection = new Vector3(0, -1, 0);
     public float gravity = WaveyCapesBase.config.gravity;
     public int numIterations = 30;
-    private float maxBend = 5;
+    private float maxBend = 40;
     public boolean sneaking = false;
 
     @Override
@@ -53,7 +53,7 @@ public class StickSimulation3d implements BasicSimulation {
 
 //        preventHardBends();
 
-//        preventSelfClipping();
+        preventSelfClipping();
         applyMotion();
         preventSelfClipping();
         preventHardBends();
@@ -103,47 +103,48 @@ public class StickSimulation3d implements BasicSimulation {
     }
     
     private void preventSelfClipping() {
-        // check the cape parts against each other. Bad implementation
-        for (int a = 0; a < points.size(); a++) {
-            for(int b = a + 1; b < points.size(); b++) {
-                Point pA = points.get(a);
-                Point pB = points.get(b);
-                Vector3 stickDir = pA.position.clone().subtract(pB.position);
-                if(stickDir.sqrMagnitude() < 1.1) {
-                    stickDir.normalize();
-                    Vector3 centre = pA.position.clone().add(pB.position).div(2);
-                    if (!pA.locked) {
-                        pA.position = centre.clone().add(stickDir.clone().mul(1f / 2f));
-                    }
-                    if (!pB.locked) {
-                        pB.position = centre.clone().subtract(stickDir.clone().mul(1f / 2f));
+        boolean clipped = false;
+        do {
+            clipped = false;
+            // check the cape parts against each other. Bad implementation
+            for (int a = 0; a < points.size(); a++) {
+                for(int b = a + 1; b < points.size(); b++) {
+                    Point pA = points.get(a);
+                    Point pB = points.get(b);
+                    Vector3 stickDir = pA.position.clone().subtract(pB.position);
+                    
+                    if(stickDir.sqrMagnitude() < 0.99) {
+                        clipped = true;
+                        stickDir.normalize();
+                        Vector3 centre = pA.position.clone().add(pB.position).div(2);
+                        if (!pA.locked) {
+                            pA.position = centre.clone().add(stickDir.clone().mul(1f / 2f));
+                        }
+                        if (!pB.locked) {
+                            pB.position = centre.clone().subtract(stickDir.clone().mul(1f / 2f));
+                        }
                     }
                 }
             }
-        }
+        }while(clipped);
     }
 
     private void preventHardBends() {
-        // Doesnt work like it should at all, but it prevents some folding into itself, so it stays for now
-        for (int i = points.size() - 2; i >= 1; i--) {
+        // Doesnt work like it should at all, but it prevents some folding into itself,
+        // so it stays for now
+        for (int i = 1; i < points.size() - 2; i++) {
             double angle = getAngle(points.get(i).position, points.get(i - 1).position, points.get(i + 1).position);
-            angle *= 57.2958;
-            if (angle > 360) {
-                angle -= 360;
-            }
-            if (angle < -360) {
-                angle += 360;
-            }
-            double abs = Math.abs(angle);
-            if (abs < 180 - maxBend) {
-                Vector3 replacement = getReplacement(points.get(i).position, points.get(i - 1).position, angle,
-                        180 - maxBend + 1);
+            if (angle < -maxBend) {
+                Vector3 replacement = getReplacement(points.get(i).position, points.get(i - 1).position, -maxBend);
                 points.get(i + 1).position = replacement;
+                System.out.println(angle + " "
+                        + getAngle(points.get(i).position, points.get(i - 1).position, points.get(i + 1).position));
             }
-            if (abs > 180 + maxBend) {
-                Vector3 replacement = getReplacement(points.get(i).position, points.get(i - 1).position, angle,
-                        180 + maxBend - 1);
+            if (angle > maxBend) {
+                Vector3 replacement = getReplacement(points.get(i).position, points.get(i - 1).position, maxBend);
                 points.get(i + 1).position = replacement;
+                System.out.println(angle + " "
+                        + getAngle(points.get(i).position, points.get(i - 1).position, points.get(i + 1).position));
             }
         }
     }
@@ -153,26 +154,29 @@ public class StickSimulation3d implements BasicSimulation {
         Point basePoint = points.get(0);
         for (Point p : points) {
             if (p != basePoint && p.position.x - basePoint.position.x > 0) {
-                p.position.x = basePoint.position.x;
+                p.position.x = basePoint.position.x - 0.1f;
             }
         }
     }
 
-    private Vector3 getReplacement(Vector3 middle, Vector3 prev, double angle, double target) {
-        double theta = target / 57.2958;
-        float x = prev.x - middle.x;
-        float y = prev.y - middle.y;
-        float z = middle.z;
-        if (angle < 0) {
-            theta *= -1;
-        }
-        double cs = Math.cos(theta);
-        double sn = Math.sin(theta);
-        return new Vector3((float) ((x * cs) - (y * sn) + middle.x), (float) ((x * sn) + (y * cs) + middle.y), z);
+    private Vector3 getReplacement(Vector3 middle, Vector3 prev, double target) {
+        Vector3 dir = middle.clone().subtract(prev);
+        dir.rotateDegrees((float) target).add(middle);
+        return dir;
     }
 
-    private double getAngle(Vector3 middle, Vector3 prev, Vector3 next) {
-        return Math.atan2(next.y - middle.y, next.x - middle.x) - Math.atan2(prev.y - middle.y, prev.x - middle.x);
+    private double getAngle(Vector3 a, Vector3 b, Vector3 c) {
+        float abx = b.x - a.x;
+        float aby = b.y - a.y;
+        float cbx = b.x - c.x;
+        float cby = b.y - c.y;
+
+        float dot = (abx * cbx + aby * cby); // dot product
+        float cross = (abx * cby - aby * cbx); // cross product
+
+        double alpha = Mth.atan2(cross, dot);
+
+        return alpha * 180;
     }
     
     @Override
