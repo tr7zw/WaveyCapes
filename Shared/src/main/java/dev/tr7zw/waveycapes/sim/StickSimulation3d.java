@@ -105,6 +105,7 @@ public class StickSimulation3d implements BasicSimulation {
     
     private void preventSelfClipping() {
         boolean clipped = false;
+        int runs = 0;
         do {
             clipped = false;
             // check the cape parts against each other. Bad implementation
@@ -116,6 +117,7 @@ public class StickSimulation3d implements BasicSimulation {
                     
                     if(stickDir.sqrMagnitude() < 0.99) {
                         clipped = true;
+                        runs++;
                         stickDir.normalize();
                         Vector3 centre = pA.position.clone().add(pB.position).div(2);
                         if (!pA.locked) {
@@ -127,7 +129,7 @@ public class StickSimulation3d implements BasicSimulation {
                     }
                 }
             }
-        }while(clipped);
+        }while(clipped && runs < 10);
     }
 
     private void preventHardBends() {
