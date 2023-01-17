@@ -129,7 +129,7 @@ public class StickSimulation3d implements BasicSimulation {
                     }
                 }
             }
-        }while(clipped && runs < 10);
+        }while(clipped && runs < 32);
     }
 
     private void preventHardBends() {
