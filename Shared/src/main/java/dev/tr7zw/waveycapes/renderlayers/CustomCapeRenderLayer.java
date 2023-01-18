@@ -204,7 +204,7 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
             poseStack.translate(0, 0.15F, 0);
         }
 
-        float naturalWindSwing = getNatrualWindSwing(part);
+        float naturalWindSwing = getNatrualWindSwing(part, abstractClientPlayer.isUnderWater());
 
         
         // vanilla rotating and wind
@@ -261,15 +261,15 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
             poseStack.translate(0, 0.15F, 0);
         }
 
-        float naturalWindSwing = getNatrualWindSwing(part);
-        
+        float naturalWindSwing = getNatrualWindSwing(part, abstractClientPlayer.isUnderWater());
+
         poseStack.mulPose(Axis.XP.rotationDegrees(6.0F + swing / 2.0F + height + naturalWindSwing));
         poseStack.mulPose(Axis.ZP.rotationDegrees(sidewaysRotationOffset / 2.0F));
         poseStack.mulPose(Axis.YP.rotationDegrees(180.0F - sidewaysRotationOffset / 2.0F));
     }
     
-    private float getNatrualWindSwing(int part) {
-        long highlightedPart = (System.currentTimeMillis() / 3) % 360;
+    private float getNatrualWindSwing(int part, boolean underwater) {
+        long highlightedPart = (System.currentTimeMillis() / (underwater ? 9 : 3)) % 360;
         float relativePart = (float) (part + 1) / partCount;
         if (WaveyCapesBase.config.windMode == WindMode.WAVES) {
             return (float) (Math.sin(Math.toRadians((relativePart) * 360 - (highlightedPart))) * 3);
