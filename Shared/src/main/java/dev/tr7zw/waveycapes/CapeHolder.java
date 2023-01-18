@@ -64,6 +64,9 @@ public interface CapeHolder {
         double p = -Mth.cos(n * 0.017453292F);
         float heightMul = WaveyCapesBase.config.heightMultiplier;
         float straveMul = WaveyCapesBase.config.straveMultiplier;
+        if(abstractClientPlayer.isUnderWater()) {
+            heightMul *= 2; // let the cape have more drag than the player underwater
+        }
         // gives the cape a small swing when jumping/falling to not clip with itself/simulate some air getting under it
         double fallHack = Mth.clamp((abstractClientPlayer.yo - abstractClientPlayer.getY())*10, 0, 1); 
         if(abstractClientPlayer.isUnderWater()) {
