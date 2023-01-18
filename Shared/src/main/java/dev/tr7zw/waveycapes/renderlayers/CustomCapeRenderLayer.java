@@ -185,22 +185,35 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
         poseStack.translate(0.0D, 0.0D, 0.125D);
         
         float x = simulation.getPoints().get(part).getLerpX(delta) - simulation.getPoints().get(0).getLerpX(delta);
-//        if(x > 0) {
-//            x = 0;
-//        }
+        if(x > 0) {
+            x = 0;
+        }
         float y = simulation.getPoints().get(0).getLerpY(delta) - part - simulation.getPoints().get(part).getLerpY(delta);
         float z = simulation.getPoints().get(0).getLerpZ(delta) - simulation.getPoints().get(part).getLerpZ(delta);
         
 //        float sidewaysRotationOffset = (float) (d * p - m * o) * 100.0F;
 //        sidewaysRotationOffset = Mth.clamp(sidewaysRotationOffset, -20.0F, 20.0F);
         float sidewaysRotationOffset = 0;
-        float partRotation = (float) -Mth.atan2(y, x);
+            float xRot = x;
+            float yRot = y;
+            if(part == 0) { // part 0 calculates its rotation with itself, so instead calculate with the next one
+                xRot = simulation.getPoints().get(1).getLerpX(delta) - simulation.getPoints().get(0).getLerpX(delta);
+                if(xRot > 0) {
+                    xRot = 0;
+                }
+                yRot = simulation.getPoints().get(0).getLerpY(delta) - 1 - simulation.getPoints().get(1).getLerpY(delta);
+            }
+        float partRotation = (float) -Math.atan2(yRot, xRot);
         partRotation = Math.max(partRotation, 0);
         if(partRotation != 0)
             partRotation = Mth.PI-partRotation;
         partRotation *= 57.2958;
         partRotation *= 2;
-        
+        if(partRotation > 180) {
+            // prevents some weird inverting
+            partRotation -= 180;
+        }
+
         float height = 0;
         if (abstractClientPlayer.isCrouching()) {
             height += 25.0F;

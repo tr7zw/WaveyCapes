@@ -151,9 +151,18 @@ public class StickSimulation3d implements BasicSimulation {
     private void preventClipping() {
         // prevent the cape from clipping into the player
         Point basePoint = points.get(0);
-        for (Point p : points) {
-            if (p != basePoint && p.position.x - basePoint.position.x > 0) {
+        for (int i = 1; i < points.size(); i++) {
+            Point p = points.get(i);
+            if (p.position.x - basePoint.position.x > 0) {
                 p.position.x = basePoint.position.x;
+            }
+            float maxZ = ((float)i / (float)points.size()) * ((float)i / (float)points.size()) * 5;
+            float z = basePoint.position.z - p.position.z;
+            if(z > maxZ) {
+                p.position.z = basePoint.position.z - maxZ;
+            }
+            if(z < -maxZ) {
+                p.position.z = basePoint.position.z + maxZ;
             }
         }
     }
