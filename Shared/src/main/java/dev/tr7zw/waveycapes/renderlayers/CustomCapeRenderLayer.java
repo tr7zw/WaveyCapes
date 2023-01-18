@@ -14,6 +14,7 @@ import dev.tr7zw.waveycapes.PlayerModelAccess;
 import dev.tr7zw.waveycapes.VanillaCapeRenderer;
 import dev.tr7zw.waveycapes.WaveyCapesBase;
 import dev.tr7zw.waveycapes.WindMode;
+import dev.tr7zw.waveycapes.math.Vector3;
 import dev.tr7zw.waveycapes.sim.BasicSimulation;
 import dev.tr7zw.waveycapes.support.ModSupport;
 import dev.tr7zw.waveycapes.support.SupportManager;
@@ -194,25 +195,7 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
 //        float sidewaysRotationOffset = (float) (d * p - m * o) * 100.0F;
 //        sidewaysRotationOffset = Mth.clamp(sidewaysRotationOffset, -20.0F, 20.0F);
         float sidewaysRotationOffset = 0;
-            float xRot = x;
-            float yRot = y;
-            if(part == 0) { // part 0 calculates its rotation with itself, so instead calculate with the next one
-                xRot = simulation.getPoints().get(1).getLerpX(delta) - simulation.getPoints().get(0).getLerpX(delta);
-                if(xRot > 0) {
-                    xRot = 0;
-                }
-                yRot = simulation.getPoints().get(0).getLerpY(delta) - 1 - simulation.getPoints().get(1).getLerpY(delta);
-            }
-        float partRotation = (float) -Math.atan2(yRot, xRot);
-        partRotation = Math.max(partRotation, 0);
-        if(partRotation != 0)
-            partRotation = Mth.PI-partRotation;
-        partRotation *= 57.2958;
-        partRotation *= 2;
-        if(partRotation > 180) {
-            // prevents some weird inverting
-            partRotation -= 180;
-        }
+        float partRotation = getRotation(delta, part, simulation);
 
         float height = 0;
         if (abstractClientPlayer.isCrouching()) {
@@ -237,6 +220,19 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
         poseStack.translate(0, -part * 1f/partCount, -part * (0)/partCount);
         poseStack.translate(0, -(0.48/16), (0.48/16));
         
+    }
+
+    private float getRotation(float delta, int part, BasicSimulation simulation) {
+        if(part == partCount-1) {
+            return getRotation(delta, part-1, simulation);
+        }
+        float angle = (float) getAngle(simulation.getPoints().get(part).getLerpedPos(delta), simulation.getPoints().get(part+1).getLerpedPos(delta));
+        return angle;
+    }
+    
+    private double getAngle(Vector3 a, Vector3 b) {
+        Vector3 angle = b.subtract(a);
+        return Math.toDegrees(Math.atan2(angle.x, angle.y))+180;
     }
     
     private void modifyPoseStackVanilla(PoseStack poseStack, AbstractClientPlayer abstractClientPlayer, float h, int part) {
