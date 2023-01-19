@@ -24,8 +24,10 @@ public interface CapeHolder {
         }
         boolean dirty = simulation.init(partCount);
         if(dirty) {
-            for(int i = 0; i < 10; i++) // quickly doing a few simulation steps to get the cape int a stable configuration
+            simulation.applyMovement(new Vector3(1f, 1f, 0));
+            for(int i = 0; i < 5; i++) { // quickly doing a few simulation steps to get the cape int a stable configuration
                 simulate(abstractClientPlayer);
+            }
         }
     }
     

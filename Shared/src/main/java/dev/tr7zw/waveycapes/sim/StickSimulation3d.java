@@ -33,6 +33,7 @@ public class StickSimulation3d implements BasicSimulation {
             for (int i = 0; i < partCount; i++) {
                 Point point = new Point();
                 point.position.y = -i;
+                point.position.x = -i;
                 point.locked = i == 0;
                 points.add(point);
                 if(i > 0) {
