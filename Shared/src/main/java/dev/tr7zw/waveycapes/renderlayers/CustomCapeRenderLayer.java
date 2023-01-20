@@ -210,7 +210,7 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
         poseStack.mulPose(Vector3f.XP.rotationDegrees(6.0F + height + naturalWindSwing));
         poseStack.mulPose(Vector3f.ZP.rotationDegrees(sidewaysRotationOffset / 2.0F));
         poseStack.mulPose(Vector3f.YP.rotationDegrees(180.0F - sidewaysRotationOffset / 2.0F));
-        poseStack.translate(-z/partCount, y/partCount, z/partCount); // movement from the simulation
+        poseStack.translate(-z/partCount, y/partCount, x/partCount); // movement from the simulation
         //offsetting so the rotation is on the cape part
         //float offset = (float) (part * (16 / partCount))/16; // to fold the entire cape into one position for debugging
         poseStack.translate(0, /*-offset*/ + (0.48/16) , - (0.48/16)); // (0.48/16)
