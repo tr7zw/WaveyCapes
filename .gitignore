@@ -4,3 +4,4 @@ workspace/
 scripts/
 patcher
 .project
+/bin/
