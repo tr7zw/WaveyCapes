@@ -1,0 +1,487 @@
+From 0b002bbb1032abafd074b4b86bb138d92e776e3e Mon Sep 17 00:00:00 2001
+From: tr7zw <tr7zw@live.de>
+Date: Thu, 2 Feb 2023 20:29:26 +0100
+Subject: [PATCH] Backport to 1.16.5
+
+---
+ .github/workflows/build.yml                   |  4 +-
+ .github/workflows/tag.yml                     |  4 +-
+ .../java/dev/tr7zw/waveycapes/CapeHolder.java |  4 +-
+ .../dev/tr7zw/waveycapes/WaveyCapesBase.java  | 35 ++++-----
+ .../waveycapes/mixin/PlayerModelMixin.java    |  6 +-
+ .../waveycapes/mixin/PlayerRendererMixin.java |  7 +-
+ .../renderlayers/CustomCapeRenderLayer.java   | 20 +----
+ .../dev/tr7zw/waveycapes/WaveyCapesMod.java   |  5 --
+ .../support/MoreBannerFeaturesSupport.java    | 77 -------------------
+ WCFabric/src/main/resources/fabric.mod.json   |  3 +-
+ .../dev/tr7zw/waveycapes/WaveyCapesMod.java   | 38 +++++----
+ WCForge/src/main/resources/META-INF/mods.toml |  9 +--
+ gradle-compose.yml                            |  8 +-
+ 13 files changed, 60 insertions(+), 160 deletions(-)
+ delete mode 100644 WCFabric/src/main/java/dev/tr7zw/waveycapes/support/MoreBannerFeaturesSupport.java
+
+diff --git a/.github/workflows/build.yml b/.github/workflows/build.yml
+index 8907f5c..37f8b05 100644
+--- a/.github/workflows/build.yml
++++ b/.github/workflows/build.yml
+@@ -10,10 +10,10 @@ jobs:
+     steps:
+       - name: checkout repository
+         uses: actions/checkout@v2
+-      - name: setup jdk 16
++      - name: setup jdk 8
+         uses: actions/setup-java@v1
+         with:
+-          java-version: 16
++          java-version: 8
+       - name: make gradle wrapper executable
+         if: ${{ runner.os != 'Windows' }}
+         run: chmod +x ./gradlecw
+diff --git a/.github/workflows/tag.yml b/.github/workflows/tag.yml
+index c98ab73..f841964 100644
+--- a/.github/workflows/tag.yml
++++ b/.github/workflows/tag.yml
+@@ -8,10 +8,10 @@ jobs:
+     steps:
+       - name: checkout repository
+         uses: actions/checkout@v2
+-      - name: setup jdk 16
++      - name: setup jdk 8
+         uses: actions/setup-java@v1
+         with:
+-          java-version: 16
++          java-version: 8
+       - name: make gradle wrapper executable
+         run: chmod +x ./gradlecw
+       - name: build
+diff --git a/Shared/src/main/java/dev/tr7zw/waveycapes/CapeHolder.java b/Shared/src/main/java/dev/tr7zw/waveycapes/CapeHolder.java
+index e646746..0906144 100644
+--- a/Shared/src/main/java/dev/tr7zw/waveycapes/CapeHolder.java
++++ b/Shared/src/main/java/dev/tr7zw/waveycapes/CapeHolder.java
+@@ -79,14 +79,14 @@ public interface CapeHolder {
+         
+         Vector3 gravity = new Vector3(0, -1, 0);
+         Vector2 strave = new Vector2((float)(abstractClientPlayer.getX() - abstractClientPlayer.xo), (float)(abstractClientPlayer.getZ() - abstractClientPlayer.zo));
+-        strave.rotateDegrees(-abstractClientPlayer.getYRot());
++        strave.rotateDegrees(-abstractClientPlayer.yRot);
+         double changeX = (d * o + m * p) + fallHack + (abstractClientPlayer.isCrouching() && !simulation.isSneaking() ? 3 : 0);
+         double changeY = ((abstractClientPlayer.getY() - abstractClientPlayer.yo)*heightMul) + (abstractClientPlayer.isCrouching() && !simulation.isSneaking() ? 1 : 0);
+         double changeZ =  -strave.x * straveMul;
+         simulation.setSneaking(abstractClientPlayer.isCrouching());
+         Vector3 change = new Vector3((float)changeX, (float)changeY, (float)changeZ);
+         if(abstractClientPlayer.isVisuallySwimming()) {
+-            float rotation = abstractClientPlayer.getXRot(); // -90 = swimming up, 0 = straight, 90 = down
++            float rotation = abstractClientPlayer.xRot; // -90 = swimming up, 0 = straight, 90 = down
+             // the simulation has the body as reference, so if the player is swimming straight down, gravity needs to point up(the cape should move into the direction of the head, not the feet)
+             // offset the rotation to swimming up doesn't rotate the vector at all
+             rotation += 90;
+diff --git a/Shared/src/main/java/dev/tr7zw/waveycapes/WaveyCapesBase.java b/Shared/src/main/java/dev/tr7zw/waveycapes/WaveyCapesBase.java
+index ee1f637..d0345ea 100644
+--- a/Shared/src/main/java/dev/tr7zw/waveycapes/WaveyCapesBase.java
++++ b/Shared/src/main/java/dev/tr7zw/waveycapes/WaveyCapesBase.java
+@@ -147,13 +147,11 @@ public abstract class WaveyCapesBase {
+     // Modified version from InventoryScreen
+     private void drawEntity(int x, int y, int size, float lookX, float lookY, LivingEntity livingEntity, float delta) {
+         float rotationModifyer = 3;
+-        PoseStack poseStack = RenderSystem.getModelViewStack();
+-        poseStack.pushPose();
+-        poseStack.translate(x, y, 1050.0D);
+-        poseStack.scale(1.0F, 1.0F, -1.0F);
+-        RenderSystem.applyModelViewMatrix();
++        RenderSystem.pushMatrix();
++        RenderSystem.translatef(x, y, 1050.0F);
++        RenderSystem.scalef(1.0F, 1.0F, -1.0F);
+         PoseStack matrixStack = new PoseStack();
+-        matrixStack.translate(0.0D, 1, 1000.0D);
++        matrixStack.translate(0.0D, 0.0D, 1000.0D);
+         matrixStack.scale((float) size, (float) size, (float) size);
+         Quaternion quaternion = Vector3f.ZP.rotationDegrees(180.0F);
+         Quaternion quaternion2 = Vector3f.XP.rotationDegrees(lookY * rotationModifyer);
+@@ -161,24 +159,23 @@ public abstract class WaveyCapesBase {
+         matrixStack.mulPose(quaternion);
+         matrixStack.translate(0.0D, -1, 0D);
+         float yBodyRot = livingEntity.yBodyRot;
+-        float yRot = livingEntity.getYRot();
++        float yRot = livingEntity.yRot;
+         float yRotO = livingEntity.yRotO;
+         float yBodyRotO = livingEntity.yBodyRotO;
+-        float xRot = livingEntity.getXRot();
++        float xRot = livingEntity.xRot;
+         float xRotO = livingEntity.xRotO;
+         float yHeadRotO = livingEntity.yHeadRotO;
+         float yHeadRot = livingEntity.yHeadRot;
+         Vec3 vel = livingEntity.getDeltaMovement();
+         livingEntity.yBodyRot = 180.0F + (lookX*rotationModifyer);
+-        livingEntity.setYRot(180.0F + (lookX*rotationModifyer));
++        livingEntity.yRot = (180.0F + (lookX*rotationModifyer));
+         livingEntity.yBodyRotO = livingEntity.yBodyRot;
+-        livingEntity.yRotO = livingEntity.getYRot();
++        livingEntity.yRotO = livingEntity.yRot;
+         livingEntity.setDeltaMovement(Vec3.ZERO);
+-        livingEntity.setXRot(0);
+-        livingEntity.xRotO = livingEntity.getXRot();
+-        livingEntity.yHeadRot = livingEntity.getYRot();
+-        livingEntity.yHeadRotO = livingEntity.getYRot();
+-        Lighting.setupForEntityInInventory();
++        livingEntity.xRot = 0;
++        livingEntity.xRotO = livingEntity.xRot;
++        livingEntity.yHeadRot = livingEntity.yRot;
++        livingEntity.yHeadRotO = livingEntity.yRot;
+         EntityRenderDispatcher entityRenderDispatcher = Minecraft.getInstance().getEntityRenderDispatcher();
+         quaternion2.conj();
+         entityRenderDispatcher.overrideCameraOrientation(quaternion2);
+@@ -191,16 +188,14 @@ public abstract class WaveyCapesBase {
+         entityRenderDispatcher.setRenderShadow(true);
+         livingEntity.yBodyRot = yBodyRot;
+         livingEntity.yBodyRotO = yBodyRotO;
+-        livingEntity.setYRot(yRot);
++        livingEntity.yRot = (yRot);
+         livingEntity.yRotO = yRotO;
+-        livingEntity.setXRot(xRot);
++        livingEntity.xRot = (xRot);
+         livingEntity.xRotO = xRotO;
+         livingEntity.yHeadRotO = yHeadRotO;
+         livingEntity.yHeadRot = yHeadRot;
+         livingEntity.setDeltaMovement(vel);
+-        poseStack.popPose();
+-        RenderSystem.applyModelViewMatrix();
+-        Lighting.setupFor3DItems();
++        RenderSystem.popMatrix();
+     }
+     
+     public abstract void initSupportHooks();
+diff --git a/Shared/src/main/java/dev/tr7zw/waveycapes/mixin/PlayerModelMixin.java b/Shared/src/main/java/dev/tr7zw/waveycapes/mixin/PlayerModelMixin.java
+index d80a2f6..72ec18b 100644
+--- a/Shared/src/main/java/dev/tr7zw/waveycapes/mixin/PlayerModelMixin.java
++++ b/Shared/src/main/java/dev/tr7zw/waveycapes/mixin/PlayerModelMixin.java
+@@ -23,10 +23,10 @@ public class PlayerModelMixin<T extends LivingEntity> extends HumanoidModel<T> i
+     @Final
+     private ModelPart cloak;
+     
+-    public PlayerModelMixin(ModelPart modelPart) {
+-        super(modelPart);
++    public PlayerModelMixin(float f) {
++        super(f);
+     }
+-
++    
+     @Inject(method = "renderCloak", at = @At("HEAD"), cancellable = true)
+     public void renderCloak(PoseStack poseStack, VertexConsumer vertexConsumer, int i, int j, CallbackInfo info) {
+         info.cancel();
+diff --git a/Shared/src/main/java/dev/tr7zw/waveycapes/mixin/PlayerRendererMixin.java b/Shared/src/main/java/dev/tr7zw/waveycapes/mixin/PlayerRendererMixin.java
+index 3322a9f..d106c0f 100644
+--- a/Shared/src/main/java/dev/tr7zw/waveycapes/mixin/PlayerRendererMixin.java
++++ b/Shared/src/main/java/dev/tr7zw/waveycapes/mixin/PlayerRendererMixin.java
+@@ -8,15 +8,16 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+ import dev.tr7zw.waveycapes.renderlayers.CustomCapeRenderLayer;
+ import net.minecraft.client.model.PlayerModel;
+ import net.minecraft.client.player.AbstractClientPlayer;
+-import net.minecraft.client.renderer.entity.EntityRendererProvider.Context;
++import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
+ import net.minecraft.client.renderer.entity.LivingEntityRenderer;
+ import net.minecraft.client.renderer.entity.player.PlayerRenderer;
+ 
+ @Mixin(PlayerRenderer.class)
+ public abstract class PlayerRendererMixin extends LivingEntityRenderer<AbstractClientPlayer, PlayerModel<AbstractClientPlayer>> {
+ 
+-    public PlayerRendererMixin(Context context, PlayerModel<AbstractClientPlayer> entityModel, float f) {
+-        super(context, entityModel, f);
++    public PlayerRendererMixin(EntityRenderDispatcher entityRenderDispatcher,
++            PlayerModel<AbstractClientPlayer> entityModel, float f) {
++        super(entityRenderDispatcher, entityModel, f);
+     }
+ 
+     @Inject(method = "<init>*", at = @At("RETURN"))
+diff --git a/Shared/src/main/java/dev/tr7zw/waveycapes/renderlayers/CustomCapeRenderLayer.java b/Shared/src/main/java/dev/tr7zw/waveycapes/renderlayers/CustomCapeRenderLayer.java
+index cd852d1..dc444a2 100644
+--- a/Shared/src/main/java/dev/tr7zw/waveycapes/renderlayers/CustomCapeRenderLayer.java
++++ b/Shared/src/main/java/dev/tr7zw/waveycapes/renderlayers/CustomCapeRenderLayer.java
+@@ -20,11 +20,6 @@ import dev.tr7zw.waveycapes.support.ModSupport;
+ import dev.tr7zw.waveycapes.support.SupportManager;
+ import net.minecraft.client.model.PlayerModel;
+ import net.minecraft.client.model.geom.ModelPart;
+-import net.minecraft.client.model.geom.PartPose;
+-import net.minecraft.client.model.geom.builders.CubeDeformation;
+-import net.minecraft.client.model.geom.builders.CubeListBuilder;
+-import net.minecraft.client.model.geom.builders.MeshDefinition;
+-import net.minecraft.client.model.geom.builders.PartDefinition;
+ import net.minecraft.client.player.AbstractClientPlayer;
+ import net.minecraft.client.renderer.MultiBufferSource;
+ import net.minecraft.client.renderer.RenderType;
+@@ -51,16 +46,9 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
+     
+     private void buildMesh() {
+         customCape = new ModelPart[partCount];
+-        MeshDefinition meshDefinition = new MeshDefinition();
+-        PartDefinition partDefinition = meshDefinition.getRoot();
+-        for (int i = 0; i < partCount; i++)
+-            partDefinition.addOrReplaceChild("customCape_" + i,
+-                    CubeListBuilder.create().texOffs(0, (int) (i * (16f / partCount)))
+-                            .addBox(-5.0F, i * (16f / partCount), -1.0F, 10.0F, (16f / partCount), 1.0F, CubeDeformation.NONE, 1.0F, 0.5F),
+-                    PartPose.offset(0.0F, 0.0F, 0.0F));  
+-        ModelPart modelPart = partDefinition.bake(64,64);
+         for (int i = 0; i < partCount; i++) {
+-            this.customCape[i] = modelPart.getChild("customCape_" + i);
++            ModelPart base = new ModelPart(64, 32, 0, i);
++            this.customCape[i] = base.addBox(-5.0F, (float)i, -1.0F, 10.0F, 1.0F, 1F);
+         }
+     }
+ 
+@@ -69,7 +57,7 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
+         CapeRenderer renderer = getCapeRenderer(abstractClientPlayer, multiBufferSource);
+         if(renderer == null) return;
+         ItemStack itemStack = abstractClientPlayer.getItemBySlot(EquipmentSlot.CHEST);
+-        if (itemStack.is(Items.ELYTRA))
++        if (itemStack.getItem() == Items.ELYTRA)
+             return;
+         if(getParentModel() instanceof PlayerModelAccess pma && !pma.getCloak().visible) {
+             return;
+@@ -516,7 +504,7 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
+      * @return
+      */
+     private static float easeOutSine(float x) {
+-        return Mth.sin((x * Mth.PI) / 2f);
++        return Mth.sin((float) ((x * Math.PI) / 2f));
+ 
+       }
+     
+diff --git a/WCFabric/src/main/java/dev/tr7zw/waveycapes/WaveyCapesMod.java b/WCFabric/src/main/java/dev/tr7zw/waveycapes/WaveyCapesMod.java
+index 5f2403a..1862095 100644
+--- a/WCFabric/src/main/java/dev/tr7zw/waveycapes/WaveyCapesMod.java
++++ b/WCFabric/src/main/java/dev/tr7zw/waveycapes/WaveyCapesMod.java
+@@ -1,7 +1,6 @@
+ package dev.tr7zw.waveycapes;
+ 
+ import dev.tr7zw.waveycapes.support.MinecraftCapesSupport;
+-import dev.tr7zw.waveycapes.support.MoreBannerFeaturesSupport;
+ import dev.tr7zw.waveycapes.support.SupportManager;
+ import net.fabricmc.api.ModInitializer;
+ 
+@@ -13,10 +12,6 @@ public class WaveyCapesMod extends WaveyCapesBase implements ModInitializer {
+ 
+     @Override
+     public void initSupportHooks() {
+-        if(doesClassExist("de.kxmischesdomi.morebannerfeatures.MoreBannerFeatures")) {
+-            SupportManager.mods.add(new MoreBannerFeaturesSupport());
+-            LOGGER.info("Wavey Capes loaded MoreBannerFeatures support!");
+-        }
+ 
+         if(doesClassExist("net.minecraftcapes.MinecraftCapes")) {
+             SupportManager.mods.add(new MinecraftCapesSupport());
+diff --git a/WCFabric/src/main/java/dev/tr7zw/waveycapes/support/MoreBannerFeaturesSupport.java b/WCFabric/src/main/java/dev/tr7zw/waveycapes/support/MoreBannerFeaturesSupport.java
+deleted file mode 100644
+index b312d5b..0000000
+--- a/WCFabric/src/main/java/dev/tr7zw/waveycapes/support/MoreBannerFeaturesSupport.java
++++ /dev/null
+@@ -1,77 +0,0 @@
+-package dev.tr7zw.waveycapes.support;
+-
+-import java.util.HashMap;
+-import java.util.List;
+-import java.util.stream.Collectors;
+-
+-import com.mojang.blaze3d.vertex.PoseStack;
+-import com.mojang.datafixers.util.Pair;
+-
+-import de.kxmischesdomi.morebannerfeatures.core.accessor.Bannerable;
+-import de.kxmischesdomi.morebannerfeatures.renderer.BannerCapeFeatureRenderer;
+-import de.kxmischesdomi.morebannerfeatures.utils.RendererUtils;
+-import dev.tr7zw.waveycapes.CapeRenderer;
+-import net.minecraft.client.model.geom.ModelPart;
+-import net.minecraft.client.model.geom.builders.CubeDeformation;
+-import net.minecraft.client.model.geom.builders.CubeListBuilder;
+-import net.minecraft.client.player.AbstractClientPlayer;
+-import net.minecraft.client.renderer.MultiBufferSource;
+-import net.minecraft.client.renderer.texture.OverlayTexture;
+-import net.minecraft.client.resources.model.ModelBakery;
+-import net.minecraft.world.item.BannerItem;
+-import net.minecraft.world.item.DyeColor;
+-import net.minecraft.world.item.ItemStack;
+-import net.minecraft.world.level.block.entity.BannerBlockEntity;
+-import net.minecraft.world.level.block.entity.BannerPattern;
+-
+-public class MoreBannerFeaturesSupport implements ModSupport {
+-
+-    private MoreBannerRenderer render = new MoreBannerRenderer();
+-    private ModelPart[] customCape = new ModelPart[16];
+-
+-    public MoreBannerFeaturesSupport() {
+-        for (int i = 0; i < 16; i++) {
+-            CubeListBuilder modelPartBuilder = CubeListBuilder.create().texOffs(0, i).addBox(-5.0F, i, -1.0F, 10.0F,
+-                    1.0F, 1.0F, CubeDeformation.NONE, 1.0F, 0.5F);
+-            customCape[i] = new ModelPart(modelPartBuilder.getCubes().stream()
+-                    .map(modelCuboidData -> modelCuboidData.bake(34, 54)).collect(Collectors.toList()),
+-                    new HashMap<>());
+-        }
+-    }
+-
+-    @Override
+-    public boolean shouldBeUsed(AbstractClientPlayer player) {
+-        return player instanceof Bannerable && !((Bannerable) player).getBannerItem().isEmpty() && ((Bannerable) player).getBannerItem().getItem() instanceof BannerItem;
+-    }
+-
+-    @Override
+-    public CapeRenderer getRenderer() {
+-        return render;
+-    }
+-
+-    private class MoreBannerRenderer implements CapeRenderer {
+-
+-        @Override
+-        public void render(AbstractClientPlayer player, int part, ModelPart model, PoseStack poseStack,
+-                MultiBufferSource multiBufferSource, int light, int overlay) {
+-            ItemStack bannerItem = ((Bannerable) player).getBannerItem();
+-            List<Pair<BannerPattern, DyeColor>> patterns = BannerBlockEntity.createPatterns(
+-                    ((BannerItem) bannerItem.getItem()).getColor(), BannerBlockEntity.getItemPatterns(bannerItem));
+-
+-            RendererUtils.renderCanvas(poseStack, multiBufferSource, light, OverlayTexture.NO_OVERLAY, customCape[part],
+-                    ModelBakery.BANNER_BASE, true, patterns);
+-        }
+-        
+-        @Override
+-        public boolean vanillaUvValues() {
+-            return false;
+-        }
+-
+-    }
+-
+-    @Override
+-    public boolean blockFeatureRenderer(Object feature) {
+-        return feature instanceof BannerCapeFeatureRenderer;
+-    }
+-
+-}
+diff --git a/WCFabric/src/main/resources/fabric.mod.json b/WCFabric/src/main/resources/fabric.mod.json
+index ac7fa6e..bd0ed42 100644
+--- a/WCFabric/src/main/resources/fabric.mod.json
++++ b/WCFabric/src/main/resources/fabric.mod.json
+@@ -30,7 +30,6 @@
+   ],
+ 
+   "depends": {
+-    "minecraft": "1.17.x",
+-    "java": ">=16"
++    "minecraft": "1.16.x"
+   }
+ }
+diff --git a/WCForge/src/main/java/dev/tr7zw/waveycapes/WaveyCapesMod.java b/WCForge/src/main/java/dev/tr7zw/waveycapes/WaveyCapesMod.java
+index f5366dd..3b795c8 100644
+--- a/WCForge/src/main/java/dev/tr7zw/waveycapes/WaveyCapesMod.java
++++ b/WCForge/src/main/java/dev/tr7zw/waveycapes/WaveyCapesMod.java
+@@ -1,39 +1,47 @@
+ package dev.tr7zw.waveycapes;
+ 
++import java.util.function.BiFunction;
++
++import org.apache.commons.lang3.tuple.Pair;
++
+ import dev.tr7zw.waveycapes.support.MinecraftCapesSupport;
+ import dev.tr7zw.waveycapes.support.SupportManager;
+-import net.minecraftforge.fml.IExtensionPoint;
++import net.minecraft.client.Minecraft;
++import net.minecraft.client.gui.screens.Screen;
++import net.minecraftforge.fml.ExtensionPoint;
+ import net.minecraftforge.fml.ModLoadingContext;
+ import net.minecraftforge.fml.common.Mod;
+-import net.minecraftforge.fmlclient.ConfigGuiHandler.ConfigGuiFactory;
++import net.minecraftforge.fml.network.FMLNetworkConstants;
+ 
+ @Mod("waveycapes")
+ public class WaveyCapesMod extends WaveyCapesBase {
+ 
+-	public WaveyCapesMod() {
++    public WaveyCapesMod() {
+         try {
+             Class clientClass = net.minecraft.client.Minecraft.class;
+-        }catch(Throwable ex) {
++        } catch (Throwable ex) {
+             LOGGER.warn("WaveyCapes Mod installed on a Server. Going to sleep.");
+             return;
+         }
+-	    init();
+-        ModLoadingContext.get().registerExtensionPoint(ConfigGuiFactory.class, () -> new ConfigGuiFactory((mc, screen) -> {
+-            return createConfigScreen(screen);
+-        }));
+-		ModLoadingContext.get().registerExtensionPoint(IExtensionPoint.DisplayTest.class,
+-                () -> new IExtensionPoint.DisplayTest(
+-                        () -> ModLoadingContext.get().getActiveContainer().getModInfo().getVersion().toString(),
+-                        (remote, isServer) -> true));
+-	}
++        init();
++        ModLoadingContext.get().registerExtensionPoint(ExtensionPoint.DISPLAYTEST,
++                () -> Pair.of(() -> FMLNetworkConstants.IGNORESERVERONLY, (remote, isServer) -> true));
++        ModLoadingContext.get().registerExtensionPoint(ExtensionPoint.CONFIGGUIFACTORY,
++                () -> new BiFunction<Minecraft, Screen, Screen>() {
++                    @Override
++                    public Screen apply(Minecraft t, Screen screen) {
++                        return createConfigScreen(screen);
++                    }
++                });
++    }
+ 
+     @Override
+     public void initSupportHooks() {
+ 
+-        if(doesClassExist("net.minecraftcapes.MinecraftCapes")) {
++        if (doesClassExist("net.minecraftcapes.MinecraftCapes")) {
+             SupportManager.mods.add(new MinecraftCapesSupport());
+             LOGGER.info("Wavey Capes loaded MinecraftCapes support!");
+         }
+     }
+-	
++
+ }
+diff --git a/WCForge/src/main/resources/META-INF/mods.toml b/WCForge/src/main/resources/META-INF/mods.toml
+index 460a931..b025d8d 100644
+--- a/WCForge/src/main/resources/META-INF/mods.toml
++++ b/WCForge/src/main/resources/META-INF/mods.toml
+@@ -14,16 +14,9 @@ authors="tr7zw"
+ description='''
+ The cape shouldn't be a static slab
+ '''
+-[[dependencies.waveycapes]] #optional
+-    modId="forge" #mandatory
+-    mandatory=true #mandatory
+-    versionRange="[33.0.22,)" #mandatory
+-    ordering="NONE"
+-    side="BOTH"
+-# Here's another dependency
+ [[dependencies.waveycapes]]
+     modId="minecraft"
+     mandatory=true
+-    versionRange="[1.17.1,)"
++    versionRange="[1.16,)"
+     ordering="NONE"
+     side="BOTH"
+\ No newline at end of file
+diff --git a/gradle-compose.yml b/gradle-compose.yml
+index ed0218a..3718910 100644
+--- a/gradle-compose.yml
++++ b/gradle-compose.yml
+@@ -1,5 +1,5 @@
+ version: '0.0.2'
+-source: "https://github.com/tr7zw/ModComposeTemplate/tree/1.17.1"
++source: "https://github.com/tr7zw/ModComposeTemplate/tree/1.16.5"
+ replacements:
+   name: "WaveyCapes"
+   id: "waveycapes"
+@@ -20,13 +20,11 @@ subProjects:
+     template: "Fabric"
+     replacements:
+       dependencies: '
+-      modCompileOnly "curse.maven:morebanners-515000:3453480"
+-      
+-      modCompileOnly "curse.maven:minecraftcapes-mod-359836:3409502"
++      modCompileOnly "curse.maven:minecraftcapes-mod-359836:3409500"
+       '
+   WCForge:
+     template: "Forge"
+     replacements:
+       dependencies: '
+-      modImplementation "curse.maven:minecraftcapes-mod-359836:3542122"
++      modImplementation "curse.maven:minecraftcapes-mod-359836:3398885"
+       '
+\ No newline at end of file
+-- 
+2.32.0.windows.2
+
