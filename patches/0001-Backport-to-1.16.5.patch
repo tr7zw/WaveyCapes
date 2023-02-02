@@ -1,4 +1,4 @@
-From 0b002bbb1032abafd074b4b86bb138d92e776e3e Mon Sep 17 00:00:00 2001
+From f27bb4917108c0969a7e860a8da2ea0b926e9f02 Mon Sep 17 00:00:00 2001
 From: tr7zw <tr7zw@live.de>
 Date: Thu, 2 Feb 2023 20:29:26 +0100
 Subject: [PATCH] Backport to 1.16.5
@@ -10,18 +10,19 @@ Subject: [PATCH] Backport to 1.16.5
  .../dev/tr7zw/waveycapes/WaveyCapesBase.java  | 35 ++++-----
  .../waveycapes/mixin/PlayerModelMixin.java    |  6 +-
  .../waveycapes/mixin/PlayerRendererMixin.java |  7 +-
- .../renderlayers/CustomCapeRenderLayer.java   | 20 +----
+ .../renderlayers/CustomCapeRenderLayer.java   | 22 ++----
+ .../src/main/resources/waveycapes.mixins.json |  1 -
  .../dev/tr7zw/waveycapes/WaveyCapesMod.java   |  5 --
  .../support/MoreBannerFeaturesSupport.java    | 77 -------------------
  WCFabric/src/main/resources/fabric.mod.json   |  3 +-
  .../dev/tr7zw/waveycapes/WaveyCapesMod.java   | 38 +++++----
  WCForge/src/main/resources/META-INF/mods.toml |  9 +--
  gradle-compose.yml                            |  8 +-
- 13 files changed, 60 insertions(+), 160 deletions(-)
+ 14 files changed, 61 insertions(+), 162 deletions(-)
  delete mode 100644 WCFabric/src/main/java/dev/tr7zw/waveycapes/support/MoreBannerFeaturesSupport.java
 
 diff --git a/.github/workflows/build.yml b/.github/workflows/build.yml
-index 8907f5c..37f8b05 100644
+index 8907f5c..be33b43 100644
 --- a/.github/workflows/build.yml
 +++ b/.github/workflows/build.yml
 @@ -10,10 +10,10 @@ jobs:
@@ -29,16 +30,16 @@ index 8907f5c..37f8b05 100644
        - name: checkout repository
          uses: actions/checkout@v2
 -      - name: setup jdk 16
-+      - name: setup jdk 8
++      - name: setup jdk 17
          uses: actions/setup-java@v1
          with:
 -          java-version: 16
-+          java-version: 8
++          java-version: 17
        - name: make gradle wrapper executable
          if: ${{ runner.os != 'Windows' }}
          run: chmod +x ./gradlecw
 diff --git a/.github/workflows/tag.yml b/.github/workflows/tag.yml
-index c98ab73..f841964 100644
+index c98ab73..4a4ac4f 100644
 --- a/.github/workflows/tag.yml
 +++ b/.github/workflows/tag.yml
 @@ -8,10 +8,10 @@ jobs:
@@ -46,11 +47,11 @@ index c98ab73..f841964 100644
        - name: checkout repository
          uses: actions/checkout@v2
 -      - name: setup jdk 16
-+      - name: setup jdk 8
++      - name: setup jdk 17
          uses: actions/setup-java@v1
          with:
 -          java-version: 16
-+          java-version: 8
++          java-version: 17
        - name: make gradle wrapper executable
          run: chmod +x ./gradlecw
        - name: build
@@ -193,7 +194,7 @@ index 3322a9f..d106c0f 100644
  
      @Inject(method = "<init>*", at = @At("RETURN"))
 diff --git a/Shared/src/main/java/dev/tr7zw/waveycapes/renderlayers/CustomCapeRenderLayer.java b/Shared/src/main/java/dev/tr7zw/waveycapes/renderlayers/CustomCapeRenderLayer.java
-index cd852d1..dc444a2 100644
+index cd852d1..53205fc 100644
 --- a/Shared/src/main/java/dev/tr7zw/waveycapes/renderlayers/CustomCapeRenderLayer.java
 +++ b/Shared/src/main/java/dev/tr7zw/waveycapes/renderlayers/CustomCapeRenderLayer.java
 @@ -20,11 +20,6 @@ import dev.tr7zw.waveycapes.support.ModSupport;
@@ -227,15 +228,18 @@ index cd852d1..dc444a2 100644
          }
      }
  
-@@ -69,7 +57,7 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
+@@ -69,9 +57,9 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
          CapeRenderer renderer = getCapeRenderer(abstractClientPlayer, multiBufferSource);
          if(renderer == null) return;
          ItemStack itemStack = abstractClientPlayer.getItemBySlot(EquipmentSlot.CHEST);
 -        if (itemStack.is(Items.ELYTRA))
 +        if (itemStack.getItem() == Items.ELYTRA)
              return;
-         if(getParentModel() instanceof PlayerModelAccess pma && !pma.getCloak().visible) {
+-        if(getParentModel() instanceof PlayerModelAccess pma && !pma.getCloak().visible) {
++        if(getParentModel() instanceof PlayerModelAccess && !((PlayerModelAccess)getParentModel()).getCloak().visible) {
              return;
+         }
+         // smooth doesn't need more than 16
 @@ -516,7 +504,7 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
       * @return
       */
@@ -245,6 +249,18 @@ index cd852d1..dc444a2 100644
  
        }
      
+diff --git a/Shared/src/main/resources/waveycapes.mixins.json b/Shared/src/main/resources/waveycapes.mixins.json
+index 7b6c306..db57e32 100644
+--- a/Shared/src/main/resources/waveycapes.mixins.json
++++ b/Shared/src/main/resources/waveycapes.mixins.json
+@@ -2,7 +2,6 @@
+   "required": true,
+   "minVersion": "0.8",
+   "package": "dev.tr7zw.waveycapes.mixin",
+-  "compatibilityLevel": "JAVA_16",
+   "mixins": [
+   ],
+   "client": [
 diff --git a/WCFabric/src/main/java/dev/tr7zw/waveycapes/WaveyCapesMod.java b/WCFabric/src/main/java/dev/tr7zw/waveycapes/WaveyCapesMod.java
 index 5f2403a..1862095 100644
 --- a/WCFabric/src/main/java/dev/tr7zw/waveycapes/WaveyCapesMod.java
