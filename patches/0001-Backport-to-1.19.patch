@@ -1,4 +1,4 @@
-From cce7c3637e90864bffe8cea5030a70570e3c1666 Mon Sep 17 00:00:00 2001
+From f06fcff3f3695da4eaa9218f7d93bc213741b392 Mon Sep 17 00:00:00 2001
 From: tr7zw <tr7zw@live.de>
 Date: Sun, 22 Jan 2023 01:26:16 +0100
 Subject: [PATCH] Backport to 1.19
@@ -107,7 +107,7 @@ index fa8c493..b788ac2 100644
      
      private float getNatrualWindSwing(int part, boolean underwater) {
 diff --git a/WCFabric/src/main/resources/fabric.mod.json b/WCFabric/src/main/resources/fabric.mod.json
-index 6d65ca9..3f71ade 100644
+index 5897f44..d8751d8 100644
 --- a/WCFabric/src/main/resources/fabric.mod.json
 +++ b/WCFabric/src/main/resources/fabric.mod.json
 @@ -30,6 +30,7 @@
@@ -156,7 +156,7 @@ index 749fcf1..e1d2022 100644
    }
  }
 diff --git a/gradle-compose.yml b/gradle-compose.yml
-index 6c0a2ce..f42b343 100644
+index a2f0f03..d32d17f 100644
 --- a/gradle-compose.yml
 +++ b/gradle-compose.yml
 @@ -1,5 +1,5 @@
