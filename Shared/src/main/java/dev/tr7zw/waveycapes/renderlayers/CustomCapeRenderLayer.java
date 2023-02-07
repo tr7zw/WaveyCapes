@@ -167,7 +167,7 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
                     part * (0.96F / partCount),
                     0F, part, light);
 
-            oldPositionMatrix = poseStack.last().pose();
+            oldPositionMatrix = new Matrix4f(poseStack.last().pose());
             poseStack.popPose();
         }
 
