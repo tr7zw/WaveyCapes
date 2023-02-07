@@ -1,26 +1,19 @@
-modLoader="javafml" #mandatory
-loaderVersion="[28,)" #mandatory (28 is current forge version)
-issueTrackerURL="https://github.com/tr7zw/NotEnoughAnimations/issues" #optional
+modLoader="javafml"
+loaderVersion="[28,)"
+issueTrackerURL="https://github.com/tr7zw/NotEnoughAnimations/issues"
 
 license="tr7zw Protective License"
-[[mods]] #mandatory
-modId="waveycapes" #mandatory
-version="1.3.0" #mandatory
-displayName="WaveyCapes Mod" #mandatory
-displayURL="https://www.curseforge.com/minecraft/mc-mods/waveycapes" #optional
+[[mods]]
+modId="waveycapes"
+version="1.3.1"
+displayName="WaveyCapes Mod"
+displayURL="https://www.curseforge.com/minecraft/mc-mods/waveycapes"
 # A file name (in the root of the mod JAR) containing a logo for display
-#logoFile="icon.png" #optional
+logoFile="assets/waveycapes/icon.png"
 authors="tr7zw"
 description='''
 The cape shouldn't be a static slab
 '''
-[[dependencies.waveycapes]] #optional
-    modId="forge" #mandatory
-    mandatory=true #mandatory
-    versionRange="[33.0.22,)" #mandatory
-    ordering="NONE"
-    side="BOTH"
-# Here's another dependency
 [[dependencies.waveycapes]]
     modId="minecraft"
     mandatory=true

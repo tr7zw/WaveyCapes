@@ -36,7 +36,6 @@ public abstract class WaveyCapesBase {
     public static Config config;
     private final File settingsFile = new File("config", "waveycapes.json");
     private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
-    private boolean optifinePresent = false;
     
     public void init() {
         INSTANCE = this;
@@ -58,14 +57,6 @@ public abstract class WaveyCapesBase {
             }
         }
         initSupportHooks();
-        try {
-            Class optifine = Class.forName("net.optifine.Config");
-            optifinePresent = true;
-            config.capeStyle = CapeStyle.BLOCKY;
-            LOGGER.warn("Optifine detected, disabling smooth cape.");
-        }catch(Throwable ex) {
-            return;
-        }
     }
     
     public void writeConfig() {
@@ -87,8 +78,7 @@ public abstract class WaveyCapesBase {
             @Override
             public void initialize() {
                 List<OptionInstance<?>> options = new ArrayList<>();
-                if(!optifinePresent)
-                    options.add(getEnumOption("text.wc.setting.capestyle", CapeStyle.class, () -> config.capeStyle, (v) -> config.capeStyle = v));
+                options.add(getEnumOption("text.wc.setting.capestyle", CapeStyle.class, () -> config.capeStyle, (v) -> config.capeStyle = v));
                 options.add(getEnumOption("text.wc.setting.windmode", WindMode.class, () -> config.windMode, (v) -> config.windMode = v));
                 options.add(getEnumOption("text.wc.setting.capemovement", CapeMovement.class, () -> config.capeMovement, (v) -> config.capeMovement = v));
                 //options.add(getIntOption("text.wc.setting.capeparts", 16, 64, () -> config.capeParts, (v) -> config.capeParts = v));
