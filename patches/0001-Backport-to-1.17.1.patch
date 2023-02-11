@@ -1,54 +1,34 @@
-From d6dc4783bb76c83f1ddbccada22db9dcd3b001c3 Mon Sep 17 00:00:00 2001
+From cb2d8bdd7cecd4d90dedb4f7fb3b40b9f343d33b Mon Sep 17 00:00:00 2001
 From: tr7zw <tr7zw@live.de>
 Date: Sat, 28 Jan 2023 19:47:16 +0100
 Subject: [PATCH] Backport to 1.17.1
 
 ---
- .github/workflows/build.yml                       | 15 +++------------
- .github/workflows/tag.yml                         |  4 ++--
- WCFabric/src/main/resources/fabric.mod.json       |  2 +-
- .../java/dev/tr7zw/waveycapes/WaveyCapesMod.java  |  2 +-
- WCForge/src/main/resources/META-INF/mods.toml     |  2 +-
- gradle-compose.yml                                |  2 +-
- 6 files changed, 9 insertions(+), 18 deletions(-)
+ .github/workflows/build.yml                                   | 4 ++--
+ .github/workflows/tag.yml                                     | 4 ++--
+ WCFabric/src/main/resources/fabric.mod.json                   | 2 +-
+ WCForge/src/main/java/dev/tr7zw/waveycapes/WaveyCapesMod.java | 2 +-
+ WCForge/src/main/resources/META-INF/mods.toml                 | 2 +-
+ gradle-compose.yml                                            | 2 +-
+ 6 files changed, 8 insertions(+), 8 deletions(-)
 
 diff --git a/.github/workflows/build.yml b/.github/workflows/build.yml
-index fb2d755..8907f5c 100644
+index be33b43..8907f5c 100644
 --- a/.github/workflows/build.yml
 +++ b/.github/workflows/build.yml
-@@ -6,29 +6,20 @@ name: build
- on: [pull_request, push]
- jobs:
-   build:
--    strategy:
--      matrix:
--        # Use these Java versions
--        java: [
--          17
--        ]
--        # and run on both Linux and Windows
--        os: [ubuntu-20.04]
--    runs-on: ${{ matrix.os }}
-+    runs-on: ubuntu-latest
+@@ -10,10 +10,10 @@ jobs:
      steps:
        - name: checkout repository
          uses: actions/checkout@v2
--      - name: setup jdk ${{ matrix.java }}
+-      - name: setup jdk 17
 +      - name: setup jdk 16
          uses: actions/setup-java@v1
          with:
--          java-version: ${{ matrix.java }}
+-          java-version: 17
 +          java-version: 16
        - name: make gradle wrapper executable
          if: ${{ runner.os != 'Windows' }}
          run: chmod +x ./gradlecw
-       - name: build
-         run: ./gradlecw build
-       - name: capture build artifacts
--        if: ${{ runner.os == 'Linux' && matrix.java == '17' }} # Only upload artifacts built from LTS java on one OS
-         uses: actions/upload-artifact@v2
-         with:
-           name: Artifacts
 diff --git a/.github/workflows/tag.yml b/.github/workflows/tag.yml
 index 4a4ac4f..c98ab73 100644
 --- a/.github/workflows/tag.yml
@@ -67,7 +47,7 @@ index 4a4ac4f..c98ab73 100644
          run: chmod +x ./gradlecw
        - name: build
 diff --git a/WCFabric/src/main/resources/fabric.mod.json b/WCFabric/src/main/resources/fabric.mod.json
-index d4c2f40..ac7fa6e 100644
+index f285cdb..25df4f6 100644
 --- a/WCFabric/src/main/resources/fabric.mod.json
 +++ b/WCFabric/src/main/resources/fabric.mod.json
 @@ -30,7 +30,7 @@
@@ -96,10 +76,10 @@ index 0d62633..f5366dd 100644
  @Mod("waveycapes")
  public class WaveyCapesMod extends WaveyCapesBase {
 diff --git a/WCForge/src/main/resources/META-INF/mods.toml b/WCForge/src/main/resources/META-INF/mods.toml
-index 7b82063..460a931 100644
+index f80eb56..f7d13c5 100644
 --- a/WCForge/src/main/resources/META-INF/mods.toml
 +++ b/WCForge/src/main/resources/META-INF/mods.toml
-@@ -24,6 +24,6 @@ The cape shouldn't be a static slab
+@@ -17,6 +17,6 @@ The cape shouldn't be a static slab
  [[dependencies.waveycapes]]
      modId="minecraft"
      mandatory=true
@@ -109,7 +89,7 @@ index 7b82063..460a931 100644
      side="BOTH"
 \ No newline at end of file
 diff --git a/gradle-compose.yml b/gradle-compose.yml
-index 941482a..ed0218a 100644
+index 1fe2cbb..e1b7997 100644
 --- a/gradle-compose.yml
 +++ b/gradle-compose.yml
 @@ -1,5 +1,5 @@
