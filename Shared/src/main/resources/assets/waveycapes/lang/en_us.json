@@ -14,6 +14,7 @@
     "text.wc.setting.capemovement.VANILLA": "Classic",
     "text.wc.setting.capemovement.BASIC_SIMULATION": "Simulation",
     "text.wc.setting.capemovement.BASIC_SIMULATION_3D": "Simulation V2",
+    "text.wc.setting.capemovement.DUNGEONS": "Dungeons",
     "text.wc.setting.gravity": "Gravity",
     "text.wc.setting.gravity.tooltip": "Change the amount of gravity applied to the cape.",
     "text.wc.setting.heightMultiplier": "Height Multiplier",

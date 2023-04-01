@@ -5,6 +5,7 @@ import dev.tr7zw.waveycapes.sim.BasicSimulation;
 import dev.tr7zw.waveycapes.sim.StickSimulation;
 import dev.tr7zw.waveycapes.sim.StickSimulation.Vector2;
 import dev.tr7zw.waveycapes.sim.StickSimulation3d;
+import dev.tr7zw.waveycapes.sim.StickSimulationDungeons;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.util.Mth;
 
@@ -37,6 +38,8 @@ public interface CapeHolder {
             return true;
         } else if(style == CapeMovement.BASIC_SIMULATION_3D && sim.getClass() != StickSimulation3d.class) {
             return true;
+        } else if(style == CapeMovement.DUNGEONS && sim.getClass() != StickSimulationDungeons.class) {
+            return true;
         }
         return false;
     }
@@ -48,6 +51,9 @@ public interface CapeHolder {
         }
         if(style == CapeMovement.BASIC_SIMULATION_3D) {
             return new StickSimulation3d();
+        }
+        if(style == CapeMovement.DUNGEONS) {
+            return new StickSimulationDungeons();
         }
         return null;
     }
