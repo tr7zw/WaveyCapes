@@ -2,6 +2,7 @@
     "text.wc.title": "Definições de WaveyCapes",
 
     "text.wc.setting.capestyle": "Estilo da Capa",
+    "text.wc.setting.capestyle.tooltip": "Alterne entre uma capa que se dobra suavemente e uma capa em blocos.",
     "text.wc.setting.capestyle.BLOCKY": "Com Cubos",
     "text.wc.setting.capestyle.SMOOTH": "Plano",
     "text.wc.setting.windmode": "Com Vento",
@@ -9,10 +10,13 @@
     "text.wc.setting.windmode.WAVES": "Ondas",
     "text.wc.setting.windmode.SLIGHT": "Aleatório",
     "text.wc.setting.capemovement": "Movimento da Capa",
-    "text.wc.setting.capemovement.VANILLA": "Clássico",
+    "text.wc.setting.capemovement.tooltip": "Mude a maneira como a capa se comporta.",
+    "text.wc.setting.capemovement.VANILLA": "Clássica",
     "text.wc.setting.capemovement.BASIC_SIMULATION": "Simulação",
-    "text.wc.setting.capeparts": "Partes da Capa",
+    "text.wc.setting.capemovement.BASIC_SIMULATION_3D": "Simulação V2",
+    "text.wc.setting.capemovement.DUNGEONS": "Dungeons",
     "text.wc.setting.gravity": "Gravidade",
     "text.wc.setting.maxBend": "Ângulo Máximo da Dobra",
-    "text.wc.setting.heightMultiplier": "Multiplicador de Altura"
+    "text.wc.setting.heightMultiplier": "Multiplicador de Altura",
+	"text.wc.setting.heightMultiplier.tooltip": "Mude o quão extrema a capa reage ao movimento Y."
 }
