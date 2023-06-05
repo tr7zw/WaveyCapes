@@ -22,11 +22,11 @@ subProjects:
       dependencies: '
       modCompileOnly "curse.maven:morebanners-515000:3820969"
       
-      modCompileOnly "curse.maven:minecraftcapes-mod-359836:4019976"
+      modCompileOnly "curse.maven:minecraftcapes-mod-359836:4562672"
       '
   WCForge:
     template: "Forge"
     replacements:
       dependencies: '
-      modImplementation "curse.maven:minecraftcapes-mod-359836:4019977"
+      modImplementation "curse.maven:minecraftcapes-mod-359836:4562670"
       '
