@@ -17,7 +17,6 @@ import net.minecraft.SharedConstants;
 import net.minecraft.client.OptionInstance;
 import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.locale.Language;
 import net.minecraft.server.Bootstrap;
