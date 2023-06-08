@@ -23,6 +23,7 @@ import dev.tr7zw.waveycapes.config.Config;
 import dev.tr7zw.waveycapes.config.ConfigUpgrader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.OptionInstance;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
@@ -113,8 +114,8 @@ public abstract class WaveyCapesBase {
             }
             
             @Override
-            public void render(PoseStack poseStack, int xMouse, int yMouse, float f) {
-                super.render(poseStack, xMouse, yMouse, f);
+            public void render(GuiGraphics guiGraphics, int xMouse, int yMouse, float f) {
+                super.render(guiGraphics, xMouse, yMouse, f);
                 if (this.minecraft.level != null) {
                     int x = minecraft.getWindow().getGuiScaledWidth()/2;
                     int y = minecraft.getWindow().getGuiScaledHeight()-(minecraft.getWindow().getGuiScaledHeight()/3);
