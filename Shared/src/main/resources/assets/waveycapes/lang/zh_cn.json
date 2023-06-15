@@ -1,18 +1,22 @@
 {
-    "text.wc.title": "飘扬披风设置",
+    "text.wc.title": "WaveyCapes 设置",
 
     "text.wc.setting.capestyle": "披风样式",
+    "text.wc.setting.capestyle.tooltip": "在平滑弯曲和方块状的披风之间切换",
     "text.wc.setting.capestyle.BLOCKY": "块状",
     "text.wc.setting.capestyle.SMOOTH": "平滑",
     "text.wc.setting.windmode": "风模式",
-    "text.wc.setting.windmode.NONE": "无缝",
+    "text.wc.setting.windmode.tooltip": "为披风增加额外的运动。",
+    "text.wc.setting.windmode.NONE": "无风",
     "text.wc.setting.windmode.WAVES": "波浪",
-    "text.wc.setting.windmode.SLIGHT": "随机",
     "text.wc.setting.capemovement": "披风移动",
-    "text.wc.setting.capemovement.VANILLA": "经典",
+    "text.wc.setting.capemovement.tooltip": "改变披风的行为方式。",
+    "text.wc.setting.capemovement.VANILLA": "原版",
     "text.wc.setting.capemovement.BASIC_SIMULATION": "模拟",
-    "text.wc.setting.capeparts": "披风部分",
+    "text.wc.setting.capemovement.BASIC_SIMULATION_3D": "模拟 V2",
+    "text.wc.setting.capemovement.DUNGEONS": "地下城",
     "text.wc.setting.gravity": "重力",
-    "text.wc.setting.maxBend": "最大弯曲角度",
-    "text.wc.setting.heightMultiplier": "高度乘数"
+    "text.wc.setting.gravity.tooltip": "改变施加在披风上的重力大小。",
+    "text.wc.setting.heightMultiplier": "高度倍数",
+    "text.wc.setting.heightMultiplier.tooltip": "改变斗篷对Y轴运动的极端反应程度"
 }
