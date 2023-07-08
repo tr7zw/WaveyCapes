@@ -2,7 +2,7 @@
     "text.wc.title": "Настройки WaveyCapes",
 
     "text.wc.setting.capestyle": "Стиль плаща",
-    "text.wc.setting.capestyle.tooltip": "Переключение между плавным и сегментированным видом плаща.",
+    "text.wc.setting.capestyle.tooltip": "Переключение между плавным и сегментированным видами плаща.",
     "text.wc.setting.capestyle.BLOCKY": "Сегменты",
     "text.wc.setting.capestyle.SMOOTH": "Плавный",
     "text.wc.setting.windmode": "Ветер",
@@ -13,7 +13,7 @@
     "text.wc.setting.capemovement.tooltip": "Изменение способа обработки движений плаща.",
     "text.wc.setting.capemovement.VANILLA": "Классический",
     "text.wc.setting.capemovement.BASIC_SIMULATION": "Симуляция",
-    "text.wc.setting.capemovement.BASIC_SIMULATION_3D": "Симуляция V2",
+    "text.wc.setting.capemovement.BASIC_SIMULATION_3D": "Симуляция v2",
     "text.wc.setting.capemovement.DUNGEONS": "Dungeons",
     "text.wc.setting.gravity": "Гравитация",
     "text.wc.setting.gravity.tooltip": "Сила притяжения, применяемая к плащу.",
