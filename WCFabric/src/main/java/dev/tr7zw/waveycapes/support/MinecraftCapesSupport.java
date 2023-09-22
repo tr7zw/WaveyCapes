@@ -38,7 +38,7 @@ public class MinecraftCapesSupport implements ModSupport {
             if(MinecraftCapesConfig.isCapeVisible() && playerHandler.getCapeLocation() != null) {
                 vertexConsumer = ItemRenderer.getArmorFoilBuffer(multiBufferSource, RenderType.armorCutoutNoCull(playerHandler.getCapeLocation()), false, playerHandler.getHasCapeGlint());
             } else {
-                vertexConsumer = ItemRenderer.getArmorFoilBuffer(multiBufferSource, RenderType.armorCutoutNoCull(player.getCloakTextureLocation()), false, false);
+                vertexConsumer = ItemRenderer.getArmorFoilBuffer(multiBufferSource, RenderType.armorCutoutNoCull(player.getSkin().capeTexture()), false, false);
             }
             model.render(poseStack, vertexConsumer, light, OverlayTexture.NO_OVERLAY);
         }
@@ -49,7 +49,7 @@ public class MinecraftCapesSupport implements ModSupport {
             if(MinecraftCapesConfig.isCapeVisible() && playerHandler.getCapeLocation() != null) {
                 return ItemRenderer.getArmorFoilBuffer(multiBufferSource, RenderType.armorCutoutNoCull(playerHandler.getCapeLocation()), false, playerHandler.getHasCapeGlint());
             } else {
-                return ItemRenderer.getArmorFoilBuffer(multiBufferSource, RenderType.armorCutoutNoCull(player.getCloakTextureLocation()), false, false);
+                return ItemRenderer.getArmorFoilBuffer(multiBufferSource, RenderType.armorCutoutNoCull(player.getSkin().capeTexture()), false, false);
             }
         }
         

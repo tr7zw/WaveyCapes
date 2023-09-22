@@ -484,13 +484,12 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
                 return support.getRenderer();
             }
         }
-        if (!abstractClientPlayer.isCapeLoaded() || abstractClientPlayer.isInvisible()
-                || !abstractClientPlayer.isModelPartShown(PlayerModelPart.CAPE)
-                || abstractClientPlayer.getCloakTextureLocation() == null) {
+        if (abstractClientPlayer.getSkin().capeTexture() == null || abstractClientPlayer.isInvisible()
+                || !abstractClientPlayer.isModelPartShown(PlayerModelPart.CAPE)) {
             return null;
         } else {
             vanillaCape.vertexConsumer = multiBufferSource
-            .getBuffer(RenderType.entityCutout(abstractClientPlayer.getCloakTextureLocation()));
+            .getBuffer(RenderType.entityCutout(abstractClientPlayer.getSkin().capeTexture()));
             return vanillaCape;
         }
     }
