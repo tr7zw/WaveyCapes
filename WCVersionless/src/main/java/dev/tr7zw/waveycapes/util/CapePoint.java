@@ -1,4 +1,4 @@
-package dev.tr7zw.waveycapes.math;
+package dev.tr7zw.waveycapes.util;
 
 public interface CapePoint {
 

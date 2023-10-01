@@ -3,10 +3,9 @@ package dev.tr7zw.waveycapes.sim;
 import java.util.ArrayList;
 import java.util.List;
 
-import dev.tr7zw.waveycapes.WaveyCapesBase;
-import dev.tr7zw.waveycapes.math.CapePoint;
-import dev.tr7zw.waveycapes.math.Vector3;
-import net.minecraft.util.Mth;
+import dev.tr7zw.waveycapes.util.CapePoint;
+import dev.tr7zw.waveycapes.util.Mth;
+import dev.tr7zw.waveycapes.util.Vector3;
 
 /**
  * Java port of https://www.youtube.com/watch?v=PGk0rnyTa1U by Sebastian Lague
@@ -19,7 +18,7 @@ public class StickSimulation implements BasicSimulation {
     public List<Point> points = new ArrayList<>();
     public List<Stick> sticks = new ArrayList<>();
     public Vector2 gravityDirection = new Vector2(0, -1);
-    public float gravity = WaveyCapesBase.config.gravity;
+    public float gravity = 0;
     public int numIterations = 30;
     private float maxBend = 5;
     public boolean sneaking = false;

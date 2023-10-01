@@ -3,11 +3,9 @@ package dev.tr7zw.waveycapes.sim;
 import java.util.ArrayList;
 import java.util.List;
 
-import dev.tr7zw.waveycapes.WaveyCapesBase;
-import dev.tr7zw.waveycapes.math.CapePoint;
-import dev.tr7zw.waveycapes.math.Vector3;
-import dev.tr7zw.waveycapes.sim.StickSimulation3d.Point;
-import net.minecraft.util.Mth;
+import dev.tr7zw.waveycapes.util.CapePoint;
+import dev.tr7zw.waveycapes.util.Mth;
+import dev.tr7zw.waveycapes.util.Vector3;
 
 /**
  * Java port of https://www.youtube.com/watch?v=PGk0rnyTa1U by Sebastian Lague
@@ -15,12 +13,12 @@ import net.minecraft.util.Mth;
  * "rope"(cape). Point 0 is the part fixed to the player
  *
  */
-public class StickSimulation3d implements BasicSimulation {
+public class StickSimulationDungeons implements BasicSimulation {
 
     public List<Point> points = new ArrayList<>();
     public List<Stick> sticks = new ArrayList<>();
     public Vector3 gravityDirection = new Vector3(0, -1, 0);
-    public float gravity = WaveyCapesBase.config.gravity;
+    public float gravity = 25;
     public int numIterations = 30;
     private float maxBend = 20;
     public boolean sneaking = false;
@@ -33,7 +31,6 @@ public class StickSimulation3d implements BasicSimulation {
             for (int i = 0; i < partCount; i++) {
                 Point point = new Point();
                 point.position.y = -i;
-                point.position.x = -i;
                 point.locked = i == 0;
                 points.add(point);
                 if(i > 0) {
@@ -53,12 +50,9 @@ public class StickSimulation3d implements BasicSimulation {
 
         preventClipping();
 
-//        preventHardBends();
-
-        preventSelfClipping();
         applyMotion();
-        preventSelfClipping();
         preventHardBends();
+        preventSelfClipping();
         limitLength();
     }
 
@@ -130,14 +124,18 @@ public class StickSimulation3d implements BasicSimulation {
                     }
                 }
             }
-        }while(clipped && runs < 32);
+        }while(clipped && runs < 10);
     }
 
     private void preventHardBends() {
         // Doesnt work like it should at all, but it prevents some folding into itself,
         // so it stays for now
-        for (int i = 1; i < points.size() - 2; i++) {
+        for (int i = 1; i < points.size() - 1; i++) {
             double angle = getAngle(points.get(i).position, points.get(i - 1).position, points.get(i + 1).position);
+            float maxBend = this.maxBend;
+            if(i != points.size()/2) {
+                maxBend = 0;
+            }
             if (angle < -maxBend) {
                 Vector3 replacement = getReplacement(points.get(i).position, points.get(i - 1).position, -maxBend*2);
                 points.get(i + 1).position = replacement;

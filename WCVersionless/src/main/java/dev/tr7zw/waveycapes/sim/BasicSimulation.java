@@ -2,8 +2,8 @@ package dev.tr7zw.waveycapes.sim;
 
 import java.util.List;
 
-import dev.tr7zw.waveycapes.math.CapePoint;
-import dev.tr7zw.waveycapes.math.Vector3;
+import dev.tr7zw.waveycapes.util.CapePoint;
+import dev.tr7zw.waveycapes.util.Vector3;
 
 public interface BasicSimulation {
 

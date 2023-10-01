@@ -1,6 +1,4 @@
-package dev.tr7zw.waveycapes.math;
-
-import net.minecraft.util.Mth;
+package dev.tr7zw.waveycapes.util;
 
 public class Vector3 {
     public float x, y, z;

@@ -22,6 +22,7 @@ jobs:
           files: |
             WCFabric/build/libs/*
             WCForge/build/libs/*
+            WCVersionless/build/libs/*
       - name: Publish-Forge-Curseforge
         uses: Kir-Antipov/mc-publish@v3.2
         with:

@@ -1,18 +1,10 @@
 package dev.tr7zw.waveycapes;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.joml.Quaternionf;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -20,7 +12,6 @@ import com.mojang.math.Axis;
 
 import dev.tr7zw.config.CustomConfigScreen;
 import dev.tr7zw.waveycapes.config.Config;
-import dev.tr7zw.waveycapes.config.ConfigUpgrader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.OptionInstance;
 import net.minecraft.client.gui.GuiGraphics;
@@ -30,44 +21,14 @@ import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
 
-public abstract class WaveyCapesBase {
+public abstract class WaveyCapesBase extends ModBase {
 
     public static WaveyCapesBase INSTANCE;
-    public static final Logger LOGGER = LogManager.getLogger("WaveyCapes");
-    public static Config config;
-    private final File settingsFile = new File("config", "waveycapes.json");
-    private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
     
     public void init() {
         INSTANCE = this;
-        if (settingsFile.exists()) {
-            try {
-                config = gson.fromJson(new String(Files.readAllBytes(settingsFile.toPath()), StandardCharsets.UTF_8),
-                        Config.class);
-            } catch (Exception ex) {
-                System.out.println("Error while loading config! Creating a new one!");
-                ex.printStackTrace();
-            }
-        }
-        if (config == null) {
-            config = new Config();
-            writeConfig();
-        } else {
-            if(ConfigUpgrader.upgradeConfig(config)) {
-                writeConfig();
-            }
-        }
+        super.init();
         initSupportHooks();
-    }
-    
-    public void writeConfig() {
-        if (settingsFile.exists())
-            settingsFile.delete();
-        try {
-            Files.write(settingsFile.toPath(), gson.toJson(config).getBytes(StandardCharsets.UTF_8));
-        } catch (IOException e1) {
-            e1.printStackTrace();
-        }
     }
     
     public Screen createConfigScreen(Screen parent) {
@@ -192,22 +153,6 @@ public abstract class WaveyCapesBase {
         poseStack.popPose();
         RenderSystem.applyModelViewMatrix();
         Lighting.setupFor3DItems();
-    }
-    
-    public abstract void initSupportHooks();
-    
-    /**
-     * Checks if a class exists or not
-     * @param name
-     * @return
-     */
-    protected static boolean doesClassExist(String name) {
-        try {
-            if(Class.forName(name) != null) {
-                return true;
-            }
-        } catch (ClassNotFoundException e) {}
-        return false;
     }
     
 }

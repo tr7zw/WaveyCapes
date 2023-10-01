@@ -13,6 +13,7 @@ enabledFlags:
   - publishForge
   - modrinth
   - curseforge
+  - versionless
 rootProject:
   template: "."
 subProjects:
@@ -23,10 +24,22 @@ subProjects:
       modCompileOnly "curse.maven:morebanners-515000:3820969"
       
       modCompileOnly "curse.maven:minecraftcapes-mod-359836:4763650"
+
+      inc project(":WCVersionless")
       '
   WCForge:
     template: "Forge"
     replacements:
       dependencies: '
       modCompileOnly "curse.maven:minecraftcapes-mod-359836:4562670"
+
+      inc project(":WCVersionless")
+      '
+  WCVersionless:
+    template: "versionless"
+    replacements:
+      dependencies: '
+      compileOnly "com.google.code.gson:gson:2.10.1"
+
+      compileOnly "org.apache.logging.log4j:log4j-core:2.20.0"
       '

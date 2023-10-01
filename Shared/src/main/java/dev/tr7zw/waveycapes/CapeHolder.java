@@ -1,11 +1,11 @@
 package dev.tr7zw.waveycapes;
 
-import dev.tr7zw.waveycapes.math.Vector3;
 import dev.tr7zw.waveycapes.sim.BasicSimulation;
 import dev.tr7zw.waveycapes.sim.StickSimulation;
 import dev.tr7zw.waveycapes.sim.StickSimulation.Vector2;
 import dev.tr7zw.waveycapes.sim.StickSimulation3d;
 import dev.tr7zw.waveycapes.sim.StickSimulationDungeons;
+import dev.tr7zw.waveycapes.util.Vector3;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.util.Mth;
 
