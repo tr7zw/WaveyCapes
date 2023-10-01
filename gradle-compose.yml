@@ -36,7 +36,7 @@ subProjects:
       inc project(":WCVersionless")
       '
   WCVersionless:
-    template: "versionless"
+    template: "Versionless"
     replacements:
       dependencies: '
       compileOnly "com.google.code.gson:gson:2.10.1"
