@@ -1,0 +1,25 @@
+{
+    "text.wc.title": "Настройки WaveyCapes",
+
+    "text.wc.setting.capestyle": "Стиль плаща",
+    "text.wc.setting.capestyle.tooltip": "Переключение между плавным и сегментированным видами плаща.",
+    "text.wc.setting.capestyle.BLOCKY": "Сегменты",
+    "text.wc.setting.capestyle.SMOOTH": "Плавный",
+    "text.wc.setting.windmode": "Ветер",
+    "text.wc.setting.windmode.tooltip": "Добавляет движение плащу.",
+    "text.wc.setting.windmode.NONE": "Штиль",
+    "text.wc.setting.windmode.WAVES": "Веяние",
+    "text.wc.setting.capemovement": "Режим",
+    "text.wc.setting.capemovement.tooltip": "Изменение способа обработки движений плаща.",
+    "text.wc.setting.capemovement.VANILLA": "Классический",
+    "text.wc.setting.capemovement.BASIC_SIMULATION": "Симуляция",
+    "text.wc.setting.capemovement.BASIC_SIMULATION_3D": "Симуляция v2",
+    "text.wc.setting.capemovement.DUNGEONS": "Dungeons",
+    "text.wc.setting.gravity": "Гравитация",
+    "text.wc.setting.gravity.tooltip": "Сила притяжения, применяемая к плащу.",
+    "text.wc.setting.heightMultiplier": "Легковесность",
+    "text.wc.setting.heightMultiplier.tooltip": "Реакция плаща на перемещение по вертикали.",
+
+    "modmenu.summaryTranslation.waveycapes": "Плащ не должен быть неподвижной доской!",
+    "modmenu.descriptionTranslation.waveycapes": "WaveyCapes добавляет плащу более гибкую анимацию с учётом физики движения. Поддерживаются разные стили плаща, режимы движения и эффекты ветра."
+}
