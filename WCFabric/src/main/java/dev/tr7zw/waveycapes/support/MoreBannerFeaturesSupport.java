@@ -49,7 +49,7 @@ public class MoreBannerFeaturesSupport implements ModSupport {
                 MultiBufferSource multiBufferSource, int light, int overlay) {
             ItemStack bannerItem = ((Bannerable) player).getBannerItem();
 
-            RendererUtils.renderCanvasFromItem(bannerItem, poseStack, multiBufferSource, light, overlay, model);
+            RendererUtils.renderCanvasFromItem(bannerItem, poseStack, multiBufferSource, light, overlay, customCape[part]);
         }
         
         @Override
