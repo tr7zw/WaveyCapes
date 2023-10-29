@@ -23,6 +23,8 @@ subProjects:
       dependencies: '
       modImplementation "curse.maven:morebanners-515000:4575797"
       
+      modCompileOnly "maven.modrinth:ears:1.4.6+fabric-1.20.2"
+
       modCompileOnly "curse.maven:minecraftcapes-mod-359836:4763650"
 
       inc project(":WCVersionless")

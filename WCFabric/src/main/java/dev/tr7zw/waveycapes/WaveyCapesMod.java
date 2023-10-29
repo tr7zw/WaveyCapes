@@ -1,5 +1,6 @@
 package dev.tr7zw.waveycapes;
 
+import dev.tr7zw.waveycapes.support.EarsSupport;
 import dev.tr7zw.waveycapes.support.MinecraftCapesSupport;
 import dev.tr7zw.waveycapes.support.MoreBannerFeaturesSupport;
 import dev.tr7zw.waveycapes.support.SupportManager;
@@ -21,6 +22,11 @@ public class WaveyCapesMod extends WaveyCapesBase implements ModInitializer {
         if(doesClassExist("net.minecraftcapes.MinecraftCapes")) {
             SupportManager.mods.add(new MinecraftCapesSupport());
             LOGGER.info("Wavey Capes loaded MinecraftCapes support!");
+        }
+        
+        if(doesClassExist("com.unascribed.ears.common.EarsVersion")) {
+            SupportManager.mods.add(new EarsSupport());
+            LOGGER.info("Wavey Capes loaded Ears support!");
         }
     }
 }
