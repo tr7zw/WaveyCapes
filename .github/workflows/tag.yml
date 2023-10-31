@@ -75,6 +75,7 @@ jobs:
   FabricRelease:
     if: inputs.target == 'fabric' || inputs.target == 'all'
     runs-on: ubuntu-latest
+    steps:
       - name: Publish-Fabric
         uses: Kir-Antipov/mc-publish@v3.2
         with:
