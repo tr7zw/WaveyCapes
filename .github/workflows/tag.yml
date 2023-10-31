@@ -31,10 +31,6 @@ jobs:
         run: chmod +x ./gradlecw
       - name: build
         run: ./gradlecw build
-  GithubRelease:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
       - name: Save Changelog
         run: echo "$LOG" > CHANGELOG.txt
         env:
@@ -50,12 +46,8 @@ jobs:
             WCFabric/build/libs/*
             WCForge/build/libs/*
             WCVersionless/build/libs/*
-  ForgeRelease:
-    needs: GithubRelease
-    if: inputs.target == 'forge' || inputs.target == 'all'
-    runs-on: ubuntu-latest
-    steps:
       - name: Publish-Forge-Curseforge
+        if: inputs.target == 'forge' || inputs.target == 'all'
         uses: Kir-Antipov/mc-publish@v3.2
         with:
           curseforge-id: 521594
@@ -74,12 +66,8 @@ jobs:
           name: ${{inputs.name}} - Forge
           github-tag: ${{inputs.name}}
           files: '*Forge/build/libs/!(*-@(dev|sources|javadoc|all)).jar'
-  FabricRelease:
-    needs: GithubRelease
-    if: inputs.target == 'fabric' || inputs.target == 'all'
-    runs-on: ubuntu-latest
-    steps:
       - name: Publish-Fabric
+        if: inputs.target == 'fabric' || inputs.target == 'all'
         uses: Kir-Antipov/mc-publish@v3.2
         with:
           modrinth-id: kYuIpRLv
