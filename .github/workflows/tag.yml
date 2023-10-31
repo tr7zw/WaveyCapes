@@ -32,6 +32,7 @@ jobs:
       - name: build
         run: ./gradlecw build
   GithubRelease:
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - name: Save Changelog
@@ -50,6 +51,7 @@ jobs:
             WCForge/build/libs/*
             WCVersionless/build/libs/*
   ForgeRelease:
+    needs: GithubRelease
     if: inputs.target == 'forge' || inputs.target == 'all'
     runs-on: ubuntu-latest
     steps:
@@ -73,6 +75,7 @@ jobs:
           github-tag: ${{inputs.name}}
           files: '*Forge/build/libs/!(*-@(dev|sources|javadoc|all)).jar'
   FabricRelease:
+    needs: GithubRelease
     if: inputs.target == 'fabric' || inputs.target == 'all'
     runs-on: ubuntu-latest
     steps:
