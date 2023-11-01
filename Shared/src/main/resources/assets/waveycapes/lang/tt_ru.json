@@ -1,0 +1,25 @@
+{
+    "text.wc.title": "WaveyCapes көйләүләре",
+
+    "text.wc.setting.capestyle": "Япма стиле",
+    "text.wc.setting.capestyle.tooltip": "Япма салмак һәм блоклы төрләрен арасында күчерә.",
+    "text.wc.setting.capestyle.BLOCKY": "Блоклы",
+    "text.wc.setting.capestyle.SMOOTH": "Салмак",
+    "text.wc.setting.windmode": "Җил шарты",
+    "text.wc.setting.windmode.tooltip": "Япма өчен өстәмә хәрәкәтне өсти.",
+    "text.wc.setting.windmode.NONE": "Җилсез",
+    "text.wc.setting.windmode.WAVES": "Дулкыннар",
+    "text.wc.setting.capemovement": "Хәрәкәт",
+    "text.wc.setting.capemovement.tooltip": "Япма хәрәкәте төрен үзгәртә.",
+    "text.wc.setting.capemovement.VANILLA": "Классик",
+    "text.wc.setting.capemovement.BASIC_SIMULATION": "Симуляция",
+    "text.wc.setting.capemovement.BASIC_SIMULATION_3D": "Симуляция V2",
+    "text.wc.setting.capemovement.DUNGEONS": "Dungeons",
+    "text.wc.setting.gravity": "Гравитация",
+    "text.wc.setting.gravity.tooltip": "Япма өчен куллана торган гравитация көче санын үзгәртә.",
+    "text.wc.setting.heightMultiplier": "Җиңеллек",
+    "text.wc.setting.heightMultiplier.tooltip": "Y буенча максималь япма хәрәкәтен үзгәртә.",
+
+    "modmenu.summaryTranslation.waveycapes": "Япма аз хәрәкәтле такта кебек булмаска тиеш!",
+    "modmenu.descriptionTranslation.waveycapes": "Плащ өчен WaveyCapes физика хәрәкәте исәпле сыгылмалырак анимацияне өсти. Төрле япма стильләр, хәрәкәт шартлары һәм җил йогынтылары хуплана."
+}
