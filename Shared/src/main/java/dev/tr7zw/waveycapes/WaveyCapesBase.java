@@ -11,7 +11,11 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 
 import dev.tr7zw.config.CustomConfigScreen;
-import dev.tr7zw.waveycapes.config.Config;
+import dev.tr7zw.waveycapes.versionless.CapeMovement;
+import dev.tr7zw.waveycapes.versionless.CapeStyle;
+import dev.tr7zw.waveycapes.versionless.ModBase;
+import dev.tr7zw.waveycapes.versionless.WindMode;
+import dev.tr7zw.waveycapes.versionless.config.Config;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.OptionInstance;
 import net.minecraft.client.gui.GuiGraphics;

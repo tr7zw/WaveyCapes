@@ -1,4 +1,4 @@
-package dev.tr7zw.waveycapes.util;
+package dev.tr7zw.waveycapes.versionless.util;
 
 public class Vector3 {
     public float x, y, z;

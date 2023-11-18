@@ -1,11 +1,11 @@
-package dev.tr7zw.waveycapes.sim;
+package dev.tr7zw.waveycapes.versionless.sim;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import dev.tr7zw.waveycapes.util.CapePoint;
-import dev.tr7zw.waveycapes.util.Mth;
-import dev.tr7zw.waveycapes.util.Vector3;
+import dev.tr7zw.waveycapes.versionless.util.CapePoint;
+import dev.tr7zw.waveycapes.versionless.util.Mth;
+import dev.tr7zw.waveycapes.versionless.util.Vector3;
 
 /**
  * Java port of https://www.youtube.com/watch?v=PGk0rnyTa1U by Sebastian Lague

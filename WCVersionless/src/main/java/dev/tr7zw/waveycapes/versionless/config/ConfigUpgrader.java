@@ -1,4 +1,4 @@
-package dev.tr7zw.waveycapes.config;
+package dev.tr7zw.waveycapes.versionless.config;
 
 public class ConfigUpgrader {
 

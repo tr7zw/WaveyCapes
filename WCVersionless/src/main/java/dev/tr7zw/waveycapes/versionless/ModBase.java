@@ -1,4 +1,4 @@
-package dev.tr7zw.waveycapes;
+package dev.tr7zw.waveycapes.versionless;
 
 import java.io.File;
 import java.io.IOException;
@@ -11,8 +11,8 @@ import org.apache.logging.log4j.Logger;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import dev.tr7zw.waveycapes.config.Config;
-import dev.tr7zw.waveycapes.config.ConfigUpgrader;
+import dev.tr7zw.waveycapes.versionless.config.Config;
+import dev.tr7zw.waveycapes.versionless.config.ConfigUpgrader;
 
 public abstract class ModBase {
 

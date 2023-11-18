@@ -1,5 +1,5 @@
 version: '0.0.2'
-source: "https://github.com/tr7zw/ModComposeTemplate/tree/1.20.2-tagtest"
+source: "https://github.com/tr7zw/ModComposeTemplate/tree/1.20.2-neo"
 replacements:
   name: "WaveyCapes"
   id: "waveycapes"
@@ -11,6 +11,7 @@ enabledFlags:
   - autopublish
   - publishFabric
   - publishForge
+  - publishNeo
   - modrinth
   - curseforge
   - versionless
@@ -36,6 +37,17 @@ subProjects:
       modCompileOnly "curse.maven:minecraftcapes-mod-359836:4562670"
 
       inc project(":WCVersionless")
+
+      forgeRuntimeLibrary project(":WCVersionless")
+      '
+  WCNeo:
+    template: "Neo"
+    replacements:
+      dependencies: '
+
+      inc project(":WCVersionless")
+
+      forgeRuntimeLibrary project(":WCVersionless")
       '
   WCVersionless:
     template: "Versionless"

@@ -1,22 +1,7 @@
 name: Create Release
-on: 
-  workflow_dispatch:
-    inputs:
-      name:
-        description: 'Tag Name'
-        required: true
-      target:
-        description: 'What to release'
-        required: true
-        default: 'all'
-        type: choice
-        options:
-        - all
-        - fabric
-        - forge
-      changelog:
-        description: 'Changelog'
-        required: true
+on:
+  release:
+    types: [published]
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -31,30 +16,38 @@ jobs:
         run: chmod +x ./gradlecw
       - name: build
         run: ./gradlecw build
-      - name: Save Changelog
-        run: echo "$LOG" > CHANGELOG.txt
-        env:
-          LOG: ${{ inputs.changelog }}
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
-          name: ${{ inputs.name }}
-          tag_name: ${{ inputs.name }}
-          body_path: CHANGELOG.txt
-          generate_release_notes: true
           files: |
             WCFabric/build/libs/*
             WCForge/build/libs/*
+            WCNeo/build/libs/*
             WCVersionless/build/libs/*
+      - name: Publish-Neo-Curseforge
+        uses: Kir-Antipov/mc-publish@v3.2
+        with:
+          curseforge-id: 521594
+          curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}  
+          loaders: neoforge
+          name: ${{github.ref_name}} - NeoForge
+          version-type: beta
+          files: '*Neo/build/libs/!(*-@(dev|sources|javadoc|all)).jar'
+      - name: Publish-Neo-Modrinth
+        uses: Kir-Antipov/mc-publish@v3.2
+        with:
+          modrinth-id: kYuIpRLv
+          modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
+          loaders: neoforge
+          name: ${{github.ref_name}} - NeoForge
+          files: '*Neo/build/libs/!(*-@(dev|sources|javadoc|all)).jar'
       - name: Publish-Forge-Curseforge
-        if: inputs.target == 'forge' || inputs.target == 'all'
         uses: Kir-Antipov/mc-publish@v3.2
         with:
           curseforge-id: 521594
           curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}  
           loaders: forge
-          name: ${{inputs.name}} - Forge
-          github-tag: ${{inputs.name}}
+          name: ${{github.ref_name}} - Forge
           version-type: beta
           files: '*Forge/build/libs/!(*-@(dev|sources|javadoc|all)).jar'
       - name: Publish-Forge-Modrinth
@@ -63,11 +56,9 @@ jobs:
           modrinth-id: kYuIpRLv
           modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
           loaders: forge
-          name: ${{inputs.name}} - Forge
-          github-tag: ${{inputs.name}}
+          name: ${{github.ref_name}} - Forge
           files: '*Forge/build/libs/!(*-@(dev|sources|javadoc|all)).jar'
       - name: Publish-Fabric
-        if: inputs.target == 'fabric' || inputs.target == 'all'
         uses: Kir-Antipov/mc-publish@v3.2
         with:
           modrinth-id: kYuIpRLv
@@ -75,6 +66,5 @@ jobs:
           curseforge-id: 521594
           curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}  
           loaders: fabric
-          name: ${{inputs.name}} - Fabric
-          github-tag: ${{inputs.name}}
+          name: ${{github.ref_name}} - Fabric
           files: '*Fabric/build/libs/!(*-@(dev|sources|javadoc|all)).jar'

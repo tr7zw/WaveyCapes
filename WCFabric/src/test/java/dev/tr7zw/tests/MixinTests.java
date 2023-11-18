@@ -12,7 +12,7 @@ import org.objenesis.ObjenesisStd;
 
 import dev.tr7zw.config.CustomConfigScreen;
 import dev.tr7zw.waveycapes.WaveyCapesBase;
-import dev.tr7zw.waveycapes.config.Config;
+import dev.tr7zw.waveycapes.versionless.config.Config;
 import net.minecraft.SharedConstants;
 import net.minecraft.client.OptionInstance;
 import net.minecraft.client.model.PlayerModel;

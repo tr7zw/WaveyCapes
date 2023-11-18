@@ -1,4 +1,4 @@
-package dev.tr7zw.waveycapes.util;
+package dev.tr7zw.waveycapes.versionless.util;
 
 import java.util.function.IntPredicate;
 

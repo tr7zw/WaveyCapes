@@ -1,8 +1,8 @@
-package dev.tr7zw.waveycapes.config;
+package dev.tr7zw.waveycapes.versionless.config;
 
-import dev.tr7zw.waveycapes.CapeMovement;
-import dev.tr7zw.waveycapes.CapeStyle;
-import dev.tr7zw.waveycapes.WindMode;
+import dev.tr7zw.waveycapes.versionless.CapeMovement;
+import dev.tr7zw.waveycapes.versionless.CapeStyle;
+import dev.tr7zw.waveycapes.versionless.WindMode;
 
 public class Config {
 

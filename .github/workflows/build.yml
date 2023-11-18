@@ -26,6 +26,7 @@ jobs:
           path: |
             WCFabric/build/libs/*
             WCForge/build/libs/*
+            WCNeo/build/libs/*
             WCVersionless/build/libs/*
       - name: Test Report
         uses: dorny/test-reporter@v1
