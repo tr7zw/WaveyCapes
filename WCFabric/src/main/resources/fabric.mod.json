@@ -1,20 +1,21 @@
 {
   "schemaVersion": 1,
-  "id": "waveycapes",
-  "version": "1.3.2",
+  "id": "${mod_id}",
+  "version": "${version}",
 
-  "name": "WaveyCapes",
-  "description": "The cape shouldn't be a static slab",
+  "name": "${mod_name}",
+  "description": "${description}",
   "authors": [
-    "tr7zw"
+    "${mod_author}"
   ],
   "contact": {
-    "homepage": "https://github.com/tr7zw",
-    "sources": "https://github.com/tr7zw/waveycapes"
+    "homepage": "${homepage_url}",
+    "sources": "${sources_url}",
+    "issues": "${issues_url}"
   },
 
-  "license": "tr7zw Protective License",
-  "icon": "assets/waveycapes/icon.png",
+  "license": "${license_name}",
+  "icon": "assets/${mod_id}/icon.png",
 
   "environment": "CLIENT",
   "entrypoints": {
@@ -30,6 +31,6 @@
   ],
 
   "depends": {
-    "minecraft": ">=1.20.2"
+    "minecraft": "${minecraft_version_range_fabric}"
   }
 }

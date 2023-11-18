@@ -1,22 +1,21 @@
 modLoader="javafml"
-loaderVersion="[28,)"
-issueTrackerURL="https://github.com/tr7zw/NotEnoughAnimations/issues"
+loaderVersion="${loader_version_range_forge}"
+issueTrackerURL="${issues_url}"
 
-license="tr7zw Protective License"
+license="${license_name}"
 [[mods]]
-modId="waveycapes"
-version="1.3.2"
-displayName="WaveyCapes Mod"
-displayURL="https://www.curseforge.com/minecraft/mc-mods/waveycapes"
-# A file name (in the root of the mod JAR) containing a logo for display
-logoFile="assets/waveycapes/icon.png"
-authors="tr7zw"
+modId="${mod_id}"
+version="${version}"
+displayName="${mod_name}"
+displayURL="${homepage_url}"
+logoFile="assets/${mod_id}/icon.png"
+authors="${mod_author}"
 description='''
-The cape shouldn't be a static slab
+${description}
 '''
 [[dependencies.waveycapes]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.20.2,)"
+    versionRange="${minecraft_version_range_forge}"
     ordering="NONE"
     side="BOTH"

@@ -1,6 +1,6 @@
 {
   "pack": {
-    "description": "Resources for WaveyCapes",
-    "pack_format": 18
+    "description": "Resources for ${mod_name}",
+    "pack_format": ${pack_format_number}
   }
 }

@@ -4,6 +4,10 @@ replacements:
   name: "WaveyCapes"
   id: "waveycapes"
   version: "1.4.1"
+  description: "The cape shouldn't be a static slab!"
+  homepageUrl: "https://modrinth.com/mod/wavey-capes"
+  sourcesUrl: "https://github.com/tr7zw/WaveyCapes"
+  issuesUrl: "https://github.com/tr7zw/WaveyCapes/issues"
   relocationpackage: "dev.tr7zw.waveycapes"
   modrinthid: kYuIpRLv
   curseforgeid: 521594
