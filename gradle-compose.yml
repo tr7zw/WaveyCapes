@@ -48,6 +48,7 @@ subProjects:
     template: "Neo"
     replacements:
       dependencies: '
+      modCompileOnly "curse.maven:minecraftcapes-mod-359836:4562670"
 
       inc project(":WCVersionless")
 
