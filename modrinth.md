@@ -47,3 +47,4 @@ Since this mod is purely visual and fully clientside, it doesn't have to be inst
   A: Optifine does not support the new cape rendering, it will use the old style.
 - Q: How do I get the cape to look like the older versions of the mod?
   A: You can change between rendering styles, cape behavior, and wind effects in the config screen.
+

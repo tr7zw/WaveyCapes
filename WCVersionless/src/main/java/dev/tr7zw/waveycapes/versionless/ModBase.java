@@ -20,7 +20,7 @@ public abstract class ModBase {
     public static Config config;
     private final File settingsFile = new File("config", "waveycapes.json");
     private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
- 
+
     public void init() {
         if (settingsFile.exists()) {
             try {
@@ -35,12 +35,12 @@ public abstract class ModBase {
             config = new Config();
             writeConfig();
         } else {
-            if(ConfigUpgrader.upgradeConfig(config)) {
+            if (ConfigUpgrader.upgradeConfig(config)) {
                 writeConfig();
             }
         }
     }
-    
+
     public void writeConfig() {
         if (settingsFile.exists())
             settingsFile.delete();
@@ -50,21 +50,23 @@ public abstract class ModBase {
             e1.printStackTrace();
         }
     }
-    
+
     public abstract void initSupportHooks();
-    
+
     /**
      * Checks if a class exists or not
+     * 
      * @param name
      * @return
      */
     protected static boolean doesClassExist(String name) {
         try {
-            if(Class.forName(name) != null) {
+            if (Class.forName(name) != null) {
                 return true;
             }
-        } catch (ClassNotFoundException e) {}
+        } catch (ClassNotFoundException e) {
+        }
         return false;
     }
-    
+
 }

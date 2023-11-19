@@ -19,7 +19,8 @@ public class MinecraftCapesSupport implements ModSupport {
 
     @Override
     public boolean shouldBeUsed(AbstractClientPlayer player) {
-        if(!MinecraftCapesConfig.isCapeVisible()) return false;
+        if (!MinecraftCapesConfig.isCapeVisible())
+            return false;
 
         return PlayerHandler.get(player).getCapeLocation() != null;
     }
@@ -32,13 +33,17 @@ public class MinecraftCapesSupport implements ModSupport {
     private class MinecraftCapesRenderer implements CapeRenderer {
 
         @Override
-        public void render(AbstractClientPlayer player, int part, ModelPart model, PoseStack poseStack, MultiBufferSource multiBufferSource, int light, int overlay) {
+        public void render(AbstractClientPlayer player, int part, ModelPart model, PoseStack poseStack,
+                MultiBufferSource multiBufferSource, int light, int overlay) {
             PlayerHandler playerHandler = PlayerHandler.get(player);
             VertexConsumer vertexConsumer;
-            if(MinecraftCapesConfig.isCapeVisible() && playerHandler.getCapeLocation() != null) {
-                vertexConsumer = ItemRenderer.getArmorFoilBuffer(multiBufferSource, RenderType.armorCutoutNoCull(playerHandler.getCapeLocation()), false, playerHandler.getHasCapeGlint());
+            if (MinecraftCapesConfig.isCapeVisible() && playerHandler.getCapeLocation() != null) {
+                vertexConsumer = ItemRenderer.getArmorFoilBuffer(multiBufferSource,
+                        RenderType.armorCutoutNoCull(playerHandler.getCapeLocation()), false,
+                        playerHandler.getHasCapeGlint());
             } else {
-                vertexConsumer = ItemRenderer.getArmorFoilBuffer(multiBufferSource, RenderType.armorCutoutNoCull(player.getSkin().capeTexture()), false, false);
+                vertexConsumer = ItemRenderer.getArmorFoilBuffer(multiBufferSource,
+                        RenderType.armorCutoutNoCull(player.getSkin().capeTexture()), false, false);
             }
             model.render(poseStack, vertexConsumer, light, OverlayTexture.NO_OVERLAY);
         }
@@ -46,18 +51,21 @@ public class MinecraftCapesSupport implements ModSupport {
         @Override
         public VertexConsumer getVertexConsumer(MultiBufferSource multiBufferSource, AbstractClientPlayer player) {
             PlayerHandler playerHandler = PlayerHandler.get(player);
-            if(MinecraftCapesConfig.isCapeVisible() && playerHandler.getCapeLocation() != null) {
-                return ItemRenderer.getArmorFoilBuffer(multiBufferSource, RenderType.armorCutoutNoCull(playerHandler.getCapeLocation()), false, playerHandler.getHasCapeGlint());
+            if (MinecraftCapesConfig.isCapeVisible() && playerHandler.getCapeLocation() != null) {
+                return ItemRenderer.getArmorFoilBuffer(multiBufferSource,
+                        RenderType.armorCutoutNoCull(playerHandler.getCapeLocation()), false,
+                        playerHandler.getHasCapeGlint());
             } else {
-                return ItemRenderer.getArmorFoilBuffer(multiBufferSource, RenderType.armorCutoutNoCull(player.getSkin().capeTexture()), false, false);
+                return ItemRenderer.getArmorFoilBuffer(multiBufferSource,
+                        RenderType.armorCutoutNoCull(player.getSkin().capeTexture()), false, false);
             }
         }
-        
+
         @Override
         public boolean vanillaUvValues() {
             return true;
         }
-        
+
     }
 
     @Override

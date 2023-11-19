@@ -10,6 +10,6 @@ public class WaveyCapesModMenu implements ModMenuApi {
         return parent -> {
             return WaveyCapesBase.INSTANCE.createConfigScreen(parent);
         };
-    }  
-    
+    }
+
 }

@@ -1,6 +1,5 @@
 {
     "text.wc.title": "WaveyCapes көйләүләре",
-
     "text.wc.setting.capestyle": "Япма стиле",
     "text.wc.setting.capestyle.tooltip": "Япма салмак һәм блоклы төрләрен арасында күчерә.",
     "text.wc.setting.capestyle.BLOCKY": "Блоклы",
@@ -19,7 +18,6 @@
     "text.wc.setting.gravity.tooltip": "Япма өчен куллана торган гравитация көче санын үзгәртә.",
     "text.wc.setting.heightMultiplier": "Җиңеллек",
     "text.wc.setting.heightMultiplier.tooltip": "Y буенча максималь япма хәрәкәтен үзгәртә.",
-
     "modmenu.summaryTranslation.waveycapes": "Япма аз хәрәкәтле такта кебек булмаска тиеш!",
     "modmenu.descriptionTranslation.waveycapes": "Япма өчен WaveyCapes физика хәрәкәте исәпле сыгылмалырак анимацияне өсти. Төрле япма стильләр, хәрәкәт шартлары һәм җил йогынтылары хуплана."
 }

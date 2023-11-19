@@ -8,10 +8,10 @@ public class TestMod extends WaveyCapesBase {
     public void initSupportHooks() {
 
     }
-    
+
     @Override
     public void init() {
-        
+
     }
 
 }

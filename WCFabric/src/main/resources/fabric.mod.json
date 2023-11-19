@@ -1,36 +1,32 @@
 {
-  "schemaVersion": 1,
-  "id": "${mod_id}",
-  "version": "${version}",
-
-  "name": "${mod_name}",
-  "description": "${description}",
-  "authors": [
-    "${mod_author}"
-  ],
-  "contact": {
-    "homepage": "${homepage_url}",
-    "sources": "${sources_url}",
-    "issues": "${issues_url}"
-  },
-
-  "license": "${license_name}",
-  "icon": "assets/${mod_id}/icon.png",
-
-  "environment": "CLIENT",
-  "entrypoints": {
-    "main": [
-      "dev.tr7zw.waveycapes.WaveyCapesMod"
+    "schemaVersion": 1,
+    "id": "${mod_id}",
+    "version": "${version}",
+    "name": "${mod_name}",
+    "description": "${description}",
+    "authors": [
+        "${mod_author}"
     ],
-    "modmenu": [
-      "dev.tr7zw.waveycapes.WaveyCapesModMenu"
-    ]
-  },
-  "mixins": [
-    "waveycapes.mixins.json"
-  ],
-
-  "depends": {
-    "minecraft": "${minecraft_version_range_fabric}"
-  }
+    "contact": {
+        "homepage": "${homepage_url}",
+        "sources": "${sources_url}",
+        "issues": "${issues_url}"
+    },
+    "license": "${license_name}",
+    "icon": "assets/${mod_id}/icon.png",
+    "environment": "CLIENT",
+    "entrypoints": {
+        "main": [
+            "dev.tr7zw.waveycapes.WaveyCapesMod"
+        ],
+        "modmenu": [
+            "dev.tr7zw.waveycapes.WaveyCapesModMenu"
+        ]
+    },
+    "mixins": [
+        "waveycapes.mixins.json"
+    ],
+    "depends": {
+        "minecraft": "${minecraft_version_range_fabric}"
+    }
 }

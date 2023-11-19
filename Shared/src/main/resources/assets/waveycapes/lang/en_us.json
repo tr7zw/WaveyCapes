@@ -1,6 +1,5 @@
 {
     "text.wc.title": "WaveyCapes Settings",
-
     "text.wc.setting.capestyle": "Cape Style",
     "text.wc.setting.capestyle.tooltip": "Switch between a smoothly bending and blocky cape.",
     "text.wc.setting.capestyle.BLOCKY": "Blocky",

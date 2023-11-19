@@ -39,40 +39,44 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
 public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, PlayerModel<AbstractClientPlayer>> {
-    
+
     private static int partCount;
     private ModelPart[] customCape = new ModelPart[partCount];
-    
+
     public CustomCapeRenderLayer(
             RenderLayerParent<AbstractClientPlayer, PlayerModel<AbstractClientPlayer>> renderLayerParent) {
         super(renderLayerParent);
         partCount = 16;
         buildMesh();
     }
-    
+
     private void buildMesh() {
         customCape = new ModelPart[partCount];
         MeshDefinition meshDefinition = new MeshDefinition();
         PartDefinition partDefinition = meshDefinition.getRoot();
         for (int i = 0; i < partCount; i++)
             partDefinition.addOrReplaceChild("customCape_" + i,
-                    CubeListBuilder.create().texOffs(0, (int) (i * (16f / partCount)))
-                            .addBox(-5.0F, i * (16f / partCount), -1.0F, 10.0F, (16f / partCount), 1.0F, CubeDeformation.NONE, 1.0F, 0.5F),
-                    PartPose.offset(0.0F, 0.0F, 0.0F));  
-        ModelPart modelPart = partDefinition.bake(64,64);
+                    CubeListBuilder.create().texOffs(0, (int) (i * (16f / partCount))).addBox(-5.0F,
+                            i * (16f / partCount), -1.0F, 10.0F, (16f / partCount), 1.0F, CubeDeformation.NONE, 1.0F,
+                            0.5F),
+                    PartPose.offset(0.0F, 0.0F, 0.0F));
+        ModelPart modelPart = partDefinition.bake(64, 64);
         for (int i = 0; i < partCount; i++) {
             this.customCape[i] = modelPart.getChild("customCape_" + i);
         }
     }
 
-    public void render(PoseStack poseStack, MultiBufferSource multiBufferSource, int i, AbstractClientPlayer abstractClientPlayer, float f, float g, float delta, float j, float k, float l) {
-        if(abstractClientPlayer.isInvisible())return;
+    public void render(PoseStack poseStack, MultiBufferSource multiBufferSource, int i,
+            AbstractClientPlayer abstractClientPlayer, float f, float g, float delta, float j, float k, float l) {
+        if (abstractClientPlayer.isInvisible())
+            return;
         CapeRenderer renderer = getCapeRenderer(abstractClientPlayer, multiBufferSource);
-        if(renderer == null) return;
+        if (renderer == null)
+            return;
         ItemStack itemStack = abstractClientPlayer.getItemBySlot(EquipmentSlot.CHEST);
         if (itemStack.is(Items.ELYTRA))
             return;
-        if(getParentModel() instanceof PlayerModelAccess pma && !pma.getCloak().visible) {
+        if (getParentModel() instanceof PlayerModelAccess pma && !pma.getCloak().visible) {
             return;
         }
         // smooth doesn't need more than 16
@@ -85,10 +89,10 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
 //            partCount = WaveyCapesBase.config.capeParts;
 //            buildMesh();
 //        }
-        
+
         CapeHolder holder = (CapeHolder) abstractClientPlayer;
         holder.updateSimulation(abstractClientPlayer, partCount);
-        
+
         if (WaveyCapesBase.config.capeStyle == CapeStyle.SMOOTH && renderer.vanillaUvValues()) {
             renderSmoothCape(poseStack, multiBufferSource, renderer, abstractClientPlayer, delta, i);
         } else {
@@ -96,13 +100,15 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
             for (int part = 0; part < partCount; part++) {
                 ModelPart model = parts[part];
                 modifyPoseStack(poseStack, abstractClientPlayer, delta, part);
-                renderer.render(abstractClientPlayer, part, model, poseStack, multiBufferSource, i, OverlayTexture.NO_OVERLAY);
+                renderer.render(abstractClientPlayer, part, model, poseStack, multiBufferSource, i,
+                        OverlayTexture.NO_OVERLAY);
                 poseStack.popPose();
             }
         }
     }
-    
-    private void renderSmoothCape(PoseStack poseStack, MultiBufferSource multiBufferSource, CapeRenderer capeRenderer, AbstractClientPlayer abstractClientPlayer, float delta, int light) {
+
+    private void renderSmoothCape(PoseStack poseStack, MultiBufferSource multiBufferSource, CapeRenderer capeRenderer,
+            AbstractClientPlayer abstractClientPlayer, float delta, int light) {
         VertexConsumer bufferBuilder = capeRenderer.getVertexConsumer(multiBufferSource, abstractClientPlayer);
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
@@ -116,56 +122,27 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
             }
 
             if (part == 0) {
-                addTopVertex(bufferBuilder, poseStack.last().pose(), oldPositionMatrix,
-                        0.3F,
-                        0,
-                        0F,
-                        -0.3F,
-                        0,
-                        -0.06F, part, light);
+                addTopVertex(bufferBuilder, poseStack.last().pose(), oldPositionMatrix, 0.3F, 0, 0F, -0.3F, 0, -0.06F,
+                        part, light);
             }
 
             if (part == partCount - 1) {
-                addBottomVertex(bufferBuilder, poseStack.last().pose(), poseStack.last().pose(),
-                        0.3F,
-                        (part + 1) * (0.96F / partCount),
-                        0F,
-                        -0.3F,
-                        (part + 1) * (0.96F / partCount),
-                        -0.06F, part, light);
+                addBottomVertex(bufferBuilder, poseStack.last().pose(), poseStack.last().pose(), 0.3F,
+                        (part + 1) * (0.96F / partCount), 0F, -0.3F, (part + 1) * (0.96F / partCount), -0.06F, part,
+                        light);
             }
 
-            addLeftVertex(bufferBuilder, poseStack.last().pose(), oldPositionMatrix,
-                    -0.3F,
-                    (part + 1) * (0.96F / partCount),
-                    0F,
-                    -0.3F,
-                    part * (0.96F / partCount),
-                    -0.06F, part, light);
+            addLeftVertex(bufferBuilder, poseStack.last().pose(), oldPositionMatrix, -0.3F,
+                    (part + 1) * (0.96F / partCount), 0F, -0.3F, part * (0.96F / partCount), -0.06F, part, light);
 
-            addRightVertex(bufferBuilder, poseStack.last().pose(), oldPositionMatrix,
-                    0.3F,
-                    (part + 1) * (0.96F / partCount),
-                    0F,
-                    0.3F,
-                    part * (0.96F / partCount),
-                    -0.06F, part, light);
+            addRightVertex(bufferBuilder, poseStack.last().pose(), oldPositionMatrix, 0.3F,
+                    (part + 1) * (0.96F / partCount), 0F, 0.3F, part * (0.96F / partCount), -0.06F, part, light);
 
-            addBackVertex(bufferBuilder, poseStack.last().pose(), oldPositionMatrix,
-                    0.3F,
-                    (part + 1) * (0.96F / partCount),
-                    -0.06F,
-                    -0.3F,
-                    part * (0.96F / partCount),
-                    -0.06F, part, light);
+            addBackVertex(bufferBuilder, poseStack.last().pose(), oldPositionMatrix, 0.3F,
+                    (part + 1) * (0.96F / partCount), -0.06F, -0.3F, part * (0.96F / partCount), -0.06F, part, light);
 
-            addFrontVertex(bufferBuilder, oldPositionMatrix, poseStack.last().pose(),
-                    0.3F,
-                    (part + 1) * (0.96F / partCount),
-                    0F,
-                    -0.3F,
-                    part * (0.96F / partCount),
-                    0F, part, light);
+            addFrontVertex(bufferBuilder, oldPositionMatrix, poseStack.last().pose(), 0.3F,
+                    (part + 1) * (0.96F / partCount), 0F, -0.3F, part * (0.96F / partCount), 0F, part, light);
 
             oldPositionMatrix = new Matrix4f(poseStack.last().pose());
             poseStack.popPose();
@@ -174,25 +151,27 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
     }
 
     private void modifyPoseStack(PoseStack poseStack, AbstractClientPlayer abstractClientPlayer, float h, int part) {
-        if(WaveyCapesBase.config.capeMovement != CapeMovement.VANILLA) {
+        if (WaveyCapesBase.config.capeMovement != CapeMovement.VANILLA) {
             modifyPoseStackSimulation(poseStack, abstractClientPlayer, h, part);
             return;
         }
         modifyPoseStackVanilla(poseStack, abstractClientPlayer, h, part);
     }
-    
-    private void modifyPoseStackSimulation(PoseStack poseStack, AbstractClientPlayer abstractClientPlayer, float delta, int part) {
-        BasicSimulation simulation = ((CapeHolder)abstractClientPlayer).getSimulation();
+
+    private void modifyPoseStackSimulation(PoseStack poseStack, AbstractClientPlayer abstractClientPlayer, float delta,
+            int part) {
+        BasicSimulation simulation = ((CapeHolder) abstractClientPlayer).getSimulation();
         poseStack.pushPose();
         poseStack.translate(0.0D, 0.0D, 0.125D);
-        
+
         float x = simulation.getPoints().get(part).getLerpX(delta) - simulation.getPoints().get(0).getLerpX(delta);
-        if(x > 0) {
+        if (x > 0) {
             x = 0;
         }
-        float y = simulation.getPoints().get(0).getLerpY(delta) - part - simulation.getPoints().get(part).getLerpY(delta);
+        float y = simulation.getPoints().get(0).getLerpY(delta) - part
+                - simulation.getPoints().get(part).getLerpY(delta);
         float z = simulation.getPoints().get(0).getLerpZ(delta) - simulation.getPoints().get(part).getLerpZ(delta);
-        
+
 //        float sidewaysRotationOffset = (float) (d * p - m * o) * 100.0F;
 //        sidewaysRotationOffset = Mth.clamp(sidewaysRotationOffset, -20.0F, 20.0F);
         float sidewaysRotationOffset = 0;
@@ -206,37 +185,39 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
 
         float naturalWindSwing = getNatrualWindSwing(part, abstractClientPlayer.isUnderWater());
 
-        
         // vanilla rotating and wind
         poseStack.mulPose(Axis.XP.rotationDegrees(6.0F + height + naturalWindSwing));
         poseStack.mulPose(Axis.ZP.rotationDegrees(sidewaysRotationOffset / 2.0F));
         poseStack.mulPose(Axis.YP.rotationDegrees(180.0F - sidewaysRotationOffset / 2.0F));
-        poseStack.translate(-z/partCount, y/partCount, x/partCount); // movement from the simulation
-        //offsetting so the rotation is on the cape part
-        //float offset = (float) (part * (16 / partCount))/16; // to fold the entire cape into one position for debugging
-        poseStack.translate(0, /*-offset*/ + (0.48/16) , - (0.48/16)); // (0.48/16)
-        poseStack.translate(0, part * 1f/partCount, part * (0)/partCount);
+        poseStack.translate(-z / partCount, y / partCount, x / partCount); // movement from the simulation
+        // offsetting so the rotation is on the cape part
+        // float offset = (float) (part * (16 / partCount))/16; // to fold the entire
+        // cape into one position for debugging
+        poseStack.translate(0, /*-offset*/ +(0.48 / 16), -(0.48 / 16)); // (0.48/16)
+        poseStack.translate(0, part * 1f / partCount, part * (0) / partCount);
         poseStack.mulPose(Axis.XP.rotationDegrees(-partRotation)); // apply actual rotation
         // undoing the rotation
-        poseStack.translate(0, -part * 1f/partCount, -part * (0)/partCount);
-        poseStack.translate(0, -(0.48/16), (0.48/16));
-        
+        poseStack.translate(0, -part * 1f / partCount, -part * (0) / partCount);
+        poseStack.translate(0, -(0.48 / 16), (0.48 / 16));
+
     }
 
     private float getRotation(float delta, int part, BasicSimulation simulation) {
-        if(part == partCount-1) {
-            return getRotation(delta, part-1, simulation);
+        if (part == partCount - 1) {
+            return getRotation(delta, part - 1, simulation);
         }
-        float angle = (float) getAngle(simulation.getPoints().get(part).getLerpedPos(delta), simulation.getPoints().get(part+1).getLerpedPos(delta));
+        float angle = (float) getAngle(simulation.getPoints().get(part).getLerpedPos(delta),
+                simulation.getPoints().get(part + 1).getLerpedPos(delta));
         return angle;
     }
-    
+
     private double getAngle(Vector3 a, Vector3 b) {
         Vector3 angle = b.subtract(a);
-        return Math.toDegrees(Math.atan2(angle.x, angle.y))+180;
+        return Math.toDegrees(Math.atan2(angle.x, angle.y)) + 180;
     }
-    
-    private void modifyPoseStackVanilla(PoseStack poseStack, AbstractClientPlayer abstractClientPlayer, float h, int part) {
+
+    private void modifyPoseStackVanilla(PoseStack poseStack, AbstractClientPlayer abstractClientPlayer, float h,
+            int part) {
         poseStack.pushPose();
         poseStack.translate(0.0D, 0.0D, 0.125D);
         double d = Mth.lerp(h, abstractClientPlayer.xCloakO, abstractClientPlayer.xCloak)
@@ -250,12 +231,13 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
         double p = -Mth.cos(n * 0.017453292F);
         float height = (float) e * 10.0F;
         height = Mth.clamp(height, -6.0F, 32.0F);
-        float swing = (float) (d * o + m * p) * easeOutSine(1.0F/partCount*part)*100;
-        swing = Mth.clamp(swing, 0.0F, 150.0F * easeOutSine(1F/partCount*part));
+        float swing = (float) (d * o + m * p) * easeOutSine(1.0F / partCount * part) * 100;
+        swing = Mth.clamp(swing, 0.0F, 150.0F * easeOutSine(1F / partCount * part));
         float sidewaysRotationOffset = (float) (d * p - m * o) * 100.0F;
         sidewaysRotationOffset = Mth.clamp(sidewaysRotationOffset, -20.0F, 20.0F);
         float t = Mth.lerp(h, abstractClientPlayer.oBob, abstractClientPlayer.bob);
-        height += Mth.sin(Mth.lerp(h, abstractClientPlayer.walkDistO, abstractClientPlayer.walkDist) * 6.0F) * 32.0F * t;
+        height += Mth.sin(Mth.lerp(h, abstractClientPlayer.walkDistO, abstractClientPlayer.walkDist) * 6.0F) * 32.0F
+                * t;
         if (abstractClientPlayer.isCrouching()) {
             height += 25.0F;
             poseStack.translate(0, 0.15F, 0);
@@ -267,7 +249,7 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
         poseStack.mulPose(Axis.ZP.rotationDegrees(sidewaysRotationOffset / 2.0F));
         poseStack.mulPose(Axis.YP.rotationDegrees(180.0F - sidewaysRotationOffset / 2.0F));
     }
-    
+
     private float getNatrualWindSwing(int part, boolean underwater) {
         long highlightedPart = (System.currentTimeMillis() / (underwater ? 9 : 3)) % 360;
         float relativePart = (float) (part + 1) / partCount;
@@ -280,7 +262,8 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
         return 0;
     }
 
-    private static void addBackVertex(VertexConsumer bufferBuilder, Matrix4f matrix, Matrix4f oldMatrix, float x1, float y1, float z1, float x2, float y2, float z2, int part, int light) {
+    private static void addBackVertex(VertexConsumer bufferBuilder, Matrix4f matrix, Matrix4f oldMatrix, float x1,
+            float y1, float z1, float x2, float y2, float z2, int part, int light) {
         float i;
         Matrix4f k;
         if (x1 < x2) {
@@ -310,13 +293,18 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
         maxV = minV + (vPerPart * (part + 1));
         minV = minV + (vPerPart * part);
 
-        bufferBuilder.vertex(oldMatrix, x1, y2, z1).color(1f, 1f, 1f, 1f).uv(maxU, minV).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(1, 0, 0).endVertex();
-        bufferBuilder.vertex(oldMatrix, x2, y2, z1).color(1f, 1f, 1f, 1f).uv(minU, minV).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(1, 0, 0).endVertex();
-        bufferBuilder.vertex(matrix, x2, y1, z2).color(1f, 1f, 1f, 1f).uv(minU, maxV).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(1, 0, 0).endVertex();
-        bufferBuilder.vertex(matrix, x1, y1, z2).color(1f, 1f, 1f, 1f).uv(maxU, maxV).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(1, 0, 0).endVertex();
+        bufferBuilder.vertex(oldMatrix, x1, y2, z1).color(1f, 1f, 1f, 1f).uv(maxU, minV)
+                .overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(1, 0, 0).endVertex();
+        bufferBuilder.vertex(oldMatrix, x2, y2, z1).color(1f, 1f, 1f, 1f).uv(minU, minV)
+                .overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(1, 0, 0).endVertex();
+        bufferBuilder.vertex(matrix, x2, y1, z2).color(1f, 1f, 1f, 1f).uv(minU, maxV)
+                .overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(1, 0, 0).endVertex();
+        bufferBuilder.vertex(matrix, x1, y1, z2).color(1f, 1f, 1f, 1f).uv(maxU, maxV)
+                .overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(1, 0, 0).endVertex();
     }
 
-    private static void addFrontVertex(VertexConsumer bufferBuilder, Matrix4f matrix, Matrix4f oldMatrix, float x1, float y1, float z1, float x2, float y2, float z2, int part, int light) {
+    private static void addFrontVertex(VertexConsumer bufferBuilder, Matrix4f matrix, Matrix4f oldMatrix, float x1,
+            float y1, float z1, float x2, float y2, float z2, int part, int light) {
         float i;
         Matrix4f k;
         if (x1 < x2) {
@@ -346,13 +334,18 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
         maxV = minV + (vPerPart * (part + 1));
         minV = minV + (vPerPart * part);
 
-        bufferBuilder.vertex(oldMatrix, x1, y1, z1).color(1f, 1f, 1f, 1f).uv(minU, maxV).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(1, 0, 0).endVertex();
-        bufferBuilder.vertex(oldMatrix, x2, y1, z1).color(1f, 1f, 1f, 1f).uv(maxU, maxV).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(1, 0, 0).endVertex();
-        bufferBuilder.vertex(matrix, x2, y2, z2).color(1f, 1f, 1f, 1f).uv(maxU, minV).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(1, 0, 0).endVertex();
-        bufferBuilder.vertex(matrix, x1, y2, z2).color(1f, 1f, 1f, 1f).uv(minU, minV).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(1, 0, 0).endVertex();
+        bufferBuilder.vertex(oldMatrix, x1, y1, z1).color(1f, 1f, 1f, 1f).uv(minU, maxV)
+                .overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(1, 0, 0).endVertex();
+        bufferBuilder.vertex(oldMatrix, x2, y1, z1).color(1f, 1f, 1f, 1f).uv(maxU, maxV)
+                .overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(1, 0, 0).endVertex();
+        bufferBuilder.vertex(matrix, x2, y2, z2).color(1f, 1f, 1f, 1f).uv(maxU, minV)
+                .overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(1, 0, 0).endVertex();
+        bufferBuilder.vertex(matrix, x1, y2, z2).color(1f, 1f, 1f, 1f).uv(minU, minV)
+                .overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(1, 0, 0).endVertex();
     }
 
-    private static void addLeftVertex(VertexConsumer bufferBuilder, Matrix4f matrix, Matrix4f oldMatrix, float x1, float y1, float z1, float x2, float y2, float z2, int part, int light) {
+    private static void addLeftVertex(VertexConsumer bufferBuilder, Matrix4f matrix, Matrix4f oldMatrix, float x1,
+            float y1, float z1, float x2, float y2, float z2, int part, int light) {
         float i;
         if (x1 < x2) {
             i = x1;
@@ -377,13 +370,18 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
         maxV = minV + (vPerPart * (part + 1));
         minV = minV + (vPerPart * part);
 
-        bufferBuilder.vertex(matrix, x2, y1, z1).color(1f, 1f, 1f, 1f).uv(minU, maxV).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(1, 0, 0).endVertex();
-        bufferBuilder.vertex(matrix, x2, y1, z2).color(1f, 1f, 1f, 1f).uv(maxU, maxV).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(1, 0, 0).endVertex();
-        bufferBuilder.vertex(oldMatrix, x2, y2, z2).color(1f, 1f, 1f, 1f).uv(maxU, minV).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(1, 0, 0).endVertex();
-        bufferBuilder.vertex(oldMatrix, x2, y2, z1).color(1f, 1f, 1f, 1f).uv(minU, minV).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(1, 0, 0).endVertex();
+        bufferBuilder.vertex(matrix, x2, y1, z1).color(1f, 1f, 1f, 1f).uv(minU, maxV)
+                .overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(1, 0, 0).endVertex();
+        bufferBuilder.vertex(matrix, x2, y1, z2).color(1f, 1f, 1f, 1f).uv(maxU, maxV)
+                .overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(1, 0, 0).endVertex();
+        bufferBuilder.vertex(oldMatrix, x2, y2, z2).color(1f, 1f, 1f, 1f).uv(maxU, minV)
+                .overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(1, 0, 0).endVertex();
+        bufferBuilder.vertex(oldMatrix, x2, y2, z1).color(1f, 1f, 1f, 1f).uv(minU, minV)
+                .overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(1, 0, 0).endVertex();
     }
 
-    private static void addRightVertex(VertexConsumer bufferBuilder, Matrix4f matrix, Matrix4f oldMatrix, float x1, float y1, float z1, float x2, float y2, float z2, int part, int light) {
+    private static void addRightVertex(VertexConsumer bufferBuilder, Matrix4f matrix, Matrix4f oldMatrix, float x1,
+            float y1, float z1, float x2, float y2, float z2, int part, int light) {
         float i;
         if (x1 < x2) {
             i = x1;
@@ -408,13 +406,18 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
         maxV = minV + (vPerPart * (part + 1));
         minV = minV + (vPerPart * part);
 
-        bufferBuilder.vertex(matrix, x2, y1, z2).color(1f, 1f, 1f, 1f).uv(minU, maxV).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(1, 0, 0).endVertex();
-        bufferBuilder.vertex(matrix, x2, y1, z1).color(1f, 1f, 1f, 1f).uv(maxU, maxV).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(1, 0, 0).endVertex();
-        bufferBuilder.vertex(oldMatrix, x2, y2, z1).color(1f, 1f, 1f, 1f).uv(maxU, minV).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(1, 0, 0).endVertex();
-        bufferBuilder.vertex(oldMatrix, x2, y2, z2).color(1f, 1f, 1f, 1f).uv(minU, minV).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(1, 0, 0).endVertex();
+        bufferBuilder.vertex(matrix, x2, y1, z2).color(1f, 1f, 1f, 1f).uv(minU, maxV)
+                .overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(1, 0, 0).endVertex();
+        bufferBuilder.vertex(matrix, x2, y1, z1).color(1f, 1f, 1f, 1f).uv(maxU, maxV)
+                .overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(1, 0, 0).endVertex();
+        bufferBuilder.vertex(oldMatrix, x2, y2, z1).color(1f, 1f, 1f, 1f).uv(maxU, minV)
+                .overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(1, 0, 0).endVertex();
+        bufferBuilder.vertex(oldMatrix, x2, y2, z2).color(1f, 1f, 1f, 1f).uv(minU, minV)
+                .overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(1, 0, 0).endVertex();
     }
 
-    private static void addBottomVertex(VertexConsumer bufferBuilder, Matrix4f matrix, Matrix4f oldMatrix, float x1, float y1, float z1, float x2, float y2, float z2, int part, int light) {
+    private static void addBottomVertex(VertexConsumer bufferBuilder, Matrix4f matrix, Matrix4f oldMatrix, float x1,
+            float y1, float z1, float x2, float y2, float z2, int part, int light) {
         float i;
         if (x1 < x2) {
             i = x1;
@@ -439,13 +442,18 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
         maxV = minV + (vPerPart * (part + 1));
         minV = minV + (vPerPart * part);
 
-        bufferBuilder.vertex(oldMatrix, x1, y2, z2).color(1f, 1f, 1f, 1f).uv(maxU, minV).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(1, 0, 0).endVertex();
-        bufferBuilder.vertex(oldMatrix, x2, y2, z2).color(1f, 1f, 1f, 1f).uv(minU, minV).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(1, 0, 0).endVertex();
-        bufferBuilder.vertex(matrix, x2, y1, z1).color(1f, 1f, 1f, 1f).uv(minU, maxV).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(1, 0, 0).endVertex();
-        bufferBuilder.vertex(matrix, x1, y1, z1).color(1f, 1f, 1f, 1f).uv(maxU, maxV).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(1, 0, 0).endVertex();
+        bufferBuilder.vertex(oldMatrix, x1, y2, z2).color(1f, 1f, 1f, 1f).uv(maxU, minV)
+                .overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(1, 0, 0).endVertex();
+        bufferBuilder.vertex(oldMatrix, x2, y2, z2).color(1f, 1f, 1f, 1f).uv(minU, minV)
+                .overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(1, 0, 0).endVertex();
+        bufferBuilder.vertex(matrix, x2, y1, z1).color(1f, 1f, 1f, 1f).uv(minU, maxV)
+                .overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(1, 0, 0).endVertex();
+        bufferBuilder.vertex(matrix, x1, y1, z1).color(1f, 1f, 1f, 1f).uv(maxU, maxV)
+                .overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(1, 0, 0).endVertex();
     }
 
-    private static void addTopVertex(VertexConsumer bufferBuilder, Matrix4f matrix, Matrix4f oldMatrix, float x1, float y1, float z1, float x2, float y2, float z2, int part, int light) {
+    private static void addTopVertex(VertexConsumer bufferBuilder, Matrix4f matrix, Matrix4f oldMatrix, float x1,
+            float y1, float z1, float x2, float y2, float z2, int part, int light) {
         float i;
         if (x1 < x2) {
             i = x1;
@@ -470,17 +478,22 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
         maxV = minV + (vPerPart * (part + 1));
         minV = minV + (vPerPart * part);
 
-        bufferBuilder.vertex(oldMatrix, x1, y2, z1).color(1f, 1f, 1f, 1f).uv(maxU, maxV).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(0, 1, 0).endVertex();
-        bufferBuilder.vertex(oldMatrix, x2, y2, z1).color(1f, 1f, 1f, 1f).uv(minU, maxV).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(0, 1, 0).endVertex();
-        bufferBuilder.vertex(matrix, x2, y1, z2).color(1f, 1f, 1f, 1f).uv(minU, minV).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(0, 1, 0).endVertex();
-        bufferBuilder.vertex(matrix, x1, y1, z2).color(1f, 1f, 1f, 1f).uv(maxU, minV).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(0, 1, 0).endVertex();
+        bufferBuilder.vertex(oldMatrix, x1, y2, z1).color(1f, 1f, 1f, 1f).uv(maxU, maxV)
+                .overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(0, 1, 0).endVertex();
+        bufferBuilder.vertex(oldMatrix, x2, y2, z1).color(1f, 1f, 1f, 1f).uv(minU, maxV)
+                .overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(0, 1, 0).endVertex();
+        bufferBuilder.vertex(matrix, x2, y1, z2).color(1f, 1f, 1f, 1f).uv(minU, minV)
+                .overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(0, 1, 0).endVertex();
+        bufferBuilder.vertex(matrix, x1, y1, z2).color(1f, 1f, 1f, 1f).uv(maxU, minV)
+                .overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(0, 1, 0).endVertex();
     }
 
     private static VanillaCapeRenderer vanillaCape = new VanillaCapeRenderer();
-    
-    private CapeRenderer getCapeRenderer(AbstractClientPlayer abstractClientPlayer, MultiBufferSource multiBufferSource) {
-        for(ModSupport support : SupportManager.getSupportedMods()) {
-            if(support.shouldBeUsed(abstractClientPlayer)) {
+
+    private CapeRenderer getCapeRenderer(AbstractClientPlayer abstractClientPlayer,
+            MultiBufferSource multiBufferSource) {
+        for (ModSupport support : SupportManager.getSupportedMods()) {
+            if (support.shouldBeUsed(abstractClientPlayer)) {
                 return support.getRenderer();
             }
         }
@@ -489,13 +502,13 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
             return null;
         } else {
             vanillaCape.vertexConsumer = multiBufferSource
-            .getBuffer(RenderType.entityCutout(abstractClientPlayer.getSkin().capeTexture()));
+                    .getBuffer(RenderType.entityCutout(abstractClientPlayer.getSkin().capeTexture()));
             return vanillaCape;
         }
     }
-    
-    private static int scale = 1000*60*60;
-    
+
+    private static int scale = 1000 * 60 * 60;
+
     /**
      * Returns between 0 and 2
      * 
@@ -507,8 +520,7 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
 //        float mod = Mth.clamp(1f/200f*(float)posY, 0f, 1f);
 //        return Mth.clamp((float) (Math.sin(2 * x) + Math.sin(Math.PI * x)) * mod, 0, 2);
 //    }
-    
-    
+
     /**
      * https://easings.net/#easeOutSine
      * 
@@ -518,6 +530,6 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
     private static float easeOutSine(float x) {
         return Mth.sin((x * Mth.PI) / 2f);
 
-      }
-    
+    }
+
 }

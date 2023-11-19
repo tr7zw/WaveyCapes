@@ -10,30 +10,31 @@ import net.minecraftforge.fml.common.Mod;
 @Mod("waveycapes")
 public class WaveyCapesMod extends WaveyCapesBase {
 
-	public WaveyCapesMod() {
+    public WaveyCapesMod() {
         try {
             Class clientClass = net.minecraft.client.Minecraft.class;
-        }catch(Throwable ex) {
+        } catch (Throwable ex) {
             LOGGER.warn("WaveyCapes Mod installed on a Server. Going to sleep.");
             return;
         }
-	    init();
-        ModLoadingContext.get().registerExtensionPoint(ConfigScreenFactory.class, () -> new ConfigScreenFactory((mc, screen) -> {
-            return createConfigScreen(screen);
-        }));
-		ModLoadingContext.get().registerExtensionPoint(IExtensionPoint.DisplayTest.class,
+        init();
+        ModLoadingContext.get().registerExtensionPoint(ConfigScreenFactory.class,
+                () -> new ConfigScreenFactory((mc, screen) -> {
+                    return createConfigScreen(screen);
+                }));
+        ModLoadingContext.get().registerExtensionPoint(IExtensionPoint.DisplayTest.class,
                 () -> new IExtensionPoint.DisplayTest(
                         () -> ModLoadingContext.get().getActiveContainer().getModInfo().getVersion().toString(),
                         (remote, isServer) -> true));
-	}
+    }
 
     @Override
     public void initSupportHooks() {
 
-        if(doesClassExist("net.minecraftcapes.MinecraftCapes")) {
+        if (doesClassExist("net.minecraftcapes.MinecraftCapes")) {
             SupportManager.mods.add(new MinecraftCapesSupport());
             LOGGER.info("Wavey Capes loaded MinecraftCapes support!");
         }
     }
-	
+
 }

@@ -16,12 +16,12 @@ import net.minecraft.world.entity.LivingEntity;
 public class LivingEntityRendererMixin<T extends LivingEntity, M extends EntityModel<T>> {
 
     @Inject(method = "addLayer", at = @At("HEAD"), cancellable = true)
-   private void addLayer(RenderLayer<T, M> renderLayer, CallbackInfoReturnable<Boolean> info) {
-        for(ModSupport support : SupportManager.getSupportedMods())
-            if(support.blockFeatureRenderer(renderLayer)) {
+    private void addLayer(RenderLayer<T, M> renderLayer, CallbackInfoReturnable<Boolean> info) {
+        for (ModSupport support : SupportManager.getSupportedMods())
+            if (support.blockFeatureRenderer(renderLayer)) {
                 info.cancel();
                 return;
             }
     }
-    
+
 }

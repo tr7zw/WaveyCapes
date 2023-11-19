@@ -34,7 +34,8 @@ public class MoreBannerFeaturesSupport implements ModSupport {
 
     @Override
     public boolean shouldBeUsed(AbstractClientPlayer player) {
-        return player instanceof Bannerable && !((Bannerable) player).getBannerItem().isEmpty() && ((Bannerable) player).getBannerItem().getItem() instanceof BannerItem;
+        return player instanceof Bannerable && !((Bannerable) player).getBannerItem().isEmpty()
+                && ((Bannerable) player).getBannerItem().getItem() instanceof BannerItem;
     }
 
     @Override
@@ -49,9 +50,10 @@ public class MoreBannerFeaturesSupport implements ModSupport {
                 MultiBufferSource multiBufferSource, int light, int overlay) {
             ItemStack bannerItem = ((Bannerable) player).getBannerItem();
 
-            RendererUtils.renderCanvasFromItem(bannerItem, poseStack, multiBufferSource, light, overlay, customCape[part]);
+            RendererUtils.renderCanvasFromItem(bannerItem, poseStack, multiBufferSource, light, overlay,
+                    customCape[part]);
         }
-        
+
         @Override
         public boolean vanillaUvValues() {
             return false;

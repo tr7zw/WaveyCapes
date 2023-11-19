@@ -9,12 +9,13 @@ import net.minecraft.client.renderer.MultiBufferSource;
 
 public interface CapeRenderer {
 
-    public void render(AbstractClientPlayer player, int part, ModelPart model, PoseStack poseStack, MultiBufferSource multiBufferSource,  int light, int overlay);
-    
+    public void render(AbstractClientPlayer player, int part, ModelPart model, PoseStack poseStack,
+            MultiBufferSource multiBufferSource, int light, int overlay);
+
     public default VertexConsumer getVertexConsumer(MultiBufferSource multiBufferSource, AbstractClientPlayer player) {
         return null;
     }
-    
+
     public boolean vanillaUvValues();
-    
+
 }

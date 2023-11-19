@@ -14,12 +14,12 @@ import net.minecraft.world.entity.player.Player;
 public class PlayerMixin implements CapeHolder {
 
     private BasicSimulation stickSimulation;
-    
+
     @Override
     public BasicSimulation getSimulation() {
         return stickSimulation;
     }
-    
+
     @Override
     public void setSimulation(BasicSimulation sim) {
         this.stickSimulation = sim;
@@ -27,9 +27,9 @@ public class PlayerMixin implements CapeHolder {
 
     @Inject(method = "moveCloak", at = @At("HEAD"))
     private void moveCloakUpdate(CallbackInfo info) {
-        if((Object)this instanceof AbstractClientPlayer) {
-            simulate((AbstractClientPlayer)(Object)this);
+        if ((Object) this instanceof AbstractClientPlayer) {
+            simulate((AbstractClientPlayer) (Object) this);
         }
     }
-    
+
 }

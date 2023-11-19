@@ -6,13 +6,13 @@ public class ConfigUpgrader {
         boolean changed = false;
 
         // check for more changes here
-        if(config.configVersion == 1) {
+        if (config.configVersion == 1) {
             config.configVersion = 2;
-            if(config.gravity < 0)
-                config.gravity *= -1;//fixed gravity
+            if (config.gravity < 0)
+                config.gravity *= -1;// fixed gravity
         }
-        
+
         return changed;
     }
-    
+
 }

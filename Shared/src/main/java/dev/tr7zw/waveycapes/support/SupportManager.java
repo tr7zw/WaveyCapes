@@ -6,9 +6,9 @@ import java.util.Set;
 public class SupportManager {
 
     public static Set<ModSupport> mods = new HashSet<>();
-    
-    public static Set<ModSupport> getSupportedMods(){
+
+    public static Set<ModSupport> getSupportedMods() {
         return mods;
     }
-    
+
 }

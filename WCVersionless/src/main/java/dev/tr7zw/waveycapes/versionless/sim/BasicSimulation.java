@@ -18,16 +18,16 @@ public interface BasicSimulation {
     boolean isSneaking();
 
     void setSneaking(boolean sneaking);
-    
+
     /**
      * @return true if it was re-initialized
      */
     boolean init(int partCount);
-    
+
     boolean empty();
-    
+
     void applyMovement(Vector3 movement);
-    
+
     List<CapePoint> getPoints();
 
 }

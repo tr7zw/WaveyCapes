@@ -16,13 +16,13 @@ import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.world.entity.LivingEntity;
 
-@Mixin(value =  PlayerModel.class)
+@Mixin(value = PlayerModel.class)
 public class PlayerModelMixin<T extends LivingEntity> extends HumanoidModel<T> implements PlayerModelAccess {
 
     @Shadow
     @Final
     private ModelPart cloak;
-    
+
     public PlayerModelMixin(ModelPart modelPart) {
         super(modelPart);
     }
@@ -36,6 +36,5 @@ public class PlayerModelMixin<T extends LivingEntity> extends HumanoidModel<T> i
     public ModelPart getCloak() {
         return cloak;
     }
-
 
 }

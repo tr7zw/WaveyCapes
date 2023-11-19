@@ -24,7 +24,7 @@ import net.minecraft.server.Bootstrap;
 public class MixinTests {
 
     @BeforeAll
-    public static void setup() {        
+    public static void setup() {
         SharedConstants.tryDetectVersion();
         Bootstrap.bootStrap();
     }
@@ -36,7 +36,7 @@ public class MixinTests {
         objenesis.newInstance(PlayerModel.class);
         objenesis.newInstance(PlayerRenderer.class);
     }
-    
+
     @Test
     public void langTests() throws Throwable {
         Language lang = TestUtil.loadDefault("/assets/waveycapes/lang/en_us.json");
@@ -45,9 +45,9 @@ public class MixinTests {
         CustomConfigScreen screen = (CustomConfigScreen) WaveyCapesBase.INSTANCE.createConfigScreen(null);
         List<OptionInstance<?>> options = TestUtil.bootStrapCustomConfigScreen(screen);
         assertNotEquals(screen.getTitle().getString(), lang.getOrDefault(screen.getTitle().getString()));
-        for(OptionInstance<?> option : options) {
+        for (OptionInstance<?> option : options) {
             Set<String> keys = TestUtil.getKeys(option, true);
-            for(String key : keys) {
+            for (String key : keys) {
                 System.out.println(key + " " + lang.getOrDefault(key));
                 assertNotEquals(key, lang.getOrDefault(key));
             }

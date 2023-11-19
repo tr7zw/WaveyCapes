@@ -25,7 +25,7 @@ public class StickSimulationDungeons implements BasicSimulation {
 
     @Override
     public boolean init(int partCount) {
-        if(points.size() != partCount) {
+        if (points.size() != partCount) {
             points.clear();
             sticks.clear();
             for (int i = 0; i < partCount; i++) {
@@ -33,18 +33,18 @@ public class StickSimulationDungeons implements BasicSimulation {
                 point.position.y = -i;
                 point.locked = i == 0;
                 points.add(point);
-                if(i > 0) {
-                    sticks.add(new Stick(points.get(i-1), point, 1f));
+                if (i > 0) {
+                    sticks.add(new Stick(points.get(i - 1), point, 1f));
                 }
             }
             return true;
         }
         return false;
     }
-    
+
     @Override
     public void simulate() {
-        //maxBend = WaveyCapesBase.config.maxBend;
+        // maxBend = WaveyCapesBase.config.maxBend;
 
         applyGravity();
 
@@ -57,7 +57,7 @@ public class StickSimulationDungeons implements BasicSimulation {
     }
 
     private void applyGravity() {
-        float deltaTime = 50f/1000f; // fixed timescale
+        float deltaTime = 50f / 1000f; // fixed timescale
         Vector3 down = gravityDirection.clone().mul(gravity * deltaTime);
         Vector3 tmp = new Vector3(0, 0, 0);
         for (Point p : points) {
@@ -88,7 +88,8 @@ public class StickSimulationDungeons implements BasicSimulation {
     }
 
     private void limitLength() {
-        // fix in the position/length, this prevents it from acting like a spring/stretchy
+        // fix in the position/length, this prevents it from acting like a
+        // spring/stretchy
         for (int x = 0; x < sticks.size(); x++) {
             Stick stick = sticks.get(x);
             Vector3 stickDir = stick.pointA.position.clone().subtract(stick.pointB.position).normalize();
@@ -97,7 +98,7 @@ public class StickSimulationDungeons implements BasicSimulation {
             }
         }
     }
-    
+
     private void preventSelfClipping() {
         boolean clipped = false;
         int runs = 0;
@@ -105,12 +106,12 @@ public class StickSimulationDungeons implements BasicSimulation {
             clipped = false;
             // check the cape parts against each other. Bad implementation
             for (int a = 0; a < points.size(); a++) {
-                for(int b = a + 1; b < points.size(); b++) {
+                for (int b = a + 1; b < points.size(); b++) {
                     Point pA = points.get(a);
                     Point pB = points.get(b);
                     Vector3 stickDir = pA.position.clone().subtract(pB.position);
-                    
-                    if(stickDir.sqrMagnitude() < 0.99) {
+
+                    if (stickDir.sqrMagnitude() < 0.99) {
                         clipped = true;
                         runs++;
                         stickDir.normalize();
@@ -124,7 +125,7 @@ public class StickSimulationDungeons implements BasicSimulation {
                     }
                 }
             }
-        }while(clipped && runs < 10);
+        } while (clipped && runs < 10);
     }
 
     private void preventHardBends() {
@@ -133,15 +134,15 @@ public class StickSimulationDungeons implements BasicSimulation {
         for (int i = 1; i < points.size() - 1; i++) {
             double angle = getAngle(points.get(i).position, points.get(i - 1).position, points.get(i + 1).position);
             float maxBend = this.maxBend;
-            if(i != points.size()/2) {
+            if (i != points.size() / 2) {
                 maxBend = 0;
             }
             if (angle < -maxBend) {
-                Vector3 replacement = getReplacement(points.get(i).position, points.get(i - 1).position, -maxBend*2);
+                Vector3 replacement = getReplacement(points.get(i).position, points.get(i - 1).position, -maxBend * 2);
                 points.get(i + 1).position = replacement;
             }
             if (angle > maxBend) {
-                Vector3 replacement = getReplacement(points.get(i).position, points.get(i - 1).position, maxBend*2);
+                Vector3 replacement = getReplacement(points.get(i).position, points.get(i - 1).position, maxBend * 2);
                 points.get(i + 1).position = replacement;
             }
         }
@@ -155,12 +156,12 @@ public class StickSimulationDungeons implements BasicSimulation {
             if (p.position.x - basePoint.position.x > 0) {
                 p.position.x = basePoint.position.x;
             }
-            float maxZ = ((float)i / (float)points.size()) * ((float)i / (float)points.size()) * 5;
+            float maxZ = ((float) i / (float) points.size()) * ((float) i / (float) points.size()) * 5;
             float z = basePoint.position.z - p.position.z;
-            if(z > maxZ) {
+            if (z > maxZ) {
                 p.position.z = basePoint.position.z - maxZ;
             }
-            if(z < -maxZ) {
+            if (z < -maxZ) {
                 p.position.z = basePoint.position.z + maxZ;
             }
         }
@@ -183,9 +184,9 @@ public class StickSimulationDungeons implements BasicSimulation {
 
         double alpha = Mth.atan2(cross, dot);
 
-        return alpha * 180/ Math.PI;
+        return alpha * 180 / Math.PI;
     }
-    
+
     @Override
     public void setGravityDirection(Vector3 gravityDirection) {
         this.gravityDirection = gravityDirection;
@@ -205,44 +206,44 @@ public class StickSimulationDungeons implements BasicSimulation {
     public boolean isSneaking() {
         return sneaking;
     }
-    
+
     @Override
     public void setSneaking(boolean sneaking) {
         this.sneaking = sneaking;
     }
-    
+
     @Override
     public boolean empty() {
         return sticks.isEmpty();
     }
-    
+
     @Override
     public void applyMovement(Vector3 movement) {
         points.get(0).prevPosition.copy(points.get(0).position);
         points.get(0).position.add(movement);
     }
-    
+
     @SuppressWarnings("unchecked")
     @Override
     public List<CapePoint> getPoints() {
-        return (List<CapePoint>)(Object)points;
+        return (List<CapePoint>) (Object) points;
     }
 
     public static class Point implements CapePoint {
         public Vector3 position = new Vector3(0, 0, 0);
         public Vector3 prevPosition = new Vector3(0, 0, 0);
         public boolean locked;
-        
+
         @Override
         public float getLerpX(float delta) {
             return Mth.lerp(delta, prevPosition.x, position.x);
         }
-        
+
         @Override
         public float getLerpY(float delta) {
             return Mth.lerp(delta, prevPosition.y, position.y);
         }
-        
+
         @Override
         public float getLerpZ(float delta) {
             return Mth.lerp(delta, prevPosition.z, position.z);

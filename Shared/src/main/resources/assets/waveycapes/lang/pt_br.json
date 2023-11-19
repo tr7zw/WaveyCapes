@@ -1,6 +1,5 @@
 {
     "text.wc.title": "Definições de WaveyCapes",
-
     "text.wc.setting.capestyle": "Estilo da Capa",
     "text.wc.setting.capestyle.tooltip": "Alterne entre uma capa que se dobra suavemente e uma capa em blocos.",
     "text.wc.setting.capestyle.BLOCKY": "Com Cubos",
@@ -18,5 +17,5 @@
     "text.wc.setting.gravity": "Gravidade",
     "text.wc.setting.maxBend": "Ângulo Máximo da Dobra",
     "text.wc.setting.heightMultiplier": "Multiplicador de Altura",
-	"text.wc.setting.heightMultiplier.tooltip": "Mude o quão extrema a capa reage ao movimento Y."
+    "text.wc.setting.heightMultiplier.tooltip": "Mude o quão extrema a capa reage ao movimento Y."
 }

@@ -1,6 +1,5 @@
 {
     "text.wc.title": "Настройки WaveyCapes",
-
     "text.wc.setting.capestyle": "Стиль плаща",
     "text.wc.setting.capestyle.tooltip": "Переключение между плавным и сегментированным видами плаща.",
     "text.wc.setting.capestyle.BLOCKY": "Сегменты",
@@ -19,7 +18,6 @@
     "text.wc.setting.gravity.tooltip": "Сила притяжения, применяемая к плащу.",
     "text.wc.setting.heightMultiplier": "Легковесность",
     "text.wc.setting.heightMultiplier.tooltip": "Реакция плаща на перемещение по вертикали.",
-
     "modmenu.summaryTranslation.waveycapes": "Плащ не должен быть неподвижной доской!",
     "modmenu.descriptionTranslation.waveycapes": "WaveyCapes добавляет плащу более гибкую анимацию с учётом физики движения. Поддерживаются разные стили плаща, режимы движения и эффекты ветра."
 }

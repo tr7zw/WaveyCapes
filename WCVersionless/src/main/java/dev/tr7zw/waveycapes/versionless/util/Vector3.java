@@ -60,13 +60,13 @@ public class Vector3 {
         }
         return this;
     }
-    
+
     public Vector3 rotateDegrees(float deg) {
         float ox = x;
         float oy = y;
         deg = (float) Math.toRadians(deg);
-        x = Mth.cos(deg) * ox - Mth.sin(deg)*oy;
-        y = Mth.sin(deg) * ox + Mth.cos(deg)*oy;
+        x = Mth.cos(deg) * ox - Mth.sin(deg) * oy;
+        y = Mth.sin(deg) * ox + Mth.cos(deg) * oy;
         return this;
     }
 
@@ -76,7 +76,7 @@ public class Vector3 {
     }
 
     public float sqrMagnitude() {
-        return x*x+y*y+z*z;
+        return x * x + y * y + z * z;
     }
 
 }

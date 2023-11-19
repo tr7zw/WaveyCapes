@@ -25,7 +25,7 @@ public class StickSimulation implements BasicSimulation {
 
     @Override
     public boolean init(int partCount) {
-        if(points.size() != partCount) {
+        if (points.size() != partCount) {
             points.clear();
             sticks.clear();
             for (int i = 0; i < partCount; i++) {
@@ -33,19 +33,19 @@ public class StickSimulation implements BasicSimulation {
                 point.position.y = -i;
                 point.locked = i == 0;
                 points.add(point);
-                if(i > 0) {
-                    sticks.add(new Stick(points.get(i-1), point, 1f));
+                if (i > 0) {
+                    sticks.add(new Stick(points.get(i - 1), point, 1f));
                 }
             }
             return true;
         }
         return false;
     }
-    
-    public void simulate() {
-        //maxBend = WaveyCapesBase.config.maxBend;
 
-        float deltaTime = 50f/1000f; // fixed timescale
+    public void simulate() {
+        // maxBend = WaveyCapesBase.config.maxBend;
+
+        float deltaTime = 50f / 1000f; // fixed timescale
         Vector2 down = gravityDirection.clone().mul(gravity * deltaTime);
         Vector2 tmp = new Vector2(0, 0);
         for (Point p : points) {
@@ -65,7 +65,8 @@ public class StickSimulation implements BasicSimulation {
             }
         }
 
-        // Doesnt work like it should at all, but it prevents some folding into itself, so it stays for now
+        // Doesnt work like it should at all, but it prevents some folding into itself,
+        // so it stays for now
         for (int i = points.size() - 2; i >= 1; i--) {
             double angle = getAngle(points.get(i).position, points.get(i - 1).position, points.get(i + 1).position);
             angle *= 57.2958;
@@ -102,7 +103,8 @@ public class StickSimulation implements BasicSimulation {
                 }
             }
         }
-        // fix in the position/length, this prevents it from acting like a spring/stretchy
+        // fix in the position/length, this prevents it from acting like a
+        // spring/stretchy
         for (int x = 0; x < sticks.size(); x++) {
             Stick stick = sticks.get(x);
             Vector2 stickDir = stick.pointA.position.clone().subtract(stick.pointB.position).normalize();
@@ -148,7 +150,7 @@ public class StickSimulation implements BasicSimulation {
     public void setSneaking(boolean sneaking) {
         this.sneaking = sneaking;
     }
-    
+
     @Override
     public void applyMovement(Vector3 movement) {
         points.get(0).prevPosition.copy(points.get(0).position);
@@ -159,22 +161,22 @@ public class StickSimulation implements BasicSimulation {
     public boolean empty() {
         return sticks.isEmpty();
     }
-    
+
     @SuppressWarnings("unchecked")
     @Override
     public List<CapePoint> getPoints() {
-        return (List<CapePoint>)(Object)points;
+        return (List<CapePoint>) (Object) points;
     }
-    
+
     public static class Point implements CapePoint {
         public Vector2 position = new Vector2(0, 0);
         public Vector2 prevPosition = new Vector2(0, 0);
         public boolean locked;
-        
+
         public float getLerpX(float delta) {
             return Mth.lerp(delta, prevPosition.x, position.x);
         }
-        
+
         public float getLerpY(float delta) {
             return Mth.lerp(delta, prevPosition.y, position.y);
         }
@@ -249,13 +251,13 @@ public class StickSimulation implements BasicSimulation {
             }
             return this;
         }
-        
+
         public Vector2 rotateDegrees(float deg) {
             float ox = x;
             float oy = y;
             deg = (float) Math.toRadians(deg);
-            x = Mth.cos(deg) * ox - Mth.sin(deg)*oy;
-            y = Mth.sin(deg) * ox + Mth.cos(deg)*oy;
+            x = Mth.cos(deg) * ox - Mth.sin(deg) * oy;
+            y = Mth.sin(deg) * ox + Mth.cos(deg) * oy;
             return this;
         }
 

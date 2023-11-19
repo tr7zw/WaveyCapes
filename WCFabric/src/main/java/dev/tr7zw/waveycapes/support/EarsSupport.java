@@ -34,8 +34,8 @@ public class EarsSupport implements ModSupport, EarsInhibitor {
     public EarsSupport() {
         EarsInhibitorRegistry.register("Waveycapes", this);
         for (int i = 0; i < 16; i++) {
-            CubeListBuilder modelPartBuilder = CubeListBuilder.create().texOffs(-1, i - 1).addBox(-5.0F, i, -1.0F, 10.0F,
-                    1.0F, 1.0F, CubeDeformation.NONE, 1.0F, 1.0F);
+            CubeListBuilder modelPartBuilder = CubeListBuilder.create().texOffs(-1, i - 1).addBox(-5.0F, i, -1.0F,
+                    10.0F, 1.0F, 1.0F, CubeDeformation.NONE, 1.0F, 1.0F);
             customCape[i] = new ModelPart(modelPartBuilder.getCubes().stream()
                     .map(modelCuboidData -> modelCuboidData.bake(20, 16)).collect(Collectors.toList()),
                     new HashMap<>());
@@ -64,7 +64,7 @@ public class EarsSupport implements ModSupport, EarsInhibitor {
         public void render(AbstractClientPlayer player, int part, ModelPart model, PoseStack poseStack,
                 MultiBufferSource multiBufferSource, int light, int overlay) {
             EarsFeatures playerFeatures = EarsFeatures.getById(player.getUUID());
-            
+
             VertexConsumer vertexConsumer = null;
             if (playerFeatures != null && playerFeatures.capeEnabled) {
                 ResourceLocation cape = getPlayerCape(player, playerFeatures);
@@ -94,8 +94,8 @@ public class EarsSupport implements ModSupport, EarsInhibitor {
 
     @Override
     public boolean shouldInhibit(EarsFeatureType arg0, Object arg1) {
-        if(arg0 == EarsFeatureType.CAPE) {
-            if(cache.containsKey(arg1)) {
+        if (arg0 == EarsFeatureType.CAPE) {
+            if (cache.containsKey(arg1)) {
                 return true;
             } else {
                 cache.put(arg1, null);
