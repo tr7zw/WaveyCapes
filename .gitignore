@@ -39,3 +39,4 @@ run/
 gradle/wrapper
 UtilityCode/
 WCFabric/logs/
+formatter.xml
