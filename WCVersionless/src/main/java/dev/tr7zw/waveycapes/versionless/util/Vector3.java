@@ -1,13 +1,16 @@
 package dev.tr7zw.waveycapes.versionless.util;
 
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode
+@ToString
 public class Vector3 {
     public float x, y, z;
-
-    public Vector3(float x, float y, float z) {
-        this.x = x;
-        this.y = y;
-        this.z = z;
-    }
 
     public Vector3 clone() {
         return new Vector3(x, y, z);
@@ -68,11 +71,6 @@ public class Vector3 {
         x = Mth.cos(deg) * ox - Mth.sin(deg) * oy;
         y = Mth.sin(deg) * ox + Mth.cos(deg) * oy;
         return this;
-    }
-
-    @Override
-    public String toString() {
-        return "Vector2 [x=" + x + ", y=" + y + "]";
     }
 
     public float sqrMagnitude() {

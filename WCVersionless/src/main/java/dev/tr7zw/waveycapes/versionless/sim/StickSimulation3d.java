@@ -6,6 +6,7 @@ import java.util.List;
 import dev.tr7zw.waveycapes.versionless.util.CapePoint;
 import dev.tr7zw.waveycapes.versionless.util.Mth;
 import dev.tr7zw.waveycapes.versionless.util.Vector3;
+import lombok.AllArgsConstructor;
 
 /**
  * Java port of https://www.youtube.com/watch?v=PGk0rnyTa1U by Sebastian Lague
@@ -250,15 +251,10 @@ public class StickSimulation3d implements BasicSimulation {
         }
     }
 
+    @AllArgsConstructor
     public static class Stick {
         public Point pointA, pointB;
         public float length;
-
-        public Stick(Point pointA, Point pointB, float length) {
-            this.pointA = pointA;
-            this.pointB = pointB;
-            this.length = length;
-        }
 
     }
 

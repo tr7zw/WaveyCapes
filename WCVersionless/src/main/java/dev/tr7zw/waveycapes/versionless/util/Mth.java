@@ -2,6 +2,9 @@ package dev.tr7zw.waveycapes.versionless.util;
 
 import java.util.function.IntPredicate;
 
+import lombok.experimental.UtilityClass;
+
+@UtilityClass
 public class Mth {
 
     public static final float PI = 3.1415927F;

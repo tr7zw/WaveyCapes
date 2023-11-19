@@ -6,6 +6,9 @@ import java.util.List;
 import dev.tr7zw.waveycapes.versionless.util.CapePoint;
 import dev.tr7zw.waveycapes.versionless.util.Mth;
 import dev.tr7zw.waveycapes.versionless.util.Vector3;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  * Java port of https://www.youtube.com/watch?v=PGk0rnyTa1U by Sebastian Lague
@@ -199,13 +202,11 @@ public class StickSimulation implements BasicSimulation {
 
     }
 
+    @AllArgsConstructor
+    @ToString
+    @EqualsAndHashCode
     public static class Vector2 {
         public float x, y;
-
-        public Vector2(float x, float y) {
-            this.x = x;
-            this.y = y;
-        }
 
         public Vector2 clone() {
             return new Vector2(x, y);
@@ -259,11 +260,6 @@ public class StickSimulation implements BasicSimulation {
             x = Mth.cos(deg) * ox - Mth.sin(deg) * oy;
             y = Mth.sin(deg) * ox + Mth.cos(deg) * oy;
             return this;
-        }
-
-        @Override
-        public String toString() {
-            return "Vector2 [x=" + x + ", y=" + y + "]";
         }
 
     }
