@@ -1,21 +1,20 @@
-package dev.tr7zw.waveycapes;
+package dev.tr7zw.waveycapes.versionless;
 
-import dev.tr7zw.waveycapes.versionless.CapeMovement;
+import dev.tr7zw.waveycapes.versionless.nms.MinecraftPlayer;
 import dev.tr7zw.waveycapes.versionless.sim.BasicSimulation;
 import dev.tr7zw.waveycapes.versionless.sim.StickSimulation;
 import dev.tr7zw.waveycapes.versionless.sim.StickSimulation.Vector2;
 import dev.tr7zw.waveycapes.versionless.sim.StickSimulation3d;
 import dev.tr7zw.waveycapes.versionless.sim.StickSimulationDungeons;
+import dev.tr7zw.waveycapes.versionless.util.Mth;
 import dev.tr7zw.waveycapes.versionless.util.Vector3;
-import net.minecraft.client.player.AbstractClientPlayer;
-import net.minecraft.util.Mth;
 
 public interface CapeHolder {
     public BasicSimulation getSimulation();
 
     public void setSimulation(BasicSimulation sim);
 
-    public default void updateSimulation(AbstractClientPlayer abstractClientPlayer, int partCount) {
+    public default void updateSimulation(MinecraftPlayer abstractClientPlayer, int partCount) {
         BasicSimulation simulation = getSimulation();
         if (simulation == null || incorrectSimulation(simulation)) {
             simulation = createSimulation();
@@ -35,7 +34,7 @@ public interface CapeHolder {
     }
 
     public default boolean incorrectSimulation(BasicSimulation sim) {
-        CapeMovement style = WaveyCapesBase.config.capeMovement;
+        CapeMovement style = ModBase.config.capeMovement;
         if (style == CapeMovement.BASIC_SIMULATION && sim.getClass() != StickSimulation.class) {
             return true;
         } else if (style == CapeMovement.BASIC_SIMULATION_3D && sim.getClass() != StickSimulation3d.class) {
@@ -47,7 +46,7 @@ public interface CapeHolder {
     }
 
     public default BasicSimulation createSimulation() {
-        CapeMovement style = WaveyCapesBase.config.capeMovement;
+        CapeMovement style = ModBase.config.capeMovement;
         if (style == CapeMovement.BASIC_SIMULATION) {
             return new StickSimulation();
         }
@@ -60,37 +59,38 @@ public interface CapeHolder {
         return null;
     }
 
-    public default void simulate(AbstractClientPlayer abstractClientPlayer) {
+    public default void simulate(MinecraftPlayer abstractClientPlayer) {
         BasicSimulation simulation = getSimulation();
         if (simulation == null || simulation.empty()) {
             return; // no cape, nothing to update
         }
-        double d = abstractClientPlayer.xCloak - abstractClientPlayer.getX();
-        double m = abstractClientPlayer.zCloak - abstractClientPlayer.getZ();
-        float n = abstractClientPlayer.yBodyRotO + abstractClientPlayer.yBodyRot - abstractClientPlayer.yBodyRotO;
+        double d = abstractClientPlayer.getXCloak() - abstractClientPlayer.getX();
+        double m = abstractClientPlayer.getZCloak() - abstractClientPlayer.getZ();
+        float n = abstractClientPlayer.getYBodyRotO() + abstractClientPlayer.getYBodyRot()
+                - abstractClientPlayer.getYBodyRotO();
         double o = Mth.sin(n * 0.017453292F);
         double p = -Mth.cos(n * 0.017453292F);
-        float heightMul = WaveyCapesBase.config.heightMultiplier;
-        float straveMul = WaveyCapesBase.config.straveMultiplier;
+        float heightMul = ModBase.config.heightMultiplier;
+        float straveMul = ModBase.config.straveMultiplier;
         if (abstractClientPlayer.isUnderWater()) {
             heightMul *= 2; // let the cape have more drag than the player underwater
         }
         // gives the cape a small swing when jumping/falling to not clip with
         // itself/simulate some air getting under it
-        double fallHack = Mth.clamp((abstractClientPlayer.yo - abstractClientPlayer.getY()) * 10, 0, 1);
+        double fallHack = Mth.clamp((abstractClientPlayer.getYo() - abstractClientPlayer.getY()) * 10, 0, 1);
         if (abstractClientPlayer.isUnderWater()) {
-            simulation.setGravity(WaveyCapesBase.config.gravity / 10f);
+            simulation.setGravity(ModBase.config.gravity / 10f);
         } else {
-            simulation.setGravity(WaveyCapesBase.config.gravity);
+            simulation.setGravity(ModBase.config.gravity);
         }
 
         Vector3 gravity = new Vector3(0, -1, 0);
-        Vector2 strave = new Vector2((float) (abstractClientPlayer.getX() - abstractClientPlayer.xo),
-                (float) (abstractClientPlayer.getZ() - abstractClientPlayer.zo));
+        Vector2 strave = new Vector2((float) (abstractClientPlayer.getX() - abstractClientPlayer.getXo()),
+                (float) (abstractClientPlayer.getZ() - abstractClientPlayer.getZo()));
         strave.rotateDegrees(-abstractClientPlayer.getYRot());
         double changeX = (d * o + m * p) + fallHack
                 + (abstractClientPlayer.isCrouching() && !simulation.isSneaking() ? 3 : 0);
-        double changeY = ((abstractClientPlayer.getY() - abstractClientPlayer.yo) * heightMul)
+        double changeY = ((abstractClientPlayer.getY() - abstractClientPlayer.getYo()) * heightMul)
                 + (abstractClientPlayer.isCrouching() && !simulation.isSneaking() ? 1 : 0);
         double changeZ = -strave.x * straveMul;
         simulation.setSneaking(abstractClientPlayer.isCrouching());

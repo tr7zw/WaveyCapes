@@ -7,13 +7,14 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 
-import dev.tr7zw.waveycapes.CapeHolder;
 import dev.tr7zw.waveycapes.CapeRenderer;
 import dev.tr7zw.waveycapes.PlayerModelAccess;
 import dev.tr7zw.waveycapes.VanillaCapeRenderer;
 import dev.tr7zw.waveycapes.WaveyCapesBase;
+import dev.tr7zw.waveycapes.delegate.PlayerDelegate;
 import dev.tr7zw.waveycapes.support.ModSupport;
 import dev.tr7zw.waveycapes.support.SupportManager;
+import dev.tr7zw.waveycapes.versionless.CapeHolder;
 import dev.tr7zw.waveycapes.versionless.CapeMovement;
 import dev.tr7zw.waveycapes.versionless.CapeStyle;
 import dev.tr7zw.waveycapes.versionless.WindMode;
@@ -91,7 +92,7 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
 //        }
 
         CapeHolder holder = (CapeHolder) abstractClientPlayer;
-        holder.updateSimulation(abstractClientPlayer, partCount);
+        holder.updateSimulation(new PlayerDelegate(abstractClientPlayer), partCount);
 
         if (WaveyCapesBase.config.capeStyle == CapeStyle.SMOOTH && renderer.vanillaUvValues()) {
             renderSmoothCape(poseStack, multiBufferSource, renderer, abstractClientPlayer, delta, i);

@@ -13,7 +13,7 @@ authors="${mod_author}"
 description='''
 ${description}
 '''
-[[dependencies.waveycapes]]
+[[dependencies.${mod_id}]]
     modId="minecraft"
     mandatory=true
     versionRange="${minecraft_version_range_forge}"

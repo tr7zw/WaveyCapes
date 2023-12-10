@@ -5,7 +5,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import dev.tr7zw.waveycapes.CapeHolder;
+import dev.tr7zw.waveycapes.delegate.PlayerDelegate;
+import dev.tr7zw.waveycapes.versionless.CapeHolder;
 import dev.tr7zw.waveycapes.versionless.sim.BasicSimulation;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,7 +23,7 @@ public class PlayerMixin implements CapeHolder {
     @Inject(method = "moveCloak", at = @At("HEAD"))
     private void moveCloakUpdate(CallbackInfo info) {
         if ((Object) this instanceof AbstractClientPlayer) {
-            simulate((AbstractClientPlayer) (Object) this);
+            simulate(new PlayerDelegate((AbstractClientPlayer) (Object) this));
         }
     }
 
