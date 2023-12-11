@@ -1,5 +1,5 @@
 version: '0.0.2'
-source: "https://github.com/tr7zw/ModComposeTemplate/tree/1.20.2"
+source: "https://github.com/tr7zw/ModComposeTemplate/tree/1.20.4"
 replacements:
   name: "WaveyCapes"
   id: "waveycapes"
@@ -14,7 +14,7 @@ replacements:
 enabledFlags:
   - autopublish
   - publishFabric
-  - publishForge
+#  - publishForge
   - publishNeo
   - modrinth
   - curseforge
@@ -26,7 +26,7 @@ subProjects:
     template: "Fabric"
     replacements:
       dependencies: '
-      modImplementation "curse.maven:morebanners-515000:4575797"
+      modCompileOnly "curse.maven:morebanners-515000:4575797"
       
       modCompileOnly "maven.modrinth:ears:1.4.6+fabric-1.20.2"
 
@@ -34,16 +34,16 @@ subProjects:
 
       inc project(":WCVersionless")
       '
-  WCForge:
-    template: "Forge"
-    replacements:
-      dependencies: '
-      modCompileOnly "curse.maven:minecraftcapes-mod-359836:4562670"
-
-      inc project(":WCVersionless")
-
-      forgeRuntimeLibrary project(":WCVersionless")
-      '
+#  WCForge:
+#    template: "Forge"
+#    replacements:
+#      dependencies: '
+#      modCompileOnly "curse.maven:minecraftcapes-mod-359836:4562670"
+#
+#      inc project(":WCVersionless")
+#
+#      forgeRuntimeLibrary project(":WCVersionless")
+#      '
   WCNeo:
     template: "Neo"
     replacements:
