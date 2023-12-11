@@ -14,7 +14,7 @@ replacements:
 enabledFlags:
   - autopublish
   - publishFabric
-#  - publishForge
+  - publishForge
   - publishNeo
   - modrinth
   - curseforge
@@ -34,16 +34,16 @@ subProjects:
 
       inc project(":WCVersionless")
       '
-#  WCForge:
-#    template: "Forge"
-#    replacements:
-#      dependencies: '
-#      modCompileOnly "curse.maven:minecraftcapes-mod-359836:4562670"
-#
-#      inc project(":WCVersionless")
-#
-#      forgeRuntimeLibrary project(":WCVersionless")
-#      '
+  WCForge:
+    template: "Forge"
+    replacements:
+      dependencies: '
+      modCompileOnly "curse.maven:minecraftcapes-mod-359836:4562670"
+
+      inc project(":WCVersionless")
+
+      forgeRuntimeLibrary project(":WCVersionless")
+      '
   WCNeo:
     template: "Neo"
     replacements:
