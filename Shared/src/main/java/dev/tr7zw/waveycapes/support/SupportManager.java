@@ -7,6 +7,8 @@ public class SupportManager {
 
     public static Set<ModSupport> mods = new HashSet<>();
 
+    public static Set<AnimationSupport> animationSupport = new HashSet<>();
+
     public static Set<ModSupport> getSupportedMods() {
         return mods;
     }

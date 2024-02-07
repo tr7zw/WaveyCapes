@@ -11,11 +11,17 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 
 import dev.tr7zw.config.CustomConfigScreen;
+import dev.tr7zw.waveycapes.delegate.PlayerDelegate;
+import dev.tr7zw.waveycapes.support.AnimationSupport;
+import dev.tr7zw.waveycapes.support.SupportManager;
 import dev.tr7zw.waveycapes.versionless.CapeMovement;
 import dev.tr7zw.waveycapes.versionless.CapeStyle;
 import dev.tr7zw.waveycapes.versionless.ModBase;
 import dev.tr7zw.waveycapes.versionless.WindMode;
 import dev.tr7zw.waveycapes.versionless.config.Config;
+import dev.tr7zw.waveycapes.versionless.nms.MinecraftPlayer;
+import dev.tr7zw.waveycapes.versionless.util.Vector3;
+import lombok.Getter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.OptionInstance;
 import net.minecraft.client.gui.GuiGraphics;
@@ -27,12 +33,21 @@ import net.minecraft.world.phys.Vec3;
 
 public abstract class WaveyCapesBase extends ModBase {
 
+    @Getter
     public static WaveyCapesBase INSTANCE;
 
     public void init() {
         INSTANCE = this;
         super.init();
         initSupportHooks();
+    }
+
+    @Override
+    public Vector3 applyModAnimations(MinecraftPlayer player, Vector3 pos) {
+        for (AnimationSupport sup : SupportManager.animationSupport) {
+            pos = sup.applyAnimationChanges(((PlayerDelegate) player).getPlayer(), 0, pos);
+        }
+        return pos;
     }
 
     public Screen createConfigScreen(Screen parent) {

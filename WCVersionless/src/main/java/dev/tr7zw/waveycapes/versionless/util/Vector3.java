@@ -29,6 +29,13 @@ public class Vector3 {
         return this;
     }
 
+    public Vector3 add(float x, float y, float z) {
+        this.x += x;
+        this.y += y;
+        this.z += z;
+        return this;
+    }
+
     public Vector3 subtract(Vector3 vec) {
         this.x -= vec.x;
         this.y -= vec.y;

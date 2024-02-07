@@ -13,6 +13,9 @@ import com.google.gson.GsonBuilder;
 
 import dev.tr7zw.waveycapes.versionless.config.Config;
 import dev.tr7zw.waveycapes.versionless.config.ConfigUpgrader;
+import dev.tr7zw.waveycapes.versionless.nms.MinecraftPlayer;
+import dev.tr7zw.waveycapes.versionless.util.Vector3;
+import lombok.Getter;
 
 public abstract class ModBase {
 
@@ -20,8 +23,11 @@ public abstract class ModBase {
     public static Config config;
     private final File settingsFile = new File("config", "waveycapes.json");
     private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    @Getter
+    public static ModBase INSTANCE;
 
     public void init() {
+        INSTANCE = this;
         if (settingsFile.exists()) {
             try {
                 config = gson.fromJson(new String(Files.readAllBytes(settingsFile.toPath()), StandardCharsets.UTF_8),
@@ -68,5 +74,7 @@ public abstract class ModBase {
         }
         return false;
     }
+
+    public abstract Vector3 applyModAnimations(MinecraftPlayer player, Vector3 pos);
 
 }
