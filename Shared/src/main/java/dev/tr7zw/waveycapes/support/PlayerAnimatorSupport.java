@@ -59,7 +59,7 @@ public class PlayerAnimatorSupport implements AnimationSupport {
 
             Vector4f offset = new Vector4f(0, 0, 0, 1);
             offset.mul(matrix);
-            float scale = -10;
+            float scale = -16;
             offset.mul(scale);
             Vector3 curOffset = new Vector3(offset.x, offset.y, offset.z);
             Vector3 lastOffset = capeHolder.getLastPlayerAnimatorPosition();
