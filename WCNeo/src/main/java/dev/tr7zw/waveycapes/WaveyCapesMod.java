@@ -30,7 +30,7 @@ public class WaveyCapesMod extends WaveyCapesBase {
 
     @Override
     public void initSupportHooks() {
-
+        super.initSupportHooks();
         if (doesClassExist("net.minecraftcapes.MinecraftCapes")) {
             SupportManager.mods.add(new MinecraftCapesSupport());
             LOGGER.info("Wavey Capes loaded MinecraftCapes support!");

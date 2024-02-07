@@ -13,6 +13,8 @@ import com.mojang.math.Axis;
 import dev.tr7zw.config.CustomConfigScreen;
 import dev.tr7zw.waveycapes.delegate.PlayerDelegate;
 import dev.tr7zw.waveycapes.support.AnimationSupport;
+import dev.tr7zw.waveycapes.support.MinecraftCapesSupport;
+import dev.tr7zw.waveycapes.support.PlayerAnimatorSupport;
 import dev.tr7zw.waveycapes.support.SupportManager;
 import dev.tr7zw.waveycapes.versionless.CapeMovement;
 import dev.tr7zw.waveycapes.versionless.CapeStyle;
@@ -180,6 +182,14 @@ public abstract class WaveyCapesBase extends ModBase {
         poseStack.popPose();
         RenderSystem.applyModelViewMatrix();
         Lighting.setupFor3DItems();
+    }
+
+    @Override
+    public void initSupportHooks() {
+        if (doesClassExist("dev.kosmx.playerAnim.core.impl.AnimationProcessor")) {
+            SupportManager.animationSupport.add(new PlayerAnimatorSupport());
+            LOGGER.info("Wavey Capes loaded PlayerAnimator support!");
+        }
     }
 
 }

@@ -8,6 +8,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import dev.tr7zw.waveycapes.delegate.PlayerDelegate;
 import dev.tr7zw.waveycapes.versionless.CapeHolder;
 import dev.tr7zw.waveycapes.versionless.sim.BasicSimulation;
+import dev.tr7zw.waveycapes.versionless.util.Vector3;
 import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.client.player.AbstractClientPlayer;
@@ -19,6 +20,10 @@ public class PlayerMixin implements CapeHolder {
     @Getter
     @Setter
     private BasicSimulation simulation;
+
+    @Getter
+    @Setter
+    private Vector3 lastPlayerAnimatorPosition = new Vector3();
 
     @Inject(method = "moveCloak", at = @At("HEAD"))
     private void moveCloakUpdate(CallbackInfo info) {
