@@ -9,6 +9,7 @@ import dev.kosmx.playerAnim.api.TransformType;
 import dev.kosmx.playerAnim.core.impl.AnimationProcessor;
 import dev.kosmx.playerAnim.core.util.Vec3f;
 import dev.kosmx.playerAnim.impl.IAnimatedPlayer;
+import dev.tr7zw.waveycapes.versionless.CapeHolder;
 import dev.tr7zw.waveycapes.versionless.util.Vector3;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.util.Mth;
@@ -18,6 +19,7 @@ public class PlayerAnimatorSupport implements AnimationSupport {
     @Override
     public Vector3 applyAnimationChanges(AbstractClientPlayer entity, float delta, Vector3 cur) {
         if (entity instanceof IAnimatedPlayer player && player.playerAnimator_getAnimation().isActive()) {
+            CapeHolder capeHolder = (CapeHolder) (Object) entity;
             AnimationProcessor anim = player.playerAnimator_getAnimation();
             anim.setTickDelta(delta); // Probably the tick is done, set tick delta.
 
@@ -57,9 +59,14 @@ public class PlayerAnimatorSupport implements AnimationSupport {
 
             Vector4f offset = new Vector4f(0, 0, 0, 1);
             offset.mul(matrix);
-            float scale = 1;
+            float scale = -10;
             offset.mul(scale);
-            cur.add(offset.x, offset.y, offset.z);
+            Vector3 curOffset = new Vector3(offset.x, offset.y, offset.z);
+            Vector3 lastOffset = capeHolder.getLastPlayerAnimatorPosition();
+            capeHolder.setLastPlayerAnimatorPosition(curOffset.clone());
+            curOffset.subtract(lastOffset);
+            System.out.println(curOffset);
+            cur.add(curOffset);
         }
         return cur;
     }

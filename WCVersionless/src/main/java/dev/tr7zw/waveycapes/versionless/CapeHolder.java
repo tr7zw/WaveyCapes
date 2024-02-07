@@ -12,6 +12,10 @@ import dev.tr7zw.waveycapes.versionless.util.Vector3;
 public interface CapeHolder {
     public BasicSimulation getSimulation();
 
+    public Vector3 getLastPlayerAnimatorPosition();
+
+    public void setLastPlayerAnimatorPosition(Vector3 pos);
+
     public void setSimulation(BasicSimulation sim);
 
     public default void updateSimulation(MinecraftPlayer abstractClientPlayer, int partCount) {

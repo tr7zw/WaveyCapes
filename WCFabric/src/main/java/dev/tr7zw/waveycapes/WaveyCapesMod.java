@@ -14,6 +14,7 @@ public class WaveyCapesMod extends WaveyCapesBase implements ModInitializer {
 
     @Override
     public void initSupportHooks() {
+        super.initSupportHooks();
         if (doesClassExist("de.kxmischesdomi.morebannerfeatures.MoreBannerFeatures")) {
             SupportManager.mods.add(new MoreBannerFeaturesSupport());
             LOGGER.info("Wavey Capes loaded MoreBannerFeatures support!");
