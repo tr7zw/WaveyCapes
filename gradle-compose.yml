@@ -30,6 +30,8 @@ subProjects:
       
       modCompileOnly "maven.modrinth:ears:1.4.6+fabric-1.20.2"
 
+      modCompileOnly "maven.modrinth:playeranimator:1.0.2-rc1+1.20.4-fabric"
+
       modCompileOnly "curse.maven:minecraftcapes-mod-359836:4763650"
 
       inc project(":WCVersionless")
@@ -40,6 +42,8 @@ subProjects:
       dependencies: '
       modCompileOnly "curse.maven:minecraftcapes-mod-359836:4562670"
 
+      modCompileOnly "maven.modrinth:playeranimator:1.0.2-rc1+1.20.4-forge"
+
       inc project(":WCVersionless")
 
       forgeRuntimeLibrary project(":WCVersionless")
@@ -49,6 +53,8 @@ subProjects:
     replacements:
       dependencies: '
       modCompileOnly "curse.maven:minecraftcapes-mod-359836:4562670"
+
+      modCompileOnly "maven.modrinth:playeranimator:1.0.2-rc1+1.20.4-forge"
 
       inc project(":WCVersionless")
 

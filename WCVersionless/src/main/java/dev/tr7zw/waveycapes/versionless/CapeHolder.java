@@ -109,6 +109,7 @@ public interface CapeHolder {
         }
         simulation.setGravityDirection(gravity);
 
+        change = ModBase.getINSTANCE().applyModAnimations(abstractClientPlayer, change);
         simulation.applyMovement(change);
         simulation.simulate();
     }
