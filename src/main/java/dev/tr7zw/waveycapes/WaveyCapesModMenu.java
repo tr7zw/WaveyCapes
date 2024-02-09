@@ -1,3 +1,4 @@
+//#if FABRIC
 package dev.tr7zw.waveycapes;
 
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
@@ -13,3 +14,4 @@ public class WaveyCapesModMenu implements ModMenuApi {
     }
 
 }
+//#endif

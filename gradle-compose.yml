@@ -1,5 +1,5 @@
 version: '0.0.2'
-source: "https://github.com/tr7zw/ModComposeTemplate/tree/1.20.4"
+source: "https://github.com/tr7zw/ProcessedModTemplate/tree/master"
 replacements:
   name: "WaveyCapes"
   id: "waveycapes"
@@ -8,9 +8,28 @@ replacements:
   homepageUrl: "https://modrinth.com/mod/wavey-capes"
   sourcesUrl: "https://github.com/tr7zw/WaveyCapes"
   issuesUrl: "https://github.com/tr7zw/WaveyCapes/issues"
+  fabric_entrypoint: "dev.tr7zw.waveycapes.WaveyCapesMod"
+  fabric_modmenu_entrypoint: "dev.tr7zw.waveycapes.WaveyCapesModMenu"
   relocationpackage: "dev.tr7zw.waveycapes"
   modrinthid: kYuIpRLv
   curseforgeid: 521594
+  versionlessname: "WCVersionless"
+  fabric_dependencies: "
+      modCompileOnly 'curse.maven:morebanners-515000:4575797'\n
+      modCompileOnly 'maven.modrinth:ears:1.4.6+fabric-1.20.2'\n
+      modCompileOnly 'maven.modrinth:playeranimator:1.0.2-rc1+1.20.4-fabric'\n
+      modCompileOnly 'curse.maven:minecraftcapes-mod-359836:4763650'\n
+      "
+  forge_dependencies: "
+      modCompileOnly 'curse.maven:minecraftcapes-mod-359836:4562670'\n
+      modCompileOnly 'maven.modrinth:playeranimator:1.0.2-rc1+1.20.4-forge'\n
+      modCompileOnly 'maven.modrinth:ears:1.4.6+fabric-1.20.2'\n
+      "
+  neoforge_dependencies: "
+      modCompileOnly 'curse.maven:minecraftcapes-mod-359836:4562670'\n
+      modCompileOnly 'maven.modrinth:playeranimator:1.0.2-rc1+1.20.4-forge'\n
+      modCompileOnly 'maven.modrinth:ears:1.4.6+fabric-1.20.2'\n
+      "
 enabledFlags:
   - autopublish
   - publishFabric
@@ -22,44 +41,6 @@ enabledFlags:
 rootProject:
   template: "."
 subProjects:
-  WCFabric:
-    template: "Fabric"
-    replacements:
-      dependencies: '
-      modCompileOnly "curse.maven:morebanners-515000:4575797"
-      
-      modCompileOnly "maven.modrinth:ears:1.4.6+fabric-1.20.2"
-
-      modCompileOnly "maven.modrinth:playeranimator:1.0.2-rc1+1.20.4-fabric"
-
-      modCompileOnly "curse.maven:minecraftcapes-mod-359836:4763650"
-
-      inc project(":WCVersionless")
-      '
-  WCForge:
-    template: "Forge"
-    replacements:
-      dependencies: '
-      modCompileOnly "curse.maven:minecraftcapes-mod-359836:4562670"
-
-      modCompileOnly "maven.modrinth:playeranimator:1.0.2-rc1+1.20.4-forge"
-
-      inc project(":WCVersionless")
-
-      forgeRuntimeLibrary project(":WCVersionless")
-      '
-  WCNeo:
-    template: "Neo"
-    replacements:
-      dependencies: '
-      modCompileOnly "curse.maven:minecraftcapes-mod-359836:4562670"
-
-      modCompileOnly "maven.modrinth:playeranimator:1.0.2-rc1+1.20.4-forge"
-
-      inc project(":WCVersionless")
-
-      forgeRuntimeLibrary project(":WCVersionless")
-      '
   WCVersionless:
     template: "Versionless"
     replacements:

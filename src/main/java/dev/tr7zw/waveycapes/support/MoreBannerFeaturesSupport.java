@@ -1,3 +1,4 @@
+//#if FABRIC
 package dev.tr7zw.waveycapes.support;
 
 import java.util.HashMap;
@@ -67,3 +68,4 @@ public class MoreBannerFeaturesSupport implements ModSupport {
     }
 
 }
+//#endif
