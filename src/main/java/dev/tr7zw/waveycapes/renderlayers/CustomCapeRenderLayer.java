@@ -17,6 +17,7 @@ import dev.tr7zw.waveycapes.support.SupportManager;
 import dev.tr7zw.waveycapes.versionless.CapeHolder;
 import dev.tr7zw.waveycapes.versionless.CapeMovement;
 import dev.tr7zw.waveycapes.versionless.CapeStyle;
+import dev.tr7zw.waveycapes.versionless.ModBase;
 import dev.tr7zw.waveycapes.versionless.WindMode;
 import dev.tr7zw.waveycapes.versionless.sim.BasicSimulation;
 import dev.tr7zw.waveycapes.versionless.util.Vector3;
@@ -41,28 +42,27 @@ import net.minecraft.world.item.Items;
 
 public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, PlayerModel<AbstractClientPlayer>> {
 
-    private static int partCount;
-    private ModelPart[] customCape = new ModelPart[partCount];
+    private static final int PART_COUNT = 16;
+    private ModelPart[] customCape = new ModelPart[PART_COUNT];
 
     public CustomCapeRenderLayer(
             RenderLayerParent<AbstractClientPlayer, PlayerModel<AbstractClientPlayer>> renderLayerParent) {
         super(renderLayerParent);
-        partCount = 16;
         buildMesh();
     }
 
     private void buildMesh() {
-        customCape = new ModelPart[partCount];
+        customCape = new ModelPart[PART_COUNT];
         MeshDefinition meshDefinition = new MeshDefinition();
         PartDefinition partDefinition = meshDefinition.getRoot();
-        for (int i = 0; i < partCount; i++)
+        for (int i = 0; i < PART_COUNT; i++)
             partDefinition.addOrReplaceChild("customCape_" + i,
-                    CubeListBuilder.create().texOffs(0, (int) (i * (16f / partCount))).addBox(-5.0F,
-                            i * (16f / partCount), -1.0F, 10.0F, (16f / partCount), 1.0F, CubeDeformation.NONE, 1.0F,
+                    CubeListBuilder.create().texOffs(0, (int) (i * (16f / PART_COUNT))).addBox(-5.0F,
+                            i * (16f / PART_COUNT), -1.0F, 10.0F, (16f / PART_COUNT), 1.0F, CubeDeformation.NONE, 1.0F,
                             0.5F),
                     PartPose.offset(0.0F, 0.0F, 0.0F));
         ModelPart modelPart = partDefinition.bake(64, 64);
-        for (int i = 0; i < partCount; i++) {
+        for (int i = 0; i < PART_COUNT; i++) {
             this.customCape[i] = modelPart.getChild("customCape_" + i);
         }
     }
@@ -80,25 +80,15 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
         if (getParentModel() instanceof PlayerModelAccess pma && !pma.getCloak().visible) {
             return;
         }
-        // smooth doesn't need more than 16
-//        if(WaveyCapesBase.config.capeStyle == CapeStyle.SMOOTH) {
-//            if(partCount != 16) {
-//                partCount = 16;
-//                buildMesh();
-//            }
-//        } else if(partCount != WaveyCapesBase.config.capeParts) {
-//            partCount = WaveyCapesBase.config.capeParts;
-//            buildMesh();
-//        }
 
         CapeHolder holder = (CapeHolder) abstractClientPlayer;
-        holder.updateSimulation(new PlayerDelegate(abstractClientPlayer), partCount);
+        holder.updateSimulation(new PlayerDelegate(abstractClientPlayer), PART_COUNT);
 
-        if (WaveyCapesBase.config.capeStyle == CapeStyle.SMOOTH && renderer.vanillaUvValues()) {
+        if (ModBase.config.capeStyle == CapeStyle.SMOOTH && renderer.vanillaUvValues()) {
             renderSmoothCape(poseStack, multiBufferSource, renderer, abstractClientPlayer, delta, i);
         } else {
             ModelPart[] parts = customCape;
-            for (int part = 0; part < partCount; part++) {
+            for (int part = 0; part < PART_COUNT; part++) {
                 ModelPart model = parts[part];
                 modifyPoseStack(poseStack, abstractClientPlayer, delta, part);
                 renderer.render(abstractClientPlayer, part, model, poseStack, multiBufferSource, i,
@@ -115,7 +105,7 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
         RenderSystem.defaultBlendFunc();
 
         Matrix4f oldPositionMatrix = null;
-        for (int part = 0; part < partCount; part++) {
+        for (int part = 0; part < PART_COUNT; part++) {
             modifyPoseStack(poseStack, abstractClientPlayer, delta, part);
 
             if (oldPositionMatrix == null) {
@@ -127,23 +117,23 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
                         part, light);
             }
 
-            if (part == partCount - 1) {
+            if (part == PART_COUNT - 1) {
                 addBottomVertex(bufferBuilder, poseStack.last().pose(), poseStack.last().pose(), 0.3F,
-                        (part + 1) * (0.96F / partCount), 0F, -0.3F, (part + 1) * (0.96F / partCount), -0.06F, part,
+                        (part + 1) * (0.96F / PART_COUNT), 0F, -0.3F, (part + 1) * (0.96F / PART_COUNT), -0.06F, part,
                         light);
             }
 
             addLeftVertex(bufferBuilder, poseStack.last().pose(), oldPositionMatrix, -0.3F,
-                    (part + 1) * (0.96F / partCount), 0F, -0.3F, part * (0.96F / partCount), -0.06F, part, light);
+                    (part + 1) * (0.96F / PART_COUNT), 0F, -0.3F, part * (0.96F / PART_COUNT), -0.06F, part, light);
 
             addRightVertex(bufferBuilder, poseStack.last().pose(), oldPositionMatrix, 0.3F,
-                    (part + 1) * (0.96F / partCount), 0F, 0.3F, part * (0.96F / partCount), -0.06F, part, light);
+                    (part + 1) * (0.96F / PART_COUNT), 0F, 0.3F, part * (0.96F / PART_COUNT), -0.06F, part, light);
 
             addBackVertex(bufferBuilder, poseStack.last().pose(), oldPositionMatrix, 0.3F,
-                    (part + 1) * (0.96F / partCount), -0.06F, -0.3F, part * (0.96F / partCount), -0.06F, part, light);
+                    (part + 1) * (0.96F / PART_COUNT), -0.06F, -0.3F, part * (0.96F / PART_COUNT), -0.06F, part, light);
 
             addFrontVertex(bufferBuilder, oldPositionMatrix, poseStack.last().pose(), 0.3F,
-                    (part + 1) * (0.96F / partCount), 0F, -0.3F, part * (0.96F / partCount), 0F, part, light);
+                    (part + 1) * (0.96F / PART_COUNT), 0F, -0.3F, part * (0.96F / PART_COUNT), 0F, part, light);
 
             oldPositionMatrix = new Matrix4f(poseStack.last().pose());
             poseStack.popPose();
@@ -173,8 +163,6 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
                 - simulation.getPoints().get(part).getLerpY(delta);
         float z = simulation.getPoints().get(0).getLerpZ(delta) - simulation.getPoints().get(part).getLerpZ(delta);
 
-//        float sidewaysRotationOffset = (float) (d * p - m * o) * 100.0F;
-//        sidewaysRotationOffset = Mth.clamp(sidewaysRotationOffset, -20.0F, 20.0F);
         float sidewaysRotationOffset = 0;
         float partRotation = getRotation(delta, part, simulation);
 
@@ -190,26 +178,25 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
         poseStack.mulPose(Axis.XP.rotationDegrees(6.0F + height + naturalWindSwing));
         poseStack.mulPose(Axis.ZP.rotationDegrees(sidewaysRotationOffset / 2.0F));
         poseStack.mulPose(Axis.YP.rotationDegrees(180.0F - sidewaysRotationOffset / 2.0F));
-        poseStack.translate(-z / partCount, y / partCount, x / partCount); // movement from the simulation
+        poseStack.translate(-z / PART_COUNT, y / PART_COUNT, x / PART_COUNT); // movement from the simulation
         // offsetting so the rotation is on the cape part
         // float offset = (float) (part * (16 / partCount))/16; // to fold the entire
         // cape into one position for debugging
         poseStack.translate(0, /*-offset*/ +(0.48 / 16), -(0.48 / 16)); // (0.48/16)
-        poseStack.translate(0, part * 1f / partCount, part * (0) / partCount);
+        poseStack.translate(0, part * 1f / PART_COUNT, part * (0) / PART_COUNT);
         poseStack.mulPose(Axis.XP.rotationDegrees(-partRotation)); // apply actual rotation
         // undoing the rotation
-        poseStack.translate(0, -part * 1f / partCount, -part * (0) / partCount);
+        poseStack.translate(0, -part * 1f / PART_COUNT, -part * (0) / PART_COUNT);
         poseStack.translate(0, -(0.48 / 16), (0.48 / 16));
 
     }
 
     private float getRotation(float delta, int part, BasicSimulation simulation) {
-        if (part == partCount - 1) {
+        if (part == PART_COUNT - 1) {
             return getRotation(delta, part - 1, simulation);
         }
-        float angle = (float) getAngle(simulation.getPoints().get(part).getLerpedPos(delta),
+        return (float) getAngle(simulation.getPoints().get(part).getLerpedPos(delta),
                 simulation.getPoints().get(part + 1).getLerpedPos(delta));
-        return angle;
     }
 
     private double getAngle(Vector3 a, Vector3 b) {
@@ -232,8 +219,8 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
         double p = -Mth.cos(n * 0.017453292F);
         float height = (float) e * 10.0F;
         height = Mth.clamp(height, -6.0F, 32.0F);
-        float swing = (float) (d * o + m * p) * easeOutSine(1.0F / partCount * part) * 100;
-        swing = Mth.clamp(swing, 0.0F, 150.0F * easeOutSine(1F / partCount * part));
+        float swing = (float) (d * o + m * p) * easeOutSine(1.0F / PART_COUNT * part) * 100;
+        swing = Mth.clamp(swing, 0.0F, 150.0F * easeOutSine(1F / PART_COUNT * part));
         float sidewaysRotationOffset = (float) (d * p - m * o) * 100.0F;
         sidewaysRotationOffset = Mth.clamp(sidewaysRotationOffset, -20.0F, 20.0F);
         float t = Mth.lerp(h, abstractClientPlayer.oBob, abstractClientPlayer.bob);
@@ -253,13 +240,10 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
 
     private float getNatrualWindSwing(int part, boolean underwater) {
         long highlightedPart = (System.currentTimeMillis() / (underwater ? 9 : 3)) % 360;
-        float relativePart = (float) (part + 1) / partCount;
+        float relativePart = (float) (part + 1) / PART_COUNT;
         if (WaveyCapesBase.config.windMode == WindMode.WAVES) {
             return (float) (Math.sin(Math.toRadians((relativePart) * 360 - (highlightedPart))) * 3);
         }
-//        if (WaveyCapesBase.config.windMode == WindMode.SLIGHT) {
-//            return getWind(60);
-//        }
         return 0;
     }
 
@@ -290,7 +274,7 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
         float maxV = .53125F;
 
         float deltaV = maxV - minV;
-        float vPerPart = deltaV / partCount;
+        float vPerPart = deltaV / PART_COUNT;
         maxV = minV + (vPerPart * (part + 1));
         minV = minV + (vPerPart * part);
 
@@ -331,7 +315,7 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
         float maxV = .53125F;
 
         float deltaV = maxV - minV;
-        float vPerPart = deltaV / partCount;
+        float vPerPart = deltaV / PART_COUNT;
         maxV = minV + (vPerPart * (part + 1));
         minV = minV + (vPerPart * part);
 
@@ -367,7 +351,7 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
         float maxV = .53125F;
 
         float deltaV = maxV - minV;
-        float vPerPart = deltaV / partCount;
+        float vPerPart = deltaV / PART_COUNT;
         maxV = minV + (vPerPart * (part + 1));
         minV = minV + (vPerPart * part);
 
@@ -403,7 +387,7 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
         float maxV = .53125F;
 
         float deltaV = maxV - minV;
-        float vPerPart = deltaV / partCount;
+        float vPerPart = deltaV / PART_COUNT;
         maxV = minV + (vPerPart * (part + 1));
         minV = minV + (vPerPart * part);
 
@@ -439,7 +423,7 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
         float maxV = .03125F;
 
         float deltaV = maxV - minV;
-        float vPerPart = deltaV / partCount;
+        float vPerPart = deltaV / PART_COUNT;
         maxV = minV + (vPerPart * (part + 1));
         minV = minV + (vPerPart * part);
 
@@ -475,7 +459,7 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
         float maxV = .03125F;
 
         float deltaV = maxV - minV;
-        float vPerPart = deltaV / partCount;
+        float vPerPart = deltaV / PART_COUNT;
         maxV = minV + (vPerPart * (part + 1));
         minV = minV + (vPerPart * part);
 
@@ -507,20 +491,6 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
             return vanillaCape;
         }
     }
-
-    private static int scale = 1000 * 60 * 60;
-
-    /**
-     * Returns between 0 and 2
-     * 
-     * @param posY
-     * @return
-     */
-//    private static float getWind(double posY) {
-//        float x = (System.currentTimeMillis()%scale)/10000f;
-//        float mod = Mth.clamp(1f/200f*(float)posY, 0f, 1f);
-//        return Mth.clamp((float) (Math.sin(2 * x) + Math.sin(Math.PI * x)) * mod, 0, 2);
-//    }
 
     /**
      * https://easings.net/#easeOutSine
