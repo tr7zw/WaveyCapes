@@ -1,12 +1,10 @@
 package dev.tr7zw.waveycapes.renderlayers;
 
-import org.joml.Matrix4f;
-
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Axis;
 
+import dev.tr7zw.util.NMSHelper;
 import dev.tr7zw.waveycapes.CapeRenderer;
 import dev.tr7zw.waveycapes.NMSUtil;
 import dev.tr7zw.waveycapes.PlayerModelAccess;
@@ -40,6 +38,14 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.PlayerModelPart;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+
+//spotless:off
+//#if MC >= 11903
+import org.joml.Matrix4f;
+//#else
+//$$import com.mojang.math.Matrix4f;
+//#endif
+//spotless:on
 
 public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, PlayerModel<AbstractClientPlayer>> {
 
@@ -176,16 +182,16 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
         float naturalWindSwing = getNatrualWindSwing(part, abstractClientPlayer.isUnderWater());
 
         // vanilla rotating and wind
-        poseStack.mulPose(Axis.XP.rotationDegrees(6.0F + height + naturalWindSwing));
-        poseStack.mulPose(Axis.ZP.rotationDegrees(sidewaysRotationOffset / 2.0F));
-        poseStack.mulPose(Axis.YP.rotationDegrees(180.0F - sidewaysRotationOffset / 2.0F));
+        poseStack.mulPose(NMSHelper.XP.rotationDegrees(6.0F + height + naturalWindSwing));
+        poseStack.mulPose(NMSHelper.ZP.rotationDegrees(sidewaysRotationOffset / 2.0F));
+        poseStack.mulPose(NMSHelper.YP.rotationDegrees(180.0F - sidewaysRotationOffset / 2.0F));
         poseStack.translate(-z / PART_COUNT, y / PART_COUNT, x / PART_COUNT); // movement from the simulation
         // offsetting so the rotation is on the cape part
         // float offset = (float) (part * (16 / partCount))/16; // to fold the entire
         // cape into one position for debugging
         poseStack.translate(0, /*-offset*/ +(0.48 / 16), -(0.48 / 16)); // (0.48/16)
         poseStack.translate(0, part * 1f / PART_COUNT, part * (0) / PART_COUNT);
-        poseStack.mulPose(Axis.XP.rotationDegrees(-partRotation)); // apply actual rotation
+        poseStack.mulPose(NMSHelper.XP.rotationDegrees(-partRotation)); // apply actual rotation
         // undoing the rotation
         poseStack.translate(0, -part * 1f / PART_COUNT, -part * (0) / PART_COUNT);
         poseStack.translate(0, -(0.48 / 16), (0.48 / 16));
@@ -234,9 +240,9 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
 
         float naturalWindSwing = getNatrualWindSwing(part, abstractClientPlayer.isUnderWater());
 
-        poseStack.mulPose(Axis.XP.rotationDegrees(6.0F + swing / 2.0F + height + naturalWindSwing));
-        poseStack.mulPose(Axis.ZP.rotationDegrees(sidewaysRotationOffset / 2.0F));
-        poseStack.mulPose(Axis.YP.rotationDegrees(180.0F - sidewaysRotationOffset / 2.0F));
+        poseStack.mulPose(NMSHelper.XP.rotationDegrees(6.0F + swing / 2.0F + height + naturalWindSwing));
+        poseStack.mulPose(NMSHelper.ZP.rotationDegrees(sidewaysRotationOffset / 2.0F));
+        poseStack.mulPose(NMSHelper.YP.rotationDegrees(180.0F - sidewaysRotationOffset / 2.0F));
     }
 
     private float getNatrualWindSwing(int part, boolean underwater) {

@@ -3,17 +3,13 @@ package dev.tr7zw.waveycapes;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.joml.Quaternionf;
-
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Axis;
-
 import dev.tr7zw.config.CustomConfigScreen;
+import dev.tr7zw.util.NMSHelper;
 import dev.tr7zw.waveycapes.delegate.PlayerDelegate;
 import dev.tr7zw.waveycapes.support.AnimationSupport;
-import dev.tr7zw.waveycapes.support.MinecraftCapesSupport;
 import dev.tr7zw.waveycapes.support.PlayerAnimatorSupport;
 import dev.tr7zw.waveycapes.support.SupportManager;
 import dev.tr7zw.waveycapes.versionless.CapeMovement;
@@ -32,6 +28,14 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
+
+// spotless:off
+//#if MC >= 11903
+import org.joml.Quaternionf;
+//#else
+//$$import com.mojang.math.Quaternion;
+//#endif
+//spotless:on
 
 public abstract class WaveyCapesBase extends ModBase {
 
@@ -53,7 +57,7 @@ public abstract class WaveyCapesBase extends ModBase {
     }
 
     public Screen createConfigScreen(Screen parent) {
-        CustomConfigScreen screen = new CustomConfigScreen(parent, "text.wc.title") {
+        return new CustomConfigScreen(parent, "text.wc.title") {
 
             private int rotationX = 164;
             private int rotationY = 5;
@@ -103,7 +107,13 @@ public abstract class WaveyCapesBase extends ModBase {
             }
 
             @Override
+            // spotless:off
+          //#if MC >= 12000
             public void render(GuiGraphics guiGraphics, int xMouse, int yMouse, float f) {
+          //#else
+          //$$public void render(PoseStack guiGraphics, int xMouse, int yMouse, float f) {
+          //#endif
+          //spotless:on
                 super.render(guiGraphics, xMouse, yMouse, f);
                 if (this.minecraft.level != null) {
                     int x = minecraft.getWindow().getGuiScaledWidth() / 2;
@@ -122,7 +132,6 @@ public abstract class WaveyCapesBase extends ModBase {
 
         };
 
-        return screen;
     }
 
     // Modified version from InventoryScreen
@@ -136,8 +145,15 @@ public abstract class WaveyCapesBase extends ModBase {
         PoseStack matrixStack = new PoseStack();
         matrixStack.translate(0.0D, 1, 1000.0D);
         matrixStack.scale((float) size, (float) size, (float) size);
-        Quaternionf quaternion = Axis.ZP.rotationDegrees(180.0F);
-        Quaternionf quaternion2 = Axis.XP.rotationDegrees(lookY * rotationModifyer);
+        // spotless:off
+        //#if MC >= 11903
+        Quaternionf quaternion = NMSHelper.ZP.rotationDegrees(180.0F);
+        Quaternionf quaternion2 = NMSHelper.XP.rotationDegrees(lookY * rotationModifyer);
+        //#else
+        //$$Quaternion quaternion = NMSHelper.ZP.rotationDegrees(180.0F);
+        //$$Quaternion quaternion2 = NMSHelper.XP.rotationDegrees(lookY * rotationModifyer);
+        //#endif
+        //spotless:on
         quaternion.mul(quaternion2);
         matrixStack.mulPose(quaternion);
         matrixStack.translate(0.0D, -1, 0D);
@@ -161,7 +177,7 @@ public abstract class WaveyCapesBase extends ModBase {
         livingEntity.yHeadRotO = livingEntity.getYRot();
         Lighting.setupForEntityInInventory();
         EntityRenderDispatcher entityRenderDispatcher = Minecraft.getInstance().getEntityRenderDispatcher();
-        quaternion2.conjugate();
+        NMSUtil.conjugate(quaternion2);
         entityRenderDispatcher.overrideCameraOrientation(quaternion2);
         entityRenderDispatcher.setRenderShadow(false);
         MultiBufferSource.BufferSource bufferSource = Minecraft.getInstance().renderBuffers().bufferSource();
