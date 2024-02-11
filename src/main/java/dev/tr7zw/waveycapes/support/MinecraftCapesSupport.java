@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 
 import dev.tr7zw.waveycapes.CapeRenderer;
+import dev.tr7zw.waveycapes.NMSUtil;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -43,7 +44,7 @@ public class MinecraftCapesSupport implements ModSupport {
                         playerHandler.getHasCapeGlint());
             } else {
                 vertexConsumer = ItemRenderer.getArmorFoilBuffer(multiBufferSource,
-                        RenderType.armorCutoutNoCull(player.getSkin().capeTexture()), false, false);
+                        RenderType.armorCutoutNoCull(NMSUtil.getPlayerCape(player)), false, false);
             }
             model.render(poseStack, vertexConsumer, light, OverlayTexture.NO_OVERLAY);
         }
@@ -57,7 +58,7 @@ public class MinecraftCapesSupport implements ModSupport {
                         playerHandler.getHasCapeGlint());
             } else {
                 return ItemRenderer.getArmorFoilBuffer(multiBufferSource,
-                        RenderType.armorCutoutNoCull(player.getSkin().capeTexture()), false, false);
+                        RenderType.armorCutoutNoCull(NMSUtil.getPlayerCape(player)), false, false);
             }
         }
 

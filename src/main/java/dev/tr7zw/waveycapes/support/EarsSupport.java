@@ -14,6 +14,7 @@ import com.unascribed.ears.api.registry.EarsInhibitorRegistry;
 import com.unascribed.ears.common.render.EarsRenderDelegate.TexSource;
 
 import dev.tr7zw.waveycapes.CapeRenderer;
+import dev.tr7zw.waveycapes.NMSUtil;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.builders.CubeDeformation;
 import net.minecraft.client.model.geom.builders.CubeListBuilder;
@@ -54,7 +55,7 @@ public class EarsSupport implements ModSupport, EarsInhibitor {
     }
 
     private ResourceLocation getPlayerCape(AbstractClientPlayer player, EarsFeatures playerFeatures) {
-        ResourceLocation skin = player.getSkin().texture();
+        ResourceLocation skin = NMSUtil.getPlayerCape(player);
         return new ResourceLocation(skin.getNamespace(), TexSource.CAPE.addSuffix(skin.getPath()));
     }
 
@@ -75,7 +76,7 @@ public class EarsSupport implements ModSupport, EarsInhibitor {
             }
             if (vertexConsumer == null) {
                 vertexConsumer = ItemRenderer.getArmorFoilBuffer(multiBufferSource,
-                        RenderType.armorCutoutNoCull(player.getSkin().capeTexture()), false, false);
+                        RenderType.armorCutoutNoCull(NMSUtil.getPlayerCape(player)), false, false);
             }
             customCape[part].render(poseStack, vertexConsumer, light, OverlayTexture.NO_OVERLAY);
         }

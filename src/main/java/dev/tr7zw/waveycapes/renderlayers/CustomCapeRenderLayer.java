@@ -8,6 +8,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 
 import dev.tr7zw.waveycapes.CapeRenderer;
+import dev.tr7zw.waveycapes.NMSUtil;
 import dev.tr7zw.waveycapes.PlayerModelAccess;
 import dev.tr7zw.waveycapes.VanillaCapeRenderer;
 import dev.tr7zw.waveycapes.WaveyCapesBase;
@@ -482,12 +483,12 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
                 return support.getRenderer();
             }
         }
-        if (abstractClientPlayer.getSkin().capeTexture() == null || abstractClientPlayer.isInvisible()
+        if (NMSUtil.getPlayerCape(abstractClientPlayer) == null || abstractClientPlayer.isInvisible()
                 || !abstractClientPlayer.isModelPartShown(PlayerModelPart.CAPE)) {
             return null;
         } else {
             vanillaCape.vertexConsumer = multiBufferSource
-                    .getBuffer(RenderType.entityCutout(abstractClientPlayer.getSkin().capeTexture()));
+                    .getBuffer(RenderType.entityCutout(NMSUtil.getPlayerCape(abstractClientPlayer)));
             return vanillaCape;
         }
     }

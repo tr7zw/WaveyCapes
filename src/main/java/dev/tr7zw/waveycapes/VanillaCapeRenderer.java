@@ -21,7 +21,7 @@ public class VanillaCapeRenderer implements CapeRenderer {
 
     @Override
     public VertexConsumer getVertexConsumer(MultiBufferSource multiBufferSource, AbstractClientPlayer player) {
-        return multiBufferSource.getBuffer(RenderType.entityCutout(player.getSkin().capeTexture()));
+        return multiBufferSource.getBuffer(RenderType.entityCutout(NMSUtil.getPlayerCape(player)));
     }
 
     @Override
