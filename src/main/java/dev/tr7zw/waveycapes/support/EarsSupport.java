@@ -1,10 +1,7 @@
 package dev.tr7zw.waveycapes.support;
 
-import java.util.HashMap;
 import java.util.WeakHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
-
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.unascribed.ears.api.EarsFeatureType;
@@ -16,8 +13,6 @@ import com.unascribed.ears.common.render.EarsRenderDelegate.TexSource;
 import dev.tr7zw.waveycapes.CapeRenderer;
 import dev.tr7zw.waveycapes.NMSUtil;
 import net.minecraft.client.model.geom.ModelPart;
-import net.minecraft.client.model.geom.builders.CubeDeformation;
-import net.minecraft.client.model.geom.builders.CubeListBuilder;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -30,17 +25,10 @@ public class EarsSupport implements ModSupport, EarsInhibitor {
     private EarsRenderer render = new EarsRenderer();
     // dumb hack to get ears to load the texture once
     private WeakHashMap<Object, AtomicInteger> cache = new WeakHashMap<Object, AtomicInteger>();
-    private ModelPart[] customCape = new ModelPart[16];
+    private ModelPart[] customCape = NMSUtil.buildCape(20, 16, x -> -1, y -> y - 1);
 
     public EarsSupport() {
         EarsInhibitorRegistry.register("Waveycapes", this);
-        for (int i = 0; i < 16; i++) {
-            CubeListBuilder modelPartBuilder = CubeListBuilder.create().texOffs(-1, i - 1).addBox(-5.0F, i, -1.0F,
-                    10.0F, 1.0F, 1.0F, CubeDeformation.NONE, 1.0F, 1.0F);
-            customCape[i] = new ModelPart(modelPartBuilder.getCubes().stream()
-                    .map(modelCuboidData -> modelCuboidData.bake(20, 16)).collect(Collectors.toList()),
-                    new HashMap<>());
-        }
     }
 
     @Override

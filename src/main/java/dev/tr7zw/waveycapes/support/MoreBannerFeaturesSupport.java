@@ -1,18 +1,14 @@
 //#if FABRIC
 package dev.tr7zw.waveycapes.support;
 
-import java.util.HashMap;
-import java.util.stream.Collectors;
-
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import de.kxmischesdomi.morebannerfeatures.core.accessor.Bannerable;
 import de.kxmischesdomi.morebannerfeatures.renderer.BannerCapeFeatureRenderer;
 import de.kxmischesdomi.morebannerfeatures.utils.RendererUtils;
 import dev.tr7zw.waveycapes.CapeRenderer;
+import dev.tr7zw.waveycapes.NMSUtil;
 import net.minecraft.client.model.geom.ModelPart;
-import net.minecraft.client.model.geom.builders.CubeDeformation;
-import net.minecraft.client.model.geom.builders.CubeListBuilder;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.world.item.BannerItem;
@@ -21,17 +17,7 @@ import net.minecraft.world.item.ItemStack;
 public class MoreBannerFeaturesSupport implements ModSupport {
 
     private MoreBannerRenderer render = new MoreBannerRenderer();
-    private ModelPart[] customCape = new ModelPart[16];
-
-    public MoreBannerFeaturesSupport() {
-        for (int i = 0; i < 16; i++) {
-            CubeListBuilder modelPartBuilder = CubeListBuilder.create().texOffs(0, i).addBox(-5.0F, i, -1.0F, 10.0F,
-                    1.0F, 1.0F, CubeDeformation.NONE, 1.0F, 0.5F);
-            customCape[i] = new ModelPart(modelPartBuilder.getCubes().stream()
-                    .map(modelCuboidData -> modelCuboidData.bake(34, 54)).collect(Collectors.toList()),
-                    new HashMap<>());
-        }
-    }
+    private ModelPart[] customCape = NMSUtil.buildCape(34, 54, x -> 0, y -> y);
 
     @Override
     public boolean shouldBeUsed(AbstractClientPlayer player) {

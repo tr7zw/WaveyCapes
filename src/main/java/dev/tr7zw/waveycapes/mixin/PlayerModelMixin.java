@@ -25,12 +25,12 @@ public class PlayerModelMixin<T extends LivingEntity> extends HumanoidModel<T> i
 
     public PlayerModelMixin(ModelPart modelPart) {
         // spotless:off
-        // #if MC >= 11700
+        //#if MC >= 11700
         super(modelPart);
-        // #else
-        // $$ super(0);
-        // #endif
-        // spotless:on
+        //#else
+        //$$ super(0);
+        //#endif
+        //spotless:on
     }
 
     @Inject(method = "renderCloak", at = @At("HEAD"), cancellable = true)

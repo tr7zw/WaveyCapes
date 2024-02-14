@@ -141,8 +141,7 @@ public class PlayerAnimatorSupport implements AnimationSupport {
           //spotless:on
 
             float scale = -16;
-            offset.mul(scale);
-            Vector3 curOffset = new Vector3(offset.x(), offset.y(), offset.z());
+            Vector3 curOffset = new Vector3(offset.x() * scale, offset.y() * scale, offset.z() + scale);
             Vector3 lastOffset = capeHolder.getLastPlayerAnimatorPosition();
             capeHolder.setLastPlayerAnimatorPosition(curOffset.clone());
             curOffset.subtract(lastOffset);

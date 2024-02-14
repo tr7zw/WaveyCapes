@@ -1,5 +1,13 @@
 package dev.tr7zw.waveycapes.renderlayers;
 
+//spotless:off
+//#if MC >= 11903
+import org.joml.Matrix4f;
+//#else
+//$$import com.mojang.math.Matrix4f;
+//#endif
+//spotless:on
+
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -22,11 +30,6 @@ import dev.tr7zw.waveycapes.versionless.sim.BasicSimulation;
 import dev.tr7zw.waveycapes.versionless.util.Vector3;
 import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.model.geom.ModelPart;
-import net.minecraft.client.model.geom.PartPose;
-import net.minecraft.client.model.geom.builders.CubeDeformation;
-import net.minecraft.client.model.geom.builders.CubeListBuilder;
-import net.minecraft.client.model.geom.builders.MeshDefinition;
-import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -39,39 +42,14 @@ import net.minecraft.world.entity.player.PlayerModelPart;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
-//spotless:off
-//#if MC >= 11903
-import org.joml.Matrix4f;
-//#else
-//$$import com.mojang.math.Matrix4f;
-//#endif
-//spotless:on
-
 public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, PlayerModel<AbstractClientPlayer>> {
 
     private static final int PART_COUNT = 16;
-    private ModelPart[] customCape = new ModelPart[PART_COUNT];
+    private ModelPart[] customCape = NMSUtil.buildCape(64, 64, x -> 0, y -> y);
 
     public CustomCapeRenderLayer(
             RenderLayerParent<AbstractClientPlayer, PlayerModel<AbstractClientPlayer>> renderLayerParent) {
         super(renderLayerParent);
-        buildMesh();
-    }
-
-    private void buildMesh() {
-        customCape = new ModelPart[PART_COUNT];
-        MeshDefinition meshDefinition = new MeshDefinition();
-        PartDefinition partDefinition = meshDefinition.getRoot();
-        for (int i = 0; i < PART_COUNT; i++)
-            partDefinition.addOrReplaceChild("customCape_" + i,
-                    CubeListBuilder.create().texOffs(0, (int) (i * (16f / PART_COUNT))).addBox(-5.0F,
-                            i * (16f / PART_COUNT), -1.0F, 10.0F, (16f / PART_COUNT), 1.0F, CubeDeformation.NONE, 1.0F,
-                            0.5F),
-                    PartPose.offset(0.0F, 0.0F, 0.0F));
-        ModelPart modelPart = partDefinition.bake(64, 64);
-        for (int i = 0; i < PART_COUNT; i++) {
-            this.customCape[i] = modelPart.getChild("customCape_" + i);
-        }
     }
 
     public void render(PoseStack poseStack, MultiBufferSource multiBufferSource, int i,
@@ -82,7 +60,7 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
         if (renderer == null)
             return;
         ItemStack itemStack = abstractClientPlayer.getItemBySlot(EquipmentSlot.CHEST);
-        if (itemStack.is(Items.ELYTRA))
+        if (!itemStack.isEmpty() && itemStack.getItem() == Items.ELYTRA)
             return;
         if (getParentModel() instanceof PlayerModelAccess pma && !pma.getCloak().visible) {
             return;
@@ -506,8 +484,7 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
      * @return
      */
     private static float easeOutSine(float x) {
-        return Mth.sin((x * Mth.PI) / 2f);
-
+        return Mth.sin((float) ((x * Math.PI) / 2f));
     }
 
 }

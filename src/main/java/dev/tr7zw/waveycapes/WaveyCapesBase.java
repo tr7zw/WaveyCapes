@@ -151,11 +151,11 @@ public abstract class WaveyCapesBase extends ModBase {
     // Modified version from InventoryScreen
     private void drawEntity(int x, int y, int size, float lookX, float lookY, LivingEntity livingEntity, float delta) {
         float rotationModifyer = 3;
-        PoseStack poseStack = RenderSystem.getModelViewStack();
+        PoseStack poseStack = NMSUtil.getPoseStack();
         poseStack.pushPose();
         poseStack.translate(x, y, 1050.0D);
         poseStack.scale(1.0F, 1.0F, -1.0F);
-        RenderSystem.applyModelViewMatrix();
+        NMSUtil.prepareViewMatrix(x, y);
         PoseStack matrixStack = new PoseStack();
         matrixStack.translate(0.0D, 1, 1000.0D);
         matrixStack.scale((float) size, (float) size, (float) size);
@@ -172,24 +172,24 @@ public abstract class WaveyCapesBase extends ModBase {
         matrixStack.mulPose(quaternion);
         matrixStack.translate(0.0D, -1, 0D);
         float yBodyRot = livingEntity.yBodyRot;
-        float yRot = livingEntity.getYRot();
+        float yRot = NMSHelper.getYRot(livingEntity);
         float yRotO = livingEntity.yRotO;
         float yBodyRotO = livingEntity.yBodyRotO;
-        float xRot = livingEntity.getXRot();
+        float xRot = NMSHelper.getXRot(livingEntity);
         float xRotO = livingEntity.xRotO;
         float yHeadRotO = livingEntity.yHeadRotO;
         float yHeadRot = livingEntity.yHeadRot;
         Vec3 vel = livingEntity.getDeltaMovement();
         livingEntity.yBodyRot = 180.0F + (lookX * rotationModifyer);
-        livingEntity.setYRot(180.0F + (lookX * rotationModifyer));
+        NMSHelper.setYRot(livingEntity, 180.0F + (lookX * rotationModifyer));
         livingEntity.yBodyRotO = livingEntity.yBodyRot;
-        livingEntity.yRotO = livingEntity.getYRot();
+        livingEntity.yRotO = NMSHelper.getYRot(livingEntity);
         livingEntity.setDeltaMovement(Vec3.ZERO);
-        livingEntity.setXRot(0);
-        livingEntity.xRotO = livingEntity.getXRot();
-        livingEntity.yHeadRot = livingEntity.getYRot();
-        livingEntity.yHeadRotO = livingEntity.getYRot();
-        Lighting.setupForEntityInInventory();
+        NMSHelper.setXRot(livingEntity, 0);
+        livingEntity.xRotO = NMSHelper.getXRot(livingEntity);
+        livingEntity.yHeadRot = NMSHelper.getYRot(livingEntity);
+        livingEntity.yHeadRotO = NMSHelper.getYRot(livingEntity);
+        NMSUtil.prepareLighting();
         EntityRenderDispatcher entityRenderDispatcher = Minecraft.getInstance().getEntityRenderDispatcher();
         NMSUtil.conjugate(quaternion2);
         entityRenderDispatcher.overrideCameraOrientation(quaternion2);
@@ -202,15 +202,15 @@ public abstract class WaveyCapesBase extends ModBase {
         entityRenderDispatcher.setRenderShadow(true);
         livingEntity.yBodyRot = yBodyRot;
         livingEntity.yBodyRotO = yBodyRotO;
-        livingEntity.setYRot(yRot);
+        NMSHelper.setYRot(livingEntity, yRot);
         livingEntity.yRotO = yRotO;
-        livingEntity.setXRot(xRot);
+        NMSHelper.setXRot(livingEntity, xRot);
         livingEntity.xRotO = xRotO;
         livingEntity.yHeadRotO = yHeadRotO;
         livingEntity.yHeadRot = yHeadRot;
         livingEntity.setDeltaMovement(vel);
         poseStack.popPose();
-        RenderSystem.applyModelViewMatrix();
+        NMSUtil.resetViewMatrix();
         Lighting.setupFor3DItems();
     }
 
