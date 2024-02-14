@@ -21,8 +21,6 @@ import dev.tr7zw.waveycapes.versionless.nms.MinecraftPlayer;
 import dev.tr7zw.waveycapes.versionless.util.Vector3;
 import lombok.Getter;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.OptionInstance;
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
@@ -34,6 +32,16 @@ import net.minecraft.world.phys.Vec3;
 import org.joml.Quaternionf;
 //#else
 //$$import com.mojang.math.Quaternion;
+//#endif
+//#if MC >= 11900
+import net.minecraft.client.OptionInstance;
+//#else
+//$$ import net.minecraft.client.Option;
+//#endif
+//#if MC >= 12000
+import net.minecraft.client.gui.GuiGraphics;
+//#else
+//$$ import com.mojang.blaze3d.vertex.PoseStack;
 //#endif
 //spotless:on
 
@@ -64,7 +72,7 @@ public abstract class WaveyCapesBase extends ModBase {
 
             @Override
             public void initialize() {
-                List<OptionInstance<?>> options = new ArrayList<>();
+                List<Object> options = new ArrayList<>();
                 options.add(getEnumOption("text.wc.setting.capestyle", CapeStyle.class, () -> config.capeStyle,
                         (v) -> config.capeStyle = v));
                 options.add(getEnumOption("text.wc.setting.windmode", WindMode.class, () -> config.windMode,
@@ -80,7 +88,13 @@ public abstract class WaveyCapesBase extends ModBase {
                 // options.add(getIntOption("text.wc.setting.maxBend", 1, 20, () ->
                 // config.maxBend, (v) -> config.maxBend = v));
 
+                // spotless:off
+                //#if MC >= 11900
                 getOptions().addSmall(options.toArray(new OptionInstance[0]));
+                //#else
+                //$$getOptions().addSmall(options.toArray(new Option[0]));
+                //#endif
+                // spotless:on
 
             }
 
