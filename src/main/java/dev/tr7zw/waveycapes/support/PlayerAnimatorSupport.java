@@ -145,7 +145,6 @@ public class PlayerAnimatorSupport implements AnimationSupport {
             Vector3 lastOffset = capeHolder.getLastPlayerAnimatorPosition();
             capeHolder.setLastPlayerAnimatorPosition(curOffset.clone());
             curOffset.subtract(lastOffset);
-            System.out.println(curOffset);
             cur.add(curOffset);
         }
         return cur;
