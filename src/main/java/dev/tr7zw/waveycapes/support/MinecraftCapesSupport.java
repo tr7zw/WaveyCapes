@@ -31,7 +31,7 @@ public class MinecraftCapesSupport implements ModSupport {
             getCape = PlayerHandler::get;
             ModBase.LOGGER.info("Using 'get(Player)' method for MinecraftCapes.");
             return;
-        }catch(Throwable ex) {
+        } catch (Throwable ex) {
             // ignore
         }
         try {
@@ -39,13 +39,14 @@ public class MinecraftCapesSupport implements ModSupport {
             getCape = player -> PlayerHandler.get(player.getUUID());
             ModBase.LOGGER.info("Using 'get(UUID)' method for MinecraftCapes.");
             return;
-        }catch(Throwable ex) {
+        } catch (Throwable ex) {
             // ignore
         }
-        
-        for(Method m : PlayerHandler.class.getMethods()) {
+
+        for (Method m : PlayerHandler.class.getMethods()) {
             try {
-                if(m.getReturnType() != PlayerHandler.class && m.getParameterCount() == 1 && m.getParameterTypes()[0] != UUID.class) {
+                if (m.getReturnType() != PlayerHandler.class && m.getParameterCount() == 1
+                        && m.getParameterTypes()[0] != UUID.class) {
                     continue;
                 }
                 m.invoke(null, test);
@@ -58,7 +59,7 @@ public class MinecraftCapesSupport implements ModSupport {
                 };
                 ModBase.LOGGER.info("Using '" + m.getName() + "' method for MinecraftCapes.");
                 return;
-            }catch(Throwable ex) {
+            } catch (Throwable ex) {
                 // ignore, MinecraftCapes wont work
             }
         }

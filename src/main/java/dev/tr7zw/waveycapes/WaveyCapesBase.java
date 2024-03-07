@@ -216,10 +216,14 @@ public abstract class WaveyCapesBase extends ModBase {
 
     @Override
     public void initSupportHooks() {
+        // spotless:off
+        //#if MC >= 18000
         if (doesClassExist("dev.kosmx.playerAnim.core.impl.AnimationProcessor")) {
             SupportManager.animationSupport.add(new PlayerAnimatorSupport());
             LOGGER.info("Wavey Capes loaded PlayerAnimator support!");
         }
+        //#endif
+     // spotless:on
     }
 
 }
