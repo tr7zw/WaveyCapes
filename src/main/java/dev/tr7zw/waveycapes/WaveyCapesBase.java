@@ -151,14 +151,15 @@ public abstract class WaveyCapesBase extends ModBase {
     // Modified version from InventoryScreen
     private void drawEntity(int x, int y, int size, float lookX, float lookY, LivingEntity livingEntity, float delta) {
         float rotationModifyer = 3;
-        PoseStack poseStack = NMSUtil.getPoseStack();
-        poseStack.pushPose();
-        poseStack.translate(x, y, 1050.0D);
-        poseStack.scale(1.0F, 1.0F, -1.0F);
+//        PoseStack poseStack = NMSUtil.getPoseStack();
+//        poseStack.pushPose();
+//        poseStack.translate(x, y, 1050.0D);
+//        poseStack.scale(1.0F, 1.0F, -1.0F);
         NMSUtil.prepareViewMatrix(x, y);
         PoseStack matrixStack = new PoseStack();
-        matrixStack.translate(0.0D, 1, 1000.0D);
+        matrixStack.translate(x, y, 1000.0D);
         matrixStack.scale((float) size, (float) size, (float) size);
+        matrixStack.scale(1.0F, 1.0F, -1.0F);
         // spotless:off
         //#if MC >= 11903
         Quaternionf quaternion = NMSHelper.ZP.rotationDegrees(180.0F);
@@ -209,7 +210,7 @@ public abstract class WaveyCapesBase extends ModBase {
         livingEntity.yHeadRotO = yHeadRotO;
         livingEntity.yHeadRot = yHeadRot;
         livingEntity.setDeltaMovement(vel);
-        poseStack.popPose();
+//        poseStack.popPose();
         NMSUtil.resetViewMatrix();
         Lighting.setupFor3DItems();
     }

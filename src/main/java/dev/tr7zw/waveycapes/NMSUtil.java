@@ -105,16 +105,16 @@ public class NMSUtil {
         //#endif
         // spotless:on
     }
+//PreviewHelper.renderEntityInInventoryFollowsMouse(guiGraphics, x, y, size, 0, 0, this.minecraft.player);
 
     public static PoseStack getPoseStack() {
         // spotless:off
-        //#if MC >= 11700
-        PoseStack poseStack = RenderSystem.getModelViewStack();
+        //#if MC >= 11700 && MC <= 12004
+        //$$ return RenderSystem.getModelViewStack();
         //#else
-        //$$ PoseStack poseStack = new PoseStack();
+         return new PoseStack();
         //#endif
         // spotless:on
-        return poseStack;
     }
 
 }
