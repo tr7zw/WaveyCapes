@@ -68,7 +68,8 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
 
         CapeHolder holder = (CapeHolder) abstractClientPlayer;
         holder.updateSimulation(new PlayerDelegate(abstractClientPlayer), PART_COUNT);
-
+        poseStack.pushPose();
+        getParentModel().body.translateAndRotate(poseStack);
         if (ModBase.config.capeStyle == CapeStyle.SMOOTH && renderer.vanillaUvValues()) {
             renderSmoothCape(poseStack, multiBufferSource, renderer, abstractClientPlayer, delta, i);
         } else {
@@ -81,6 +82,7 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
                 poseStack.popPose();
             }
         }
+        poseStack.popPose();
     }
 
     private void renderSmoothCape(PoseStack poseStack, MultiBufferSource multiBufferSource, CapeRenderer capeRenderer,
