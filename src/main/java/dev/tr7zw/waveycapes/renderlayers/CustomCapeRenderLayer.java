@@ -154,10 +154,10 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
         float partRotation = getRotation(delta, part, simulation);
 
         float height = 0;
-        if (abstractClientPlayer.isCrouching()) {
-            height += 25.0F;
-            poseStack.translate(0, 0.15F, 0);
-        }
+//        if (abstractClientPlayer.isCrouching()) {
+//            height += 25.0F;
+//            poseStack.translate(0, 0.15F, 0);
+//        }
 
         float naturalWindSwing = getNatrualWindSwing(part, abstractClientPlayer.isUnderWater());
 
@@ -213,10 +213,10 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
         float t = Mth.lerp(h, abstractClientPlayer.oBob, abstractClientPlayer.bob);
         height += Mth.sin(Mth.lerp(h, abstractClientPlayer.walkDistO, abstractClientPlayer.walkDist) * 6.0F) * 32.0F
                 * t;
-        if (abstractClientPlayer.isCrouching()) {
-            height += 25.0F;
-            poseStack.translate(0, 0.15F, 0);
-        }
+//        if (abstractClientPlayer.isCrouching()) {
+//            height += 25.0F;
+//            poseStack.translate(0, 0.15F, 0);
+//        }
 
         float naturalWindSwing = getNatrualWindSwing(part, abstractClientPlayer.isUnderWater());
 
