@@ -1,0 +1,21 @@
+{
+    "text.wc.title": "Configuración de WaveyCapes",
+    "text.wc.setting.capestyle": "Estilo de Capa",
+    "text.wc.setting.capestyle.tooltip": "Cambiar entre una capa con movimiento suave y una capa con movimiento en rigido.",
+    "text.wc.setting.capestyle.BLOCKY": "Rigido",
+    "text.wc.setting.capestyle.SMOOTH": "Suave",
+    "text.wc.setting.windmode": "Modo de Viento",
+    "text.wc.setting.windmode.tooltip": "Agregar movimiento adicional a la capa.",
+    "text.wc.setting.windmode.NONE": "Sin Viento",
+    "text.wc.setting.windmode.WAVES": "Ondas",
+    "text.wc.setting.capemovement": "Movimiento de Capa",
+    "text.wc.setting.capemovement.tooltip": "Cambiar la forma en que se comporta la capa.",
+    "text.wc.setting.capemovement.VANILLA": "Clásico",
+    "text.wc.setting.capemovement.BASIC_SIMULATION": "Simulación",
+    "text.wc.setting.capemovement.BASIC_SIMULATION_3D": "Simulación V2",
+    "text.wc.setting.capemovement.DUNGEONS": "Mazmorras",
+    "text.wc.setting.gravity": "Gravedad",
+    "text.wc.setting.gravity.tooltip": "Cambiar la cantidad de gravedad aplicada a la capa.",
+    "text.wc.setting.heightMultiplier": "Multiplicador de Altura",
+    "text.wc.setting.heightMultiplier.tooltip": "Cambiar la intensidad con la que la capa reacciona al movimiento en el eje Y."
+}
