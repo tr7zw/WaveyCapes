@@ -1,0 +1,21 @@
+{
+    "text.wc.title": "WaveyCapes 설정",
+    "text.wc.setting.capestyle": "망토 스타일",
+    "text.wc.setting.capestyle.tooltip": "부드럽게 구부러지는 망토와 딱딱한 망토 사이를 전환하세요.",
+    "text.wc.setting.capestyle.BLOCKY": "딱딱한",
+    "text.wc.setting.capestyle.SMOOTH": "부드러운",
+    "text.wc.setting.windmode": "바람 모드",
+    "text.wc.setting.windmode.tooltip": "망토에 추가적인 움직임을 제공합니다.",
+    "text.wc.setting.windmode.NONE": "바람 없음",
+    "text.wc.setting.windmode.WAVES": "파도식 바람",
+    "text.wc.setting.capemovement": "망토 움직임",
+    "text.wc.setting.capemovement.tooltip": "망토의 작동 방식을 변경합니다.",
+    "text.wc.setting.capemovement.VANILLA": "바닐라",
+    "text.wc.setting.capemovement.BASIC_SIMULATION": "시뮬레이션",
+    "text.wc.setting.capemovement.BASIC_SIMULATION_3D": "시뮬레이션 V2",
+    "text.wc.setting.capemovement.DUNGEONS": "던전스",
+    "text.wc.setting.gravity": "중력",
+    "text.wc.setting.gravity.tooltip": "망토에 적용되는 중력을 변경합니다.",
+    "text.wc.setting.heightMultiplier": "중력 계수",
+    "text.wc.setting.heightMultiplier.tooltip": "망토가 위아래 움직임에 얼마나 극단적으로 반응하는지 변경합니다."
+}
