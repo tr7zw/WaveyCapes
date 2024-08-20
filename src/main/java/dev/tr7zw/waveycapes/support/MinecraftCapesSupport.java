@@ -90,7 +90,7 @@ public class MinecraftCapesSupport implements ModSupport {
             PlayerHandler playerHandler = getCape.apply(player);
             VertexConsumer vertexConsumer;
             if (MinecraftCapesConfig.isCapeVisible() && playerHandler.getCapeLocation() != null) {
-              //spotless:off
+                // spotless:off
                 //#if MC >= 12100
                 vertexConsumer = ItemRenderer.getArmorFoilBuffer(multiBufferSource,
                         RenderType.armorCutoutNoCull(playerHandler.getCapeLocation()),
@@ -102,7 +102,7 @@ public class MinecraftCapesSupport implements ModSupport {
                 //#endif
                 //spotless:on
             } else {
-              //spotless:off
+                // spotless:off
                 //#if MC >= 12100
                 vertexConsumer = ItemRenderer.getArmorFoilBuffer(multiBufferSource,
                         RenderType.armorCutoutNoCull(NMSUtil.getPlayerCape(player)), false);
@@ -119,7 +119,7 @@ public class MinecraftCapesSupport implements ModSupport {
         public VertexConsumer getVertexConsumer(MultiBufferSource multiBufferSource, AbstractClientPlayer player) {
             PlayerHandler playerHandler = getCape.apply(player);
             if (MinecraftCapesConfig.isCapeVisible() && playerHandler.getCapeLocation() != null) {
-                //spotless:off
+                // spotless:off
                 //#if MC >= 12100
                 return ItemRenderer.getArmorFoilBuffer(multiBufferSource,
                         RenderType.armorCutoutNoCull(playerHandler.getCapeLocation()),
@@ -131,7 +131,7 @@ public class MinecraftCapesSupport implements ModSupport {
               //#endif
                 //spotless:on
             } else {
-              //spotless:off
+                // spotless:off
                 //#if MC >= 12100
                 return ItemRenderer.getArmorFoilBuffer(multiBufferSource,
                         RenderType.armorCutoutNoCull(NMSUtil.getPlayerCape(player)), false);

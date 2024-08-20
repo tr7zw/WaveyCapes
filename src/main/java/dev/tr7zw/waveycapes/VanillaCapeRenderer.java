@@ -8,6 +8,7 @@ import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.resources.ResourceLocation;
 
 public class VanillaCapeRenderer implements CapeRenderer {
 
@@ -21,7 +22,11 @@ public class VanillaCapeRenderer implements CapeRenderer {
 
     @Override
     public VertexConsumer getVertexConsumer(MultiBufferSource multiBufferSource, AbstractClientPlayer player) {
-        return multiBufferSource.getBuffer(RenderType.entityCutout(NMSUtil.getPlayerCape(player)));
+        ResourceLocation cape = NMSUtil.getPlayerCape(player);
+        if (cape != null) {
+            return multiBufferSource.getBuffer(RenderType.entityCutout(cape));
+        }
+        return null;
     }
 
     @Override

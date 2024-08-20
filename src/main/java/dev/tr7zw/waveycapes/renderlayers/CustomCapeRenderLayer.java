@@ -88,6 +88,9 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
     private void renderSmoothCape(PoseStack poseStack, MultiBufferSource multiBufferSource, CapeRenderer capeRenderer,
             AbstractClientPlayer abstractClientPlayer, float delta, int light) {
         VertexConsumer bufferBuilder = capeRenderer.getVertexConsumer(multiBufferSource, abstractClientPlayer);
+        if (bufferBuilder == null) {
+            return;
+        }
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
 
@@ -233,8 +236,6 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
         }
         return 0;
     }
-    
-    
 
     private static void addBackVertex(VertexConsumer bufferBuilder, Matrix4f matrix, Matrix4f oldMatrix, float x1,
             float y1, float z1, float x2, float y2, float z2, int part, int light) {
@@ -267,12 +268,14 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
         maxV = minV + (vPerPart * (part + 1));
         minV = minV + (vPerPart * part);
 
-        NMSHelper.addVertex(bufferBuilder, oldMatrix, x1, y2, z1, maxU, minV, OverlayTexture.NO_OVERLAY, light, 1, 0, 0);
-        NMSHelper.addVertex(bufferBuilder, oldMatrix, x2, y2, z1, minU, minV,OverlayTexture.NO_OVERLAY, light, 1, 0, 0);
+        NMSHelper.addVertex(bufferBuilder, oldMatrix, x1, y2, z1, maxU, minV, OverlayTexture.NO_OVERLAY, light, 1, 0,
+                0);
+        NMSHelper.addVertex(bufferBuilder, oldMatrix, x2, y2, z1, minU, minV, OverlayTexture.NO_OVERLAY, light, 1, 0,
+                0);
         NMSHelper.addVertex(bufferBuilder, matrix, x2, y1, z2, minU, maxV, OverlayTexture.NO_OVERLAY, light, 1, 0, 0);
-        NMSHelper.addVertex(bufferBuilder, matrix, x1, y1, z2, maxU, maxV,OverlayTexture.NO_OVERLAY, light, 1, 0, 0);
+        NMSHelper.addVertex(bufferBuilder, matrix, x1, y1, z2, maxU, maxV, OverlayTexture.NO_OVERLAY, light, 1, 0, 0);
     }
-    
+
     private static void addFrontVertex(VertexConsumer bufferBuilder, Matrix4f matrix, Matrix4f oldMatrix, float x1,
             float y1, float z1, float x2, float y2, float z2, int part, int light) {
         float i;
@@ -304,8 +307,10 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
         maxV = minV + (vPerPart * (part + 1));
         minV = minV + (vPerPart * part);
 
-        NMSHelper.addVertex(bufferBuilder, oldMatrix, x1, y1, z1, minU, maxV, OverlayTexture.NO_OVERLAY, light, 1, 0, 0);
-        NMSHelper.addVertex(bufferBuilder, oldMatrix, x2, y1, z1, maxU, maxV, OverlayTexture.NO_OVERLAY, light, 1, 0, 0);
+        NMSHelper.addVertex(bufferBuilder, oldMatrix, x1, y1, z1, minU, maxV, OverlayTexture.NO_OVERLAY, light, 1, 0,
+                0);
+        NMSHelper.addVertex(bufferBuilder, oldMatrix, x2, y1, z1, maxU, maxV, OverlayTexture.NO_OVERLAY, light, 1, 0,
+                0);
         NMSHelper.addVertex(bufferBuilder, matrix, x2, y2, z2, maxU, minV, OverlayTexture.NO_OVERLAY, light, 1, 0, 0);
         NMSHelper.addVertex(bufferBuilder, matrix, x1, y2, z2, minU, minV, OverlayTexture.NO_OVERLAY, light, 1, 0, 0);
     }
@@ -338,8 +343,10 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
 
         NMSHelper.addVertex(bufferBuilder, matrix, x2, y1, z1, minU, maxV, OverlayTexture.NO_OVERLAY, light, 1, 0, 0);
         NMSHelper.addVertex(bufferBuilder, matrix, x2, y1, z2, maxU, maxV, OverlayTexture.NO_OVERLAY, light, 1, 0, 0);
-        NMSHelper.addVertex(bufferBuilder, oldMatrix, x2, y2, z2, maxU, minV, OverlayTexture.NO_OVERLAY, light, 1, 0, 0);
-        NMSHelper.addVertex(bufferBuilder, oldMatrix, x2, y2, z1, minU, minV, OverlayTexture.NO_OVERLAY, light, 1, 0, 0);
+        NMSHelper.addVertex(bufferBuilder, oldMatrix, x2, y2, z2, maxU, minV, OverlayTexture.NO_OVERLAY, light, 1, 0,
+                0);
+        NMSHelper.addVertex(bufferBuilder, oldMatrix, x2, y2, z1, minU, minV, OverlayTexture.NO_OVERLAY, light, 1, 0,
+                0);
     }
 
     private static void addRightVertex(VertexConsumer bufferBuilder, Matrix4f matrix, Matrix4f oldMatrix, float x1,
@@ -370,8 +377,10 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
 
         NMSHelper.addVertex(bufferBuilder, matrix, x2, y1, z2, minU, maxV, OverlayTexture.NO_OVERLAY, light, 1, 0, 0);
         NMSHelper.addVertex(bufferBuilder, matrix, x2, y1, z1, maxU, maxV, OverlayTexture.NO_OVERLAY, light, 1, 0, 0);
-        NMSHelper.addVertex(bufferBuilder, oldMatrix, x2, y2, z1, maxU, minV, OverlayTexture.NO_OVERLAY, light, 1, 0, 0);
-        NMSHelper.addVertex(bufferBuilder, oldMatrix, x2, y2, z2, minU, minV, OverlayTexture.NO_OVERLAY, light, 1, 0, 0);
+        NMSHelper.addVertex(bufferBuilder, oldMatrix, x2, y2, z1, maxU, minV, OverlayTexture.NO_OVERLAY, light, 1, 0,
+                0);
+        NMSHelper.addVertex(bufferBuilder, oldMatrix, x2, y2, z2, minU, minV, OverlayTexture.NO_OVERLAY, light, 1, 0,
+                0);
     }
 
     private static void addBottomVertex(VertexConsumer bufferBuilder, Matrix4f matrix, Matrix4f oldMatrix, float x1,
@@ -400,8 +409,10 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
         maxV = minV + (vPerPart * (part + 1));
         minV = minV + (vPerPart * part);
 
-        NMSHelper.addVertex(bufferBuilder, oldMatrix, x1, y2, z2, maxU, minV, OverlayTexture.NO_OVERLAY, light, 1, 0, 0);
-        NMSHelper.addVertex(bufferBuilder, oldMatrix, x2, y2, z2, minU, minV, OverlayTexture.NO_OVERLAY, light, 1, 0, 0);
+        NMSHelper.addVertex(bufferBuilder, oldMatrix, x1, y2, z2, maxU, minV, OverlayTexture.NO_OVERLAY, light, 1, 0,
+                0);
+        NMSHelper.addVertex(bufferBuilder, oldMatrix, x2, y2, z2, minU, minV, OverlayTexture.NO_OVERLAY, light, 1, 0,
+                0);
         NMSHelper.addVertex(bufferBuilder, matrix, x2, y1, z1, minU, maxV, OverlayTexture.NO_OVERLAY, light, 1, 0, 0);
         NMSHelper.addVertex(bufferBuilder, matrix, x1, y1, z1, maxU, maxV, OverlayTexture.NO_OVERLAY, light, 1, 0, 0);
     }
@@ -432,8 +443,10 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
         maxV = minV + (vPerPart * (part + 1));
         minV = minV + (vPerPart * part);
 
-        NMSHelper.addVertex(bufferBuilder, oldMatrix, x1, y2, z1, maxU, maxV, OverlayTexture.NO_OVERLAY, light, 0, 1, 0);
-        NMSHelper.addVertex(bufferBuilder, oldMatrix, x2, y2, z1, minU, maxV, OverlayTexture.NO_OVERLAY, light, 0, 1, 0);
+        NMSHelper.addVertex(bufferBuilder, oldMatrix, x1, y2, z1, maxU, maxV, OverlayTexture.NO_OVERLAY, light, 0, 1,
+                0);
+        NMSHelper.addVertex(bufferBuilder, oldMatrix, x2, y2, z1, minU, maxV, OverlayTexture.NO_OVERLAY, light, 0, 1,
+                0);
         NMSHelper.addVertex(bufferBuilder, matrix, x2, y1, z2, minU, minV, OverlayTexture.NO_OVERLAY, light, 0, 1, 0);
         NMSHelper.addVertex(bufferBuilder, matrix, x1, y1, z2, maxU, minV, OverlayTexture.NO_OVERLAY, light, 0, 1, 0);
     }
