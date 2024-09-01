@@ -1,0 +1,21 @@
+{
+    "text.wc.title": "WaveyCapes Einstellungen",
+    "text.wc.setting.capestyle": "Umhang Stil",
+    "text.wc.setting.capestyle.tooltip": "Wechselt zwischen einem geschmeidig fallenden oder einem blockigen Umhang.",
+    "text.wc.setting.capestyle.BLOCKY": "Blockig",
+    "text.wc.setting.capestyle.SMOOTH": "Geschmeidig",
+    "text.wc.setting.windmode": "Wind Modus",
+    "text.wc.setting.windmode.tooltip": "Fügt dem Umhang zusätzliche Bewegung hinzu.",
+    "text.wc.setting.windmode.NONE": "Kein Wind",
+    "text.wc.setting.windmode.WAVES": "Wellenförmig",
+    "text.wc.setting.capemovement": "Umhangbewegung",
+    "text.wc.setting.capemovement.tooltip": "Ändert die Art und Weise, wie sich der Umhang bewegt.",
+    "text.wc.setting.capemovement.VANILLA": "Klassik",
+    "text.wc.setting.capemovement.BASIC_SIMULATION": "Simulation",
+    "text.wc.setting.capemovement.BASIC_SIMULATION_3D": "Simulation V2",
+    "text.wc.setting.capemovement.DUNGEONS": "Dungeons",
+    "text.wc.setting.gravity": "Schwerkraft",
+    "text.wc.setting.gravity.tooltip": "Ändern Sie die Stärke der Schwerkraft, die auf den Umhang einwirkt.",
+    "text.wc.setting.heightMultiplier": "Höhenmultiplikator",
+    "text.wc.setting.heightMultiplier.tooltip": "Ändert, wie stark der Umhang auf Y-Bewegungen reagiert."
+}
