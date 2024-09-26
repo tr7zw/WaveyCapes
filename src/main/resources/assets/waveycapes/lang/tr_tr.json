@@ -1,0 +1,21 @@
+{
+    "text.wc.title": "WaveyCapes Ayarları",
+    "text.wc.setting.capestyle": "Pelerin Stili",
+    "text.wc.setting.capestyle.tooltip": "Pürüzsüz yada bloklu pelerin arasında stil geçişi yap.",
+    "text.wc.setting.capestyle.BLOCKY": "Bloklu",
+    "text.wc.setting.capestyle.SMOOTH": "Pürüzsüz",
+    "text.wc.setting.windmode": "Rüzgar Modu",
+    "text.wc.setting.windmode.tooltip": "Pelerine ekstra hareket ekleyin.",
+    "text.wc.setting.windmode.NONE": "Rüzgarsız",
+    "text.wc.setting.windmode.WAVES": "Dalgalı",
+    "text.wc.setting.capemovement": "Pelerin Hareketi",
+    "text.wc.setting.capemovement.tooltip": "Pelerinin nasıl hareket ettiğini değiştirin.",
+    "text.wc.setting.capemovement.VANILLA": "Klasik",
+    "text.wc.setting.capemovement.BASIC_SIMULATION": "Simülasyon",
+    "text.wc.setting.capemovement.BASIC_SIMULATION_3D": "Simülasyon V2",
+    "text.wc.setting.capemovement.DUNGEONS": "Dungeons Stili",
+    "text.wc.setting.gravity": "Yer Çekimi",
+    "text.wc.setting.gravity.tooltip": "Pelerine uygulanan yer çekimini değiştirin.",
+    "text.wc.setting.heightMultiplier": "Yükseklik Değişkeni",
+    "text.wc.setting.heightMultiplier.tooltip": "Pelerinin Y eksenindeki hareketinin gücü."
+}
