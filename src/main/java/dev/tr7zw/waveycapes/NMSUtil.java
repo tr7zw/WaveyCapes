@@ -76,8 +76,8 @@ public class NMSUtil {
 
     public static void prepareViewMatrix(double xpos, double ypos) {
         // spotless:off
-        //#if MC >= 11700
-        RenderSystem.applyModelViewMatrix();
+        //#if MC >= 11700 && MC < 12102
+        //$$RenderSystem.applyModelViewMatrix();
         //#else
         //$$ RenderSystem.pushMatrix();
         //$$ RenderSystem.translatef((float)xpos, (float)ypos, 1050.0F);
@@ -88,8 +88,8 @@ public class NMSUtil {
 
     public static void resetViewMatrix() {
         // spotless:off
-        //#if MC >= 11700
-        RenderSystem.applyModelViewMatrix();
+        //#if MC >= 11700 && MC < 12102
+        //$$RenderSystem.applyModelViewMatrix();
         //#else
         //$$ RenderSystem.popMatrix();
         //#endif

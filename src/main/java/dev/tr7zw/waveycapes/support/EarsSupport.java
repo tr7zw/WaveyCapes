@@ -10,6 +10,7 @@ import com.unascribed.ears.api.iface.EarsInhibitor;
 import com.unascribed.ears.api.registry.EarsInhibitorRegistry;
 import com.unascribed.ears.common.render.EarsRenderDelegate.TexSource;
 
+import dev.tr7zw.waveycapes.CapeRenderInfo;
 import dev.tr7zw.util.NMSHelper;
 import dev.tr7zw.waveycapes.CapeRenderer;
 import dev.tr7zw.waveycapes.NMSUtil;
@@ -33,8 +34,8 @@ public class EarsSupport implements ModSupport, EarsInhibitor {
     }
 
     @Override
-    public boolean shouldBeUsed(AbstractClientPlayer player) {
-        EarsFeatures playerFeatures = EarsFeatures.getById(player.getUUID());
+    public boolean shouldBeUsed(CapeRenderInfo capeRenderInfo) {
+        EarsFeatures playerFeatures = EarsFeatures.getById(capeRenderInfo.getCapeHolder().getUUID());
         return playerFeatures != null && playerFeatures.capeEnabled;
     }
 
@@ -43,21 +44,21 @@ public class EarsSupport implements ModSupport, EarsInhibitor {
         return render;
     }
 
-    private ResourceLocation getPlayerCape(AbstractClientPlayer player, EarsFeatures playerFeatures) {
-        ResourceLocation skin = NMSUtil.getPlayerCape(player);
+    private ResourceLocation getPlayerCape(CapeRenderInfo capeRenderInfo, EarsFeatures playerFeatures) {
+        ResourceLocation skin = capeRenderInfo.getCapeTexture();
         return NMSHelper.getResourceLocation(skin.getNamespace(), TexSource.CAPE.addSuffix(skin.getPath()));
     }
 
     private class EarsRenderer implements CapeRenderer {
 
         @Override
-        public void render(AbstractClientPlayer player, int part, ModelPart model, PoseStack poseStack,
+        public void render(CapeRenderInfo capeRenderInfo, int part, ModelPart model, PoseStack poseStack,
                 MultiBufferSource multiBufferSource, int light, int overlay) {
-            EarsFeatures playerFeatures = EarsFeatures.getById(player.getUUID());
+            EarsFeatures playerFeatures = EarsFeatures.getById(capeRenderInfo.getCapeHolder().getUUID());
 
             VertexConsumer vertexConsumer = null;
             if (playerFeatures != null && playerFeatures.capeEnabled) {
-                ResourceLocation cape = getPlayerCape(player, playerFeatures);
+                ResourceLocation cape = getPlayerCape(capeRenderInfo, playerFeatures);
                 if (cape != null) {
                     // spotless:off
                   //#if MC >= 12100
@@ -74,10 +75,10 @@ public class EarsSupport implements ModSupport, EarsInhibitor {
                 // spotless:off
                 //#if MC >= 12100
                 vertexConsumer = ItemRenderer.getArmorFoilBuffer(multiBufferSource,
-                        RenderType.armorCutoutNoCull(NMSUtil.getPlayerCape(player)), false);
+                        RenderType.armorCutoutNoCull(capeRenderInfo.getCapeTexture()), false);
                 //#else
               //$$  vertexConsumer = ItemRenderer.getArmorFoilBuffer(multiBufferSource,
-              //$$  RenderType.armorCutoutNoCull(NMSUtil.getPlayerCape(player)), false, false);
+              //$$  RenderType.armorCutoutNoCull(capeRenderInfo.getCapeTexture()), false, false);
               //#endif
               //spotless:on
             }

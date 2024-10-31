@@ -7,7 +7,9 @@ import dev.tr7zw.waveycapes.support.SupportManager;
 //spotless:off
 //#if FABRIC
 import net.fabricmc.api.ClientModInitializer;
-import dev.tr7zw.waveycapes.support.MoreBannerFeaturesSupport;
+//#if MC < 12102
+//$$import dev.tr7zw.waveycapes.support.MoreBannerFeaturesSupport;
+//#endif
 
 public class WaveyCapesMod extends WaveyCapesBase implements ClientModInitializer {
     @Override
@@ -23,11 +25,11 @@ public class WaveyCapesMod extends WaveyCapesBase implements ClientModInitialize
     public void initSupportHooks() {
         super.initSupportHooks();
         // spotless:off
-      //#if FABRIC
-        if (doesClassExist("de.kxmischesdomi.morebannerfeatures.MoreBannerFeatures")) {
-            SupportManager.mods.add(new MoreBannerFeaturesSupport());
-            LOGGER.info("Wavey Capes loaded MoreBannerFeatures support!");
-        }
+      //#if FABRIC && MC < 12102
+        //$$if (doesClassExist("de.kxmischesdomi.morebannerfeatures.MoreBannerFeatures")) {
+        //$$    SupportManager.mods.add(new MoreBannerFeaturesSupport());
+        //$$    LOGGER.info("Wavey Capes loaded MoreBannerFeatures support!");
+        //$$}
       //#endif
       //spotless:on
 

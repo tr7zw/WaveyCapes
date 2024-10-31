@@ -8,10 +8,18 @@ import org.joml.Matrix4f;
 //#endif
 //spotless:on
 
+//spotless:off
+//#if MC >= 12102
+import net.minecraft.client.renderer.entity.state.PlayerRenderState;
+import net.minecraft.client.Minecraft;
+//#endif
+//spotless:off
+
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 
+import dev.tr7zw.waveycapes.CapeRenderInfo;
 import dev.tr7zw.util.NMSHelper;
 import dev.tr7zw.waveycapes.CapeRenderer;
 import dev.tr7zw.waveycapes.NMSUtil;
@@ -37,47 +45,63 @@ import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.PlayerModelPart;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 
-public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, PlayerModel<AbstractClientPlayer>> {
+//#if MC >= 12102
+public class CustomCapeRenderLayer extends RenderLayer<PlayerRenderState, PlayerModel> {
+//#else
+//$$public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, PlayerModel<AbstractClientPlayer>> {
+//#endif
 
     private static final int PART_COUNT = 16;
     private ModelPart[] customCape = NMSUtil.buildCape(64, 64, x -> 0, y -> y);
 
+    //#if MC >= 12102
     public CustomCapeRenderLayer(
-            RenderLayerParent<AbstractClientPlayer, PlayerModel<AbstractClientPlayer>> renderLayerParent) {
+            RenderLayerParent<PlayerRenderState, PlayerModel> renderLayerParent) {
         super(renderLayerParent);
     }
+    //#else
+    //$$public CustomCapeRenderLayer(
+    //$$        RenderLayerParent<AbstractClientPlayer, PlayerModel<AbstractClientPlayer>> renderLayerParent) {
+    //$$    super(renderLayerParent);
+    //$$}
+    //#endif
 
+    //spotless:off
+    //#if MC >= 12102
     public void render(PoseStack poseStack, MultiBufferSource multiBufferSource, int i,
-            AbstractClientPlayer abstractClientPlayer, float f, float g, float delta, float j, float k, float l) {
-        if (abstractClientPlayer.isInvisible())
+            PlayerRenderState renderState, float f, float g) {
+        CapeRenderInfo capeRenderInfo = new CapeRenderInfo(renderState);
+        float delta = Minecraft.getInstance().getDeltaTracker().getRealtimeDeltaTicks();
+    //#else
+    //$$public void render(PoseStack poseStack, MultiBufferSource multiBufferSource, int i,
+    //$$        AbstractClientPlayer abstractClientPlayer, float f, float g, float delta, float j, float k, float l) {
+    //$$    CapeRenderInfo capeRenderInfo = new CapeRenderInfo(abstractClientPlayer);
+    //#endif
+        if (capeRenderInfo.isPlayerInvisible())
             return;
-        CapeRenderer renderer = getCapeRenderer(abstractClientPlayer, multiBufferSource);
+        CapeRenderer renderer = getCapeRenderer(capeRenderInfo, multiBufferSource);
         if (renderer == null)
             return;
-        ItemStack itemStack = abstractClientPlayer.getItemBySlot(EquipmentSlot.CHEST);
-        if (!itemStack.isEmpty() && itemStack.getItem() == Items.ELYTRA)
+        if (capeRenderInfo.hasElytraEquipped())
             return;
         if (getParentModel() instanceof PlayerModelAccess pma && !pma.getCloak().visible) {
             return;
         }
 
-        CapeHolder holder = (CapeHolder) abstractClientPlayer;
-        holder.updateSimulation(new PlayerDelegate(abstractClientPlayer), PART_COUNT);
+        CapeHolder holder = capeRenderInfo.getCapeHolder();
+        holder.updateSimulation(PART_COUNT);
         poseStack.pushPose();
         getParentModel().body.translateAndRotate(poseStack);
         if (ModBase.config.capeStyle == CapeStyle.SMOOTH && renderer.vanillaUvValues()) {
-            renderSmoothCape(poseStack, multiBufferSource, renderer, abstractClientPlayer, delta, i);
+            renderSmoothCape(poseStack, multiBufferSource, renderer, capeRenderInfo, delta, i);
         } else {
             ModelPart[] parts = customCape;
             for (int part = 0; part < PART_COUNT; part++) {
                 ModelPart model = parts[part];
-                modifyPoseStack(poseStack, abstractClientPlayer, delta, part);
-                renderer.render(abstractClientPlayer, part, model, poseStack, multiBufferSource, i,
+                modifyPoseStack(poseStack, capeRenderInfo, delta, part);
+                renderer.render(capeRenderInfo, part, model, poseStack, multiBufferSource, i,
                         OverlayTexture.NO_OVERLAY);
                 poseStack.popPose();
             }
@@ -86,8 +110,8 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
     }
 
     private void renderSmoothCape(PoseStack poseStack, MultiBufferSource multiBufferSource, CapeRenderer capeRenderer,
-            AbstractClientPlayer abstractClientPlayer, float delta, int light) {
-        VertexConsumer bufferBuilder = capeRenderer.getVertexConsumer(multiBufferSource, abstractClientPlayer);
+            CapeRenderInfo capeRenderInfo, float delta, int light) {
+        VertexConsumer bufferBuilder = capeRenderer.getVertexConsumer(multiBufferSource, capeRenderInfo);
         if (bufferBuilder == null) {
             return;
         }
@@ -96,7 +120,7 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
 
         Matrix4f oldPositionMatrix = null;
         for (int part = 0; part < PART_COUNT; part++) {
-            modifyPoseStack(poseStack, abstractClientPlayer, delta, part);
+            modifyPoseStack(poseStack, capeRenderInfo, delta, part);
 
             if (oldPositionMatrix == null) {
                 oldPositionMatrix = poseStack.last().pose();
@@ -131,17 +155,28 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
 
     }
 
-    private void modifyPoseStack(PoseStack poseStack, AbstractClientPlayer abstractClientPlayer, float h, int part) {
+    private void modifyPoseStack(PoseStack poseStack, CapeRenderInfo capeRenderInfo, float h, int part) {
         if (WaveyCapesBase.config.capeMovement != CapeMovement.VANILLA) {
-            modifyPoseStackSimulation(poseStack, abstractClientPlayer, h, part);
+            modifyPoseStackSimulation(poseStack, capeRenderInfo, h, part);
             return;
         }
-        modifyPoseStackVanilla(poseStack, abstractClientPlayer, h, part);
+        //spotless:off
+        //#if MC < 12102
+        //$$modifyPoseStackVanilla(poseStack, capeRenderInfo.getPlayer(), h, part);
+        //#else
+        PlayerRenderState renderState = capeRenderInfo.getRenderState();
+        poseStack.pushPose();
+        poseStack.translate(0.0D, 0.0D, 0.125D);
+        poseStack.mulPose(NMSHelper.XP.rotationDegrees(6.0F + renderState.capeLean / 2.0F + renderState.capeFlap + getNatrualWindSwing(part, capeRenderInfo.isPlayerUnderwater())));
+        poseStack.mulPose(NMSHelper.ZP.rotationDegrees(renderState.capeLean2 / 2.0F));
+        poseStack.mulPose(NMSHelper.YP.rotationDegrees(180.0F - renderState.capeLean2 / 2.0F));
+        //#endif
+        //spotless:on
     }
 
-    private void modifyPoseStackSimulation(PoseStack poseStack, AbstractClientPlayer abstractClientPlayer, float delta,
+    private void modifyPoseStackSimulation(PoseStack poseStack, CapeRenderInfo capeRenderInfo, float delta,
             int part) {
-        BasicSimulation simulation = ((CapeHolder) abstractClientPlayer).getSimulation();
+        BasicSimulation simulation = capeRenderInfo.getCapeHolder().getSimulation();
         poseStack.pushPose();
         poseStack.translate(0.0D, 0.0D, 0.125D);
 
@@ -162,7 +197,7 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
 //            poseStack.translate(0, 0.15F, 0);
 //        }
 
-        float naturalWindSwing = getNatrualWindSwing(part, abstractClientPlayer.isUnderWater());
+        float naturalWindSwing = getNatrualWindSwing(part, capeRenderInfo.isPlayerUnderwater());
 
         // vanilla rotating and wind
         poseStack.mulPose(NMSHelper.XP.rotationDegrees(6.0F + height + naturalWindSwing));
@@ -453,26 +488,26 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
 
     private static VanillaCapeRenderer vanillaCape = new VanillaCapeRenderer();
 
-    private CapeRenderer getCapeRenderer(AbstractClientPlayer abstractClientPlayer,
+    private CapeRenderer getCapeRenderer(CapeRenderInfo capeRenderInfo,
             MultiBufferSource multiBufferSource) {
         for (ModSupport support : SupportManager.getSupportedMods()) {
-            if (support.shouldBeUsed(abstractClientPlayer)) {
+            if (support.shouldBeUsed(capeRenderInfo)) {
                 return support.getRenderer();
             }
         }
-        if (NMSUtil.getPlayerCape(abstractClientPlayer) == null || abstractClientPlayer.isInvisible()
-                || !abstractClientPlayer.isModelPartShown(PlayerModelPart.CAPE)) {
+        if (capeRenderInfo.getCapeTexture() == null
+                || !capeRenderInfo.isCapeVisible()) {
             return null;
         } else {
             vanillaCape.vertexConsumer = multiBufferSource
-                    .getBuffer(RenderType.entityCutout(NMSUtil.getPlayerCape(abstractClientPlayer)));
+                    .getBuffer(RenderType.entityCutout(capeRenderInfo.getCapeTexture()));
             return vanillaCape;
         }
     }
 
     /**
      * https://easings.net/#easeOutSine
-     * 
+     *
      * @param x
      * @return
      */

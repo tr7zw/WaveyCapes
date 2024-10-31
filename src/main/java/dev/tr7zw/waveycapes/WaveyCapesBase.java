@@ -198,7 +198,11 @@ public abstract class WaveyCapesBase extends ModBase {
         MultiBufferSource.BufferSource bufferSource = Minecraft.getInstance().renderBuffers().bufferSource();
         // Mc renders the player in the inventory without delta, causing it to look
         // "laggy". Good luck unseeing this :)
-        entityRenderDispatcher.render(livingEntity, 0.0D, 0.0D, 0.0D, 0.0F, delta, matrixStack, bufferSource, 15728880);
+        //#if MC >= 12102
+        entityRenderDispatcher.render(livingEntity, 0.0D, 0.0D, 0.0D, 0.0F, matrixStack, bufferSource, 15728880);
+        //#else
+        //$$entityRenderDispatcher.render(livingEntity, 0.0D, 0.0D, 0.0D, 0.0F, delta, matrixStack, bufferSource, 15728880);
+        //#endif
         bufferSource.endBatch();
         entityRenderDispatcher.setRenderShadow(true);
         livingEntity.yBodyRot = yBodyRot;

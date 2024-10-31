@@ -1,5 +1,11 @@
 package dev.tr7zw.waveycapes.mixin;
 
+//spotless:off
+//#if MC >= 12102
+import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
+//#endif
+//spotless:on
+import net.minecraft.client.renderer.entity.layers.CapeLayer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -13,10 +19,20 @@ import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.world.entity.LivingEntity;
 
 @Mixin(LivingEntityRenderer.class)
-public class LivingEntityRendererMixin<T extends LivingEntity, M extends EntityModel<T>> {
+//spotless:off
+//#if MC >= 12102
+public class LivingEntityRendererMixin<S extends LivingEntity, T extends LivingEntityRenderState, M extends EntityModel<? super T>> {
+//#else
+//$$public class LivingEntityRendererMixin<T extends LivingEntity, M extends EntityModel<T>> {
+//#endif
+//spotless:on
 
     @Inject(method = "addLayer", at = @At("HEAD"), cancellable = true)
     private void addLayer(RenderLayer<T, M> renderLayer, CallbackInfoReturnable<Boolean> info) {
+        if (renderLayer instanceof CapeLayer) {
+            info.cancel();
+            return;
+        }
         for (ModSupport support : SupportManager.getSupportedMods())
             if (support.blockFeatureRenderer(renderLayer)) {
                 info.cancel();

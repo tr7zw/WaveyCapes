@@ -9,10 +9,23 @@ import net.minecraft.client.renderer.MultiBufferSource;
 
 public interface CapeRenderer {
 
-    public void render(AbstractClientPlayer player, int part, ModelPart model, PoseStack poseStack,
-            MultiBufferSource multiBufferSource, int light, int overlay);
+    @Deprecated
+    public default void render(AbstractClientPlayer player, int part, ModelPart model, PoseStack poseStack,
+                       MultiBufferSource multiBufferSource, int light, int overlay) {}
 
-    public default VertexConsumer getVertexConsumer(MultiBufferSource multiBufferSource, AbstractClientPlayer player) {
+    //spotless:off
+    //#if MC >= 12102
+    public void render(CapeRenderInfo capeRenderInfo, int part, ModelPart model, PoseStack poseStack,
+            MultiBufferSource multiBufferSource, int light, int overlay);
+    //#else
+    //$$public default void render(CapeRenderInfo capeRenderInfo, int part, ModelPart model, PoseStack poseStack,
+    //$$        MultiBufferSource multiBufferSource, int light, int overlay) {
+    //$$    render(capeRenderInfo.getPlayer(), part, model, poseStack, multiBufferSource, light, overlay);
+    //$$}
+    //#endif
+    //spotless:on
+
+    public default VertexConsumer getVertexConsumer(MultiBufferSource multiBufferSource, CapeRenderInfo capeRenderInfo) {
         return null;
     }
 
