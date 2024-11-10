@@ -15,14 +15,14 @@ public class VanillaCapeRenderer implements CapeRenderer {
     public VertexConsumer vertexConsumer = null;
 
     @Override
-    public void render(AbstractClientPlayer player, int part, ModelPart model, PoseStack poseStack,
+    public void render(CapeRenderInfo capeRenderInfo, int part, ModelPart model, PoseStack poseStack,
             MultiBufferSource multiBufferSource, int light, int overlay) {
         model.render(poseStack, vertexConsumer, light, OverlayTexture.NO_OVERLAY);
     }
 
     @Override
-    public VertexConsumer getVertexConsumer(MultiBufferSource multiBufferSource, AbstractClientPlayer player) {
-        ResourceLocation cape = NMSUtil.getPlayerCape(player);
+    public VertexConsumer getVertexConsumer(MultiBufferSource multiBufferSource, CapeRenderInfo capeRenderInfo) {
+        ResourceLocation cape = capeRenderInfo.getCapeTexture();
         if (cape != null) {
             return multiBufferSource.getBuffer(RenderType.entityCutout(cape));
         }

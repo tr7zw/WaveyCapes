@@ -4,10 +4,11 @@
     "package": "dev.tr7zw.waveycapes.mixin",
     "mixins": [],
     "client": [
-        "PlayerRendererMixin",
-        "PlayerModelMixin",
         "LivingEntityRendererMixin",
-        "PlayerMixin"
+        "PlayerMixin",
+        "PlayerModelMixin",
+        "PlayerRendererMixin",
+        "PlayerRenderStateMixin"
     ],
     "injectors": {
         "defaultRequire": 1

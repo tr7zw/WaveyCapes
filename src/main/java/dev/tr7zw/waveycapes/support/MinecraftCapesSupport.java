@@ -8,6 +8,7 @@ import java.util.function.Function;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 
+import dev.tr7zw.waveycapes.CapeRenderInfo;
 import dev.tr7zw.waveycapes.CapeRenderer;
 import dev.tr7zw.waveycapes.NMSUtil;
 import dev.tr7zw.waveycapes.versionless.ModBase;
@@ -23,57 +24,53 @@ import net.minecraftcapes.player.PlayerHandler;
 public class MinecraftCapesSupport implements ModSupport {
 
     private MinecraftCapesRenderer render = new MinecraftCapesRenderer();
-    private Function<AbstractClientPlayer, PlayerHandler> getCape = null;
+    private Function<CapeRenderInfo, PlayerHandler> getCape = null;
 
-    private void init(AbstractClientPlayer test) {
+    private void init(CapeRenderInfo test) {
         try {
-            PlayerHandler.get(test).getCapeLocation();
-            getCape = PlayerHandler::get;
-            ModBase.LOGGER.info("Using 'get(Player)' method for MinecraftCapes.");
-            return;
-        } catch (Throwable ex) {
-            // ignore
-        }
-        try {
-            PlayerHandler.get(test.getUUID()).getCapeLocation();
-            getCape = player -> PlayerHandler.get(player.getUUID());
+            PlayerHandler.get(test.getCapeHolder().getUUID()).getCapeLocation();
+            getCape = player -> PlayerHandler.get(player.getCapeHolder().getUUID());
             ModBase.LOGGER.info("Using 'get(UUID)' method for MinecraftCapes.");
             return;
         } catch (Throwable ex) {
             // ignore
         }
 
-        for (Method m : PlayerHandler.class.getMethods()) {
-            try {
-                if (m.getReturnType() != PlayerHandler.class && m.getParameterCount() == 1
-                        && m.getParameterTypes()[0] != UUID.class) {
-                    continue;
-                }
-                m.invoke(null, test);
-                getCape = player -> {
-                    try {
-                        return (PlayerHandler) m.invoke(null, player);
-                    } catch (IllegalAccessException | InvocationTargetException e) {
-                        return null;
-                    }
-                };
-                ModBase.LOGGER.info("Using '" + m.getName() + "' method for MinecraftCapes.");
-                return;
-            } catch (Throwable ex) {
-                // ignore, MinecraftCapes wont work
-            }
-        }
+        //spotless:off
+        //#if MC < 12102
+        //$$for (Method m : PlayerHandler.class.getMethods()) {
+        //$$    try {
+        //$$        if (m.getReturnType() != PlayerHandler.class && m.getParameterCount() == 1
+        //$$                && m.getParameterTypes()[0] != UUID.class) {
+        //$$            continue;
+        //$$        }
+        //$$        m.invoke(null, test);
+        //$$        getCape = player -> {
+        //$$            try {
+        //$$                return (PlayerHandler) m.invoke(null, player);
+        //$$            } catch (IllegalAccessException | InvocationTargetException e) {
+        //$$                return null;
+        //$$            }
+        //$$        };
+        //$$        ModBase.LOGGER.info("Using '" + m.getName() + "' method for MinecraftCapes.");
+        //$$        return;
+        //$$    } catch (Throwable ex) {
+        //$$        // ignore, MinecraftCapes wont work
+        //$$    }
+        //$$}
+        //#endif
+        //spotless:on
         getCape = player -> null;
         ModBase.LOGGER.info("Unable to find a method for MinecraftCapes.");
     }
 
     @Override
-    public boolean shouldBeUsed(AbstractClientPlayer player) {
+    public boolean shouldBeUsed(CapeRenderInfo capeRenderInfo) {
         if (!MinecraftCapesConfig.isCapeVisible())
             return false;
         if (getCape == null)
-            init(player);
-        PlayerHandler handler = getCape.apply(player);
+            init(capeRenderInfo);
+        PlayerHandler handler = getCape.apply(capeRenderInfo);
         return handler != null && handler.getCapeLocation() != null;
     }
 
@@ -85,9 +82,9 @@ public class MinecraftCapesSupport implements ModSupport {
     private class MinecraftCapesRenderer implements CapeRenderer {
 
         @Override
-        public void render(AbstractClientPlayer player, int part, ModelPart model, PoseStack poseStack,
+        public void render(CapeRenderInfo capeRenderInfo, int part, ModelPart model, PoseStack poseStack,
                 MultiBufferSource multiBufferSource, int light, int overlay) {
-            PlayerHandler playerHandler = getCape.apply(player);
+            PlayerHandler playerHandler = getCape.apply(capeRenderInfo);
             VertexConsumer vertexConsumer;
             if (MinecraftCapesConfig.isCapeVisible() && playerHandler.getCapeLocation() != null) {
                 // spotless:off
@@ -105,10 +102,10 @@ public class MinecraftCapesSupport implements ModSupport {
                 // spotless:off
                 //#if MC >= 12100
                 vertexConsumer = ItemRenderer.getArmorFoilBuffer(multiBufferSource,
-                        RenderType.armorCutoutNoCull(NMSUtil.getPlayerCape(player)), false);
+                        RenderType.armorCutoutNoCull(capeRenderInfo.getCapeTexture()), false);
               //#else
               //$$  vertexConsumer = ItemRenderer.getArmorFoilBuffer(multiBufferSource,
-              //$$          RenderType.armorCutoutNoCull(NMSUtil.getPlayerCape(player)), false, false);
+              //$$          RenderType.armorCutoutNoCull(capeRenderInfo.getCapeTexture()), false, false);
               //#endif
                 //spotless:on
             }
@@ -116,8 +113,8 @@ public class MinecraftCapesSupport implements ModSupport {
         }
 
         @Override
-        public VertexConsumer getVertexConsumer(MultiBufferSource multiBufferSource, AbstractClientPlayer player) {
-            PlayerHandler playerHandler = getCape.apply(player);
+        public VertexConsumer getVertexConsumer(MultiBufferSource multiBufferSource, CapeRenderInfo capeRenderInfo) {
+            PlayerHandler playerHandler = getCape.apply(capeRenderInfo);
             if (MinecraftCapesConfig.isCapeVisible() && playerHandler.getCapeLocation() != null) {
                 // spotless:off
                 //#if MC >= 12100
@@ -134,10 +131,10 @@ public class MinecraftCapesSupport implements ModSupport {
                 // spotless:off
                 //#if MC >= 12100
                 return ItemRenderer.getArmorFoilBuffer(multiBufferSource,
-                        RenderType.armorCutoutNoCull(NMSUtil.getPlayerCape(player)), false);
+                        RenderType.armorCutoutNoCull(capeRenderInfo.getCapeTexture()), false);
               //#else
               //$$  return ItemRenderer.getArmorFoilBuffer(multiBufferSource,
-              //$$          RenderType.armorCutoutNoCull(NMSUtil.getPlayerCape(player)), false, false);
+              //$$          RenderType.armorCutoutNoCull(capeRenderInfo.getCapeTexture()), false, false);
               //#endif
                 //spotless:on
             }

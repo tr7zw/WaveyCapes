@@ -9,6 +9,8 @@ import dev.tr7zw.waveycapes.versionless.sim.StickSimulationDungeons;
 import dev.tr7zw.waveycapes.versionless.util.Mth;
 import dev.tr7zw.waveycapes.versionless.util.Vector3;
 
+import java.util.UUID;
+
 public interface CapeHolder {
     public BasicSimulation getSimulation();
 
@@ -18,7 +20,11 @@ public interface CapeHolder {
 
     public void setSimulation(BasicSimulation sim);
 
-    public default void updateSimulation(MinecraftPlayer abstractClientPlayer, int partCount) {
+    UUID getUUID();
+
+    void setDirty();
+
+    public default void updateSimulation(int partCount) {
         BasicSimulation simulation = getSimulation();
         if (simulation == null || incorrectSimulation(simulation)) {
             simulation = createSimulation();
@@ -27,14 +33,9 @@ public interface CapeHolder {
         if (simulation == null) {
             return;
         }
-        boolean dirty = simulation.init(partCount);
-        if (dirty) {
-            simulation.applyMovement(new Vector3(1f, 1f, 0));
-            for (int i = 0; i < 5; i++) { // quickly doing a few simulation steps to get the cape int a stable
-                                          // configuration
-                simulate(abstractClientPlayer);
-            }
-        }
+        if (simulation.init(partCount))
+            setDirty();
+
     }
 
     public default boolean incorrectSimulation(BasicSimulation sim) {

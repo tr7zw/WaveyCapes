@@ -151,10 +151,10 @@ public abstract class WaveyCapesBase extends ModBase {
     // Modified version from InventoryScreen
     private void drawEntity(int x, int y, int size, float lookX, float lookY, LivingEntity livingEntity, float delta) {
         float rotationModifyer = 3;
-//        PoseStack poseStack = NMSUtil.getPoseStack();
-//        poseStack.pushPose();
-//        poseStack.translate(x, y, 1050.0D);
-//        poseStack.scale(1.0F, 1.0F, -1.0F);
+        //        PoseStack poseStack = NMSUtil.getPoseStack();
+        //        poseStack.pushPose();
+        //        poseStack.translate(x, y, 1050.0D);
+        //        poseStack.scale(1.0F, 1.0F, -1.0F);
         NMSUtil.prepareViewMatrix(x, y);
         PoseStack matrixStack = new PoseStack();
         matrixStack.translate(x, y, 1000.0D);
@@ -198,7 +198,11 @@ public abstract class WaveyCapesBase extends ModBase {
         MultiBufferSource.BufferSource bufferSource = Minecraft.getInstance().renderBuffers().bufferSource();
         // Mc renders the player in the inventory without delta, causing it to look
         // "laggy". Good luck unseeing this :)
-        entityRenderDispatcher.render(livingEntity, 0.0D, 0.0D, 0.0D, 0.0F, delta, matrixStack, bufferSource, 15728880);
+        //#if MC >= 12102
+        entityRenderDispatcher.render(livingEntity, 0.0D, 0.0D, 0.0D, 0.0F, matrixStack, bufferSource, 15728880);
+        //#else
+        //$$entityRenderDispatcher.render(livingEntity, 0.0D, 0.0D, 0.0D, 0.0F, delta, matrixStack, bufferSource, 15728880);
+        //#endif
         bufferSource.endBatch();
         entityRenderDispatcher.setRenderShadow(true);
         livingEntity.yBodyRot = yBodyRot;
@@ -210,7 +214,7 @@ public abstract class WaveyCapesBase extends ModBase {
         livingEntity.yHeadRotO = yHeadRotO;
         livingEntity.yHeadRot = yHeadRot;
         livingEntity.setDeltaMovement(vel);
-//        poseStack.popPose();
+        //        poseStack.popPose();
         NMSUtil.resetViewMatrix();
         Lighting.setupFor3DItems();
     }
