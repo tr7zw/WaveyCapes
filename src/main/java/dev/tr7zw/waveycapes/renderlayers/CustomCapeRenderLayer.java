@@ -73,7 +73,7 @@ public class CustomCapeRenderLayer extends RenderLayer<PlayerRenderState, Player
     public void render(PoseStack poseStack, MultiBufferSource multiBufferSource, int i,
             PlayerRenderState renderState, float f, float g) {
         CapeRenderInfo capeRenderInfo = new CapeRenderInfo(renderState);
-        float delta = Minecraft.getInstance().getDeltaTracker().getRealtimeDeltaTicks();
+        float delta = Minecraft.getInstance().getDeltaTracker().getGameTimeDeltaPartialTick(false);
     //#else
     //$$public void render(PoseStack poseStack, MultiBufferSource multiBufferSource, int i,
     //$$        AbstractClientPlayer abstractClientPlayer, float f, float g, float delta, float j, float k, float l) {
