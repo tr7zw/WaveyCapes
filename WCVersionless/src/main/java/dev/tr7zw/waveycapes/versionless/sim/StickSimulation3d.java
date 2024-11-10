@@ -52,7 +52,7 @@ public class StickSimulation3d implements BasicSimulation {
 
         preventClipping();
 
-//        preventHardBends();
+        //        preventHardBends();
 
         preventSelfClipping();
         applyMotion();

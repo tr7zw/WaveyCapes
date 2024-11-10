@@ -29,7 +29,7 @@ public class LivingEntityRendererMixin<S extends LivingEntity, T extends LivingE
 
     @Inject(method = "addLayer", at = @At("HEAD"), cancellable = true)
     private void addLayer(RenderLayer<T, M> renderLayer, CallbackInfoReturnable<Boolean> info) {
-        if (renderLayer instanceof CapeLayer) {
+        if ((Object) renderLayer instanceof CapeLayer) {
             info.cancel();
             return;
         }

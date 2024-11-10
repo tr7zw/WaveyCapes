@@ -15,7 +15,6 @@ public interface ModSupport {
     //$$}
     //#endif
 
-
     @Deprecated
     default boolean shouldBeUsed(AbstractClientPlayer player) {
         return false;

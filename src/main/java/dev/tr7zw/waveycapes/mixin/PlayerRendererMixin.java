@@ -6,8 +6,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-
-
 import dev.tr7zw.waveycapes.versionless.CapeHolder;
 import dev.tr7zw.waveycapes.versionless.ExtendedPlayerRenderState;
 import dev.tr7zw.waveycapes.renderlayers.CustomCapeRenderLayer;
@@ -75,7 +73,7 @@ public abstract class PlayerRendererMixin
     }
     //#endif
     //spotless:on
-    
+
     // Dirty 1.16 workaround for slim skins for whatever reason not working right
     // spotless:off
     //#if MC < 11700

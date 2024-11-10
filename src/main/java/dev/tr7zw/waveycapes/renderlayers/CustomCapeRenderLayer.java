@@ -174,8 +174,7 @@ public class CustomCapeRenderLayer extends RenderLayer<PlayerRenderState, Player
         //spotless:on
     }
 
-    private void modifyPoseStackSimulation(PoseStack poseStack, CapeRenderInfo capeRenderInfo, float delta,
-            int part) {
+    private void modifyPoseStackSimulation(PoseStack poseStack, CapeRenderInfo capeRenderInfo, float delta, int part) {
         BasicSimulation simulation = capeRenderInfo.getCapeHolder().getSimulation();
         poseStack.pushPose();
         poseStack.translate(0.0D, 0.0D, 0.125D);
@@ -192,10 +191,10 @@ public class CustomCapeRenderLayer extends RenderLayer<PlayerRenderState, Player
         float partRotation = getRotation(delta, part, simulation);
 
         float height = 0;
-//        if (abstractClientPlayer.isCrouching()) {
-//            height += 25.0F;
-//            poseStack.translate(0, 0.15F, 0);
-//        }
+        //        if (abstractClientPlayer.isCrouching()) {
+        //            height += 25.0F;
+        //            poseStack.translate(0, 0.15F, 0);
+        //        }
 
         float naturalWindSwing = getNatrualWindSwing(part, capeRenderInfo.isPlayerUnderwater());
 
@@ -251,10 +250,10 @@ public class CustomCapeRenderLayer extends RenderLayer<PlayerRenderState, Player
         float t = Mth.lerp(h, abstractClientPlayer.oBob, abstractClientPlayer.bob);
         height += Mth.sin(Mth.lerp(h, abstractClientPlayer.walkDistO, abstractClientPlayer.walkDist) * 6.0F) * 32.0F
                 * t;
-//        if (abstractClientPlayer.isCrouching()) {
-//            height += 25.0F;
-//            poseStack.translate(0, 0.15F, 0);
-//        }
+        //        if (abstractClientPlayer.isCrouching()) {
+        //            height += 25.0F;
+        //            poseStack.translate(0, 0.15F, 0);
+        //        }
 
         float naturalWindSwing = getNatrualWindSwing(part, abstractClientPlayer.isUnderWater());
 
@@ -488,15 +487,13 @@ public class CustomCapeRenderLayer extends RenderLayer<PlayerRenderState, Player
 
     private static VanillaCapeRenderer vanillaCape = new VanillaCapeRenderer();
 
-    private CapeRenderer getCapeRenderer(CapeRenderInfo capeRenderInfo,
-            MultiBufferSource multiBufferSource) {
+    private CapeRenderer getCapeRenderer(CapeRenderInfo capeRenderInfo, MultiBufferSource multiBufferSource) {
         for (ModSupport support : SupportManager.getSupportedMods()) {
             if (support.shouldBeUsed(capeRenderInfo)) {
                 return support.getRenderer();
             }
         }
-        if (capeRenderInfo.getCapeTexture() == null
-                || !capeRenderInfo.isCapeVisible()) {
+        if (capeRenderInfo.getCapeTexture() == null || !capeRenderInfo.isCapeVisible()) {
             return null;
         } else {
             vanillaCape.vertexConsumer = multiBufferSource

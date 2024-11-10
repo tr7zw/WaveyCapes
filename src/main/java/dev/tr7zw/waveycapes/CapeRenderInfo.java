@@ -10,11 +10,10 @@ import net.minecraft.client.renderer.entity.state.PlayerRenderState;
 //$$import net.minecraft.world.entity.player.PlayerModelPart;
 //#endif
 //spotless:on
-
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.Items;
 import dev.tr7zw.waveycapes.versionless.CapeHolder;
 import net.minecraft.resources.ResourceLocation;
-
 
 public class CapeRenderInfo {
     //spotless:off
@@ -85,7 +84,7 @@ public class CapeRenderInfo {
         //#if MC >= 12102
         return renderState.chestItem.is(Items.ELYTRA);
         //#else
-        //$$return player.getItemBySlot(EquipmentSlot.CHEST).is(Items.ELYTRA);
+        //$$return player.getItemBySlot(EquipmentSlot.CHEST).getItem().equals(Items.ELYTRA);
         //#endif
     }
 }

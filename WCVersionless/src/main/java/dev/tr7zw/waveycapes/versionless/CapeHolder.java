@@ -33,7 +33,8 @@ public interface CapeHolder {
         if (simulation == null) {
             return;
         }
-        if (simulation.init(partCount)) setDirty();
+        if (simulation.init(partCount))
+            setDirty();
 
     }
 
