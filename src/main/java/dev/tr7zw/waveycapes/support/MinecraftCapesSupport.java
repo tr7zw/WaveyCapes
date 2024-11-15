@@ -28,8 +28,8 @@ public class MinecraftCapesSupport implements ModSupport {
 
     private void init(CapeRenderInfo test) {
         try {
-            PlayerHandler.get(test.getCapeHolder().getUUID()).getCapeLocation();
-            getCape = player -> PlayerHandler.get(player.getCapeHolder().getUUID());
+            PlayerHandler.get(test.getCapeHolder().getWCUUID()).getCapeLocation();
+            getCape = player -> PlayerHandler.get(player.getCapeHolder().getWCUUID());
             ModBase.LOGGER.info("Using 'get(UUID)' method for MinecraftCapes.");
             return;
         } catch (Throwable ex) {

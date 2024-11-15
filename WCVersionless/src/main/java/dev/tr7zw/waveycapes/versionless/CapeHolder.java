@@ -20,7 +20,7 @@ public interface CapeHolder {
 
     public void setSimulation(BasicSimulation sim);
 
-    UUID getUUID();
+    UUID getWCUUID();
 
     void setDirty();
 

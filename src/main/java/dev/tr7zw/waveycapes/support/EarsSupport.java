@@ -35,7 +35,7 @@ public class EarsSupport implements ModSupport, EarsInhibitor {
 
     @Override
     public boolean shouldBeUsed(CapeRenderInfo capeRenderInfo) {
-        EarsFeatures playerFeatures = EarsFeatures.getById(capeRenderInfo.getCapeHolder().getUUID());
+        EarsFeatures playerFeatures = EarsFeatures.getById(capeRenderInfo.getCapeHolder().getWCUUID());
         return playerFeatures != null && playerFeatures.capeEnabled;
     }
 
@@ -54,7 +54,7 @@ public class EarsSupport implements ModSupport, EarsInhibitor {
         @Override
         public void render(CapeRenderInfo capeRenderInfo, int part, ModelPart model, PoseStack poseStack,
                 MultiBufferSource multiBufferSource, int light, int overlay) {
-            EarsFeatures playerFeatures = EarsFeatures.getById(capeRenderInfo.getCapeHolder().getUUID());
+            EarsFeatures playerFeatures = EarsFeatures.getById(capeRenderInfo.getCapeHolder().getWCUUID());
 
             VertexConsumer vertexConsumer = null;
             if (playerFeatures != null && playerFeatures.capeEnabled) {
