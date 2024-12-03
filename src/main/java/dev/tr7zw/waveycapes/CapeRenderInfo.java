@@ -81,8 +81,10 @@ public class CapeRenderInfo {
     }
 
     public boolean hasElytraEquipped() {
-        //#if MC >= 12102
-        return renderState.chestItem.is(Items.ELYTRA);
+        //#if MC >= 12104
+        return renderState.chestEquipment.is(Items.ELYTRA);
+        //#elseif MC >= 12102
+        //$$return renderState.chestItem.is(Items.ELYTRA);
         //#else
         //$$return player.getItemBySlot(EquipmentSlot.CHEST).getItem().equals(Items.ELYTRA);
         //#endif
