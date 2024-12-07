@@ -1,0 +1,22 @@
+{
+    "text.wc.title": "WaveyCapes 設定",
+    "text.wc.setting.capestyle": "披風樣式",
+    "text.wc.setting.capestyle.tooltip": "在平滑彎曲和方塊披風之間切換。",
+    "text.wc.setting.capestyle.BLOCKY": "方塊",
+    "text.wc.setting.capestyle.SMOOTH": "平滑",
+    "text.wc.setting.windmode": "風力模式",
+    "text.wc.setting.windmode.tooltip": "為披風添加額外的動態效果。",
+    "text.wc.setting.windmode.NONE": "無風",
+    "text.wc.setting.windmode.WAVES": "波浪",
+    "text.wc.setting.capemovement": "披風動態",
+    "text.wc.setting.capemovement.tooltip": "更改披風的動態方式。",
+    "text.wc.setting.capemovement.VANILLA": "經典",
+    "text.wc.setting.capemovement.BASIC_SIMULATION": "模擬",
+    "text.wc.setting.capemovement.BASIC_SIMULATION_3D": "模擬 V2",
+    "text.wc.setting.capemovement.DUNGEONS": "地下城",
+    "text.wc.setting.gravity": "重力",
+    "text.wc.setting.gravity.tooltip": "更改應用於披風的重力大小。",
+    "text.wc.setting.heightMultiplier": "高度倍數",
+    "text.wc.setting.heightMultiplier.tooltip": "更改披風對 Y 軸移動的反應程度。",
+    "modmenu.descriptionTranslation.waveycapes": "披風不應該像靜態的石板一樣僵硬"
+}
