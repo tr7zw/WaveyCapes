@@ -2,9 +2,6 @@ package dev.tr7zw.waveycapes;
 
 import net.minecraft.client.model.geom.ModelPart;
 
-import net.minecraft.client.player.AbstractClientPlayer;
-import net.minecraft.resources.ResourceLocation;
-
 import java.util.function.IntUnaryOperator;
 
 //spotless:off
@@ -23,20 +20,12 @@ import org.joml.Quaternionf;
 //spotless:on
 
 import com.mojang.blaze3d.platform.Lighting;
-import com.mojang.blaze3d.systems.RenderSystem;
+//#if MC < 12102
+//$$import com.mojang.blaze3d.systems.RenderSystem;
+//#endif
 import com.mojang.blaze3d.vertex.PoseStack;
 
 public class NMSUtil {
-
-    public static ResourceLocation getPlayerCape(AbstractClientPlayer player) {
-        // spotless:off
-        //#if MC >= 12002
-        return player.getSkin().capeTexture();
-        //#else
-        //$$ return player.getCloakTextureLocation();
-        //#endif
-        //spotless:on
-    }
 
     // spotless:off
     //#if MC >= 11903

@@ -52,7 +52,7 @@ public class CapeRenderInfo {
         //#if MC >= 12102
         return renderState.skin.capeTexture();
         //#else
-        //$$return dev.tr7zw.waveycapes.NMSUtil.getPlayerCape(player);
+        //$$return dev.tr7zw.util.NMSHelper.getPlayerCape(player);
         //#endif
     }
 
