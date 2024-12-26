@@ -1,7 +1,6 @@
 package dev.tr7zw.waveycapes.mixin;
 
 import org.spongepowered.asm.mixin.Mixin;
-//spotless:off
 //#if MC >= 12102
 import dev.tr7zw.waveycapes.versionless.CapeHolder;
 import dev.tr7zw.waveycapes.versionless.ExtendedPlayerRenderState;
@@ -43,4 +42,3 @@ public class PlayerRenderStateMixin implements ExtendedPlayerRenderState {
 //$$@Mixin(Minecraft.class)
 //$$public class PlayerRenderStateMixin {}
 //#endif
-//spotless:on

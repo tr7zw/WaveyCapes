@@ -14,7 +14,6 @@ public interface CapeRenderer {
             MultiBufferSource multiBufferSource, int light, int overlay) {
     }
 
-    //spotless:off
     //#if MC >= 12102
     public void render(CapeRenderInfo capeRenderInfo, int part, ModelPart model, PoseStack poseStack,
             MultiBufferSource multiBufferSource, int light, int overlay);
@@ -24,7 +23,6 @@ public interface CapeRenderer {
     //$$    render(capeRenderInfo.getPlayer(), part, model, poseStack, multiBufferSource, light, overlay);
     //$$}
     //#endif
-    //spotless:on
 
     public default VertexConsumer getVertexConsumer(MultiBufferSource multiBufferSource,
             CapeRenderInfo capeRenderInfo) {

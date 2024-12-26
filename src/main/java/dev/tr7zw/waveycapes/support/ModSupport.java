@@ -6,7 +6,6 @@ import net.minecraft.client.player.AbstractClientPlayer;
 
 public interface ModSupport {
 
-    //spotless:off
     //#if MC >= 12102
     public boolean shouldBeUsed(CapeRenderInfo capeRenderInfo);
     //#else

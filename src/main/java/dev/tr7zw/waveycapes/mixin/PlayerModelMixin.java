@@ -1,6 +1,5 @@
 package dev.tr7zw.waveycapes.mixin;
 
-//spotless:off
 //#if MC >= 12102
 import net.minecraft.client.Minecraft;
 import org.spongepowered.asm.mixin.Mixin;
@@ -52,4 +51,3 @@ public class PlayerModelMixin {}
 //$$
 //$$}
 //#endif
-//spotless:on

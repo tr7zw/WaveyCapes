@@ -1,6 +1,5 @@
 package dev.tr7zw.waveycapes;
 
-//spotless:off
 //#if MC >= 12102
 import dev.tr7zw.waveycapes.versionless.ExtendedPlayerRenderState;
 import net.minecraft.client.renderer.entity.state.PlayerRenderState;
@@ -9,14 +8,12 @@ import net.minecraft.client.renderer.entity.state.PlayerRenderState;
 //$$import net.minecraft.world.entity.EquipmentSlot;
 //$$import net.minecraft.world.entity.player.PlayerModelPart;
 //#endif
-//spotless:on
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.Items;
 import dev.tr7zw.waveycapes.versionless.CapeHolder;
 import net.minecraft.resources.ResourceLocation;
 
 public class CapeRenderInfo {
-    //spotless:off
     //#if MC >= 12102
     private final PlayerRenderState renderState;
 
@@ -38,7 +35,6 @@ public class CapeRenderInfo {
     //$$	this.player = player;
     //$$}
     //#endif
-    //spotless:on
 
     public boolean isPlayerUnderwater() {
         //#if MC >= 12102

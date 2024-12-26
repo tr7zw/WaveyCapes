@@ -41,7 +41,6 @@ public class PlayerDelegate implements MinecraftPlayer {
         return player.zo;
     }
 
-    // spotless:off
   //#if MC <= 11605
   //$$  public float getXRot() {
   //$$      return player.xRot;
@@ -51,6 +50,5 @@ public class PlayerDelegate implements MinecraftPlayer {
   //$$      return player.yRot;
   //$$  }
   //#endif
-  //spotless:on
 
 }

@@ -26,7 +26,6 @@ import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
 
-// spotless:off
 //#if MC >= 11903
 import org.joml.Quaternionf;
 //#else
@@ -42,7 +41,6 @@ import net.minecraft.client.gui.GuiGraphics;
 //#else
 //$$ import com.mojang.blaze3d.vertex.PoseStack;
 //#endif
-//spotless:on
 
 public abstract class WaveyCapesBase extends ModBase {
 
@@ -87,13 +85,11 @@ public abstract class WaveyCapesBase extends ModBase {
                 // options.add(getIntOption("text.wc.setting.maxBend", 1, 20, () ->
                 // config.maxBend, (v) -> config.maxBend = v));
 
-                // spotless:off
                 //#if MC >= 11900
                 getOptions().addSmall(options.toArray(new OptionInstance[0]));
                 //#else
                 //$$getOptions().addSmall(options.toArray(new Option[0]));
                 //#endif
-                // spotless:on
 
             }
 
@@ -120,13 +116,11 @@ public abstract class WaveyCapesBase extends ModBase {
             }
 
             @Override
-            // spotless:off
           //#if MC >= 12000
             public void render(GuiGraphics guiGraphics, int xMouse, int yMouse, float f) {
           //#else
           //$$public void render(PoseStack guiGraphics, int xMouse, int yMouse, float f) {
           //#endif
-          //spotless:on
                 super.render(guiGraphics, xMouse, yMouse, f);
                 if (this.minecraft.level != null) {
                     int x = minecraft.getWindow().getGuiScaledWidth() / 2;
@@ -159,7 +153,6 @@ public abstract class WaveyCapesBase extends ModBase {
         matrixStack.translate(x, y, 1000.0D);
         matrixStack.scale((float) size, (float) size, (float) size);
         matrixStack.scale(1.0F, 1.0F, -1.0F);
-        // spotless:off
         //#if MC >= 11903
         Quaternionf quaternion = NMSHelper.ZP.rotationDegrees(180.0F);
         Quaternionf quaternion2 = NMSHelper.XP.rotationDegrees(lookY * rotationModifyer);
@@ -167,7 +160,6 @@ public abstract class WaveyCapesBase extends ModBase {
         //$$Quaternion quaternion = NMSHelper.ZP.rotationDegrees(180.0F);
         //$$Quaternion quaternion2 = NMSHelper.XP.rotationDegrees(lookY * rotationModifyer);
         //#endif
-        //spotless:on
         quaternion.mul(quaternion2);
         matrixStack.mulPose(quaternion);
         matrixStack.translate(0.0D, -1, 0D);
@@ -220,14 +212,12 @@ public abstract class WaveyCapesBase extends ModBase {
 
     @Override
     public void initSupportHooks() {
-        // spotless:off
         //#if MC >= 18000
         if (doesClassExist("dev.kosmx.playerAnim.core.impl.AnimationProcessor")) {
             SupportManager.animationSupport.add(new PlayerAnimatorSupport());
             LOGGER.info("Wavey Capes loaded PlayerAnimator support!");
         }
         //#endif
-     // spotless:on
     }
 
 }

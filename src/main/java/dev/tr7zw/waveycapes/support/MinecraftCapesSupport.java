@@ -36,7 +36,6 @@ public class MinecraftCapesSupport implements ModSupport {
             // ignore
         }
 
-        //spotless:off
         //#if MC < 12102
         //$$for (Method m : PlayerHandler.class.getMethods()) {
         //$$    try {
@@ -59,7 +58,6 @@ public class MinecraftCapesSupport implements ModSupport {
         //$$    }
         //$$}
         //#endif
-        //spotless:on
         getCape = player -> null;
         ModBase.LOGGER.info("Unable to find a method for MinecraftCapes.");
     }
@@ -87,7 +85,6 @@ public class MinecraftCapesSupport implements ModSupport {
             PlayerHandler playerHandler = getCape.apply(capeRenderInfo);
             VertexConsumer vertexConsumer;
             if (MinecraftCapesConfig.isCapeVisible() && playerHandler.getCapeLocation() != null) {
-                // spotless:off
                 //#if MC >= 12100
                 vertexConsumer = ItemRenderer.getArmorFoilBuffer(multiBufferSource,
                         RenderType.armorCutoutNoCull(playerHandler.getCapeLocation()),
@@ -97,9 +94,7 @@ public class MinecraftCapesSupport implements ModSupport {
                 //$$         RenderType.armorCutoutNoCull(playerHandler.getCapeLocation()), false,
                 //$$         playerHandler.getHasCapeGlint());
                 //#endif
-                //spotless:on
             } else {
-                // spotless:off
                 //#if MC >= 12100
                 vertexConsumer = ItemRenderer.getArmorFoilBuffer(multiBufferSource,
                         RenderType.armorCutoutNoCull(capeRenderInfo.getCapeTexture()), false);
@@ -107,7 +102,6 @@ public class MinecraftCapesSupport implements ModSupport {
               //$$  vertexConsumer = ItemRenderer.getArmorFoilBuffer(multiBufferSource,
               //$$          RenderType.armorCutoutNoCull(capeRenderInfo.getCapeTexture()), false, false);
               //#endif
-                //spotless:on
             }
             model.render(poseStack, vertexConsumer, light, OverlayTexture.NO_OVERLAY);
         }
@@ -116,7 +110,6 @@ public class MinecraftCapesSupport implements ModSupport {
         public VertexConsumer getVertexConsumer(MultiBufferSource multiBufferSource, CapeRenderInfo capeRenderInfo) {
             PlayerHandler playerHandler = getCape.apply(capeRenderInfo);
             if (MinecraftCapesConfig.isCapeVisible() && playerHandler.getCapeLocation() != null) {
-                // spotless:off
                 //#if MC >= 12100
                 return ItemRenderer.getArmorFoilBuffer(multiBufferSource,
                         RenderType.armorCutoutNoCull(playerHandler.getCapeLocation()),
@@ -126,9 +119,7 @@ public class MinecraftCapesSupport implements ModSupport {
               //$$          RenderType.armorCutoutNoCull(playerHandler.getCapeLocation()), false,
               //$$          playerHandler.getHasCapeGlint());
               //#endif
-                //spotless:on
             } else {
-                // spotless:off
                 //#if MC >= 12100
                 return ItemRenderer.getArmorFoilBuffer(multiBufferSource,
                         RenderType.armorCutoutNoCull(capeRenderInfo.getCapeTexture()), false);
@@ -136,7 +127,6 @@ public class MinecraftCapesSupport implements ModSupport {
               //$$  return ItemRenderer.getArmorFoilBuffer(multiBufferSource,
               //$$          RenderType.armorCutoutNoCull(capeRenderInfo.getCapeTexture()), false, false);
               //#endif
-                //spotless:on
             }
         }
 

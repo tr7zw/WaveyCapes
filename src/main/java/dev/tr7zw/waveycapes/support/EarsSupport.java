@@ -60,7 +60,6 @@ public class EarsSupport implements ModSupport, EarsInhibitor {
             if (playerFeatures != null && playerFeatures.capeEnabled) {
                 ResourceLocation cape = getPlayerCape(capeRenderInfo, playerFeatures);
                 if (cape != null) {
-                    // spotless:off
                   //#if MC >= 12100
                     vertexConsumer = ItemRenderer.getArmorFoilBuffer(multiBufferSource,
                             RenderType.armorCutoutNoCull(cape), false);
@@ -68,11 +67,9 @@ public class EarsSupport implements ModSupport, EarsInhibitor {
                   //$$  vertexConsumer = ItemRenderer.getArmorFoilBuffer(multiBufferSource,
                   //$$          RenderType.armorCutoutNoCull(cape), false, false);
                   //#endif
-                  //spotless:on
                 }
             }
             if (vertexConsumer == null) {
-                // spotless:off
                 //#if MC >= 12100
                 vertexConsumer = ItemRenderer.getArmorFoilBuffer(multiBufferSource,
                         RenderType.armorCutoutNoCull(capeRenderInfo.getCapeTexture()), false);
@@ -80,7 +77,6 @@ public class EarsSupport implements ModSupport, EarsInhibitor {
               //$$  vertexConsumer = ItemRenderer.getArmorFoilBuffer(multiBufferSource,
               //$$  RenderType.armorCutoutNoCull(capeRenderInfo.getCapeTexture()), false, false);
               //#endif
-              //spotless:on
             }
             customCape[part].render(poseStack, vertexConsumer, light, OverlayTexture.NO_OVERLAY);
         }

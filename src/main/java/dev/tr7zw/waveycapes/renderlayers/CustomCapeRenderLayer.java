@@ -1,19 +1,15 @@
 package dev.tr7zw.waveycapes.renderlayers;
 
-//spotless:off
 //#if MC >= 11903
 import org.joml.Matrix4f;
 //#else
 //$$import com.mojang.math.Matrix4f;
 //#endif
-//spotless:on
 
-//spotless:off
 //#if MC >= 12102
 import net.minecraft.client.renderer.entity.state.PlayerRenderState;
 import net.minecraft.client.Minecraft;
 //#endif
-//spotless:off
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -68,7 +64,6 @@ public class CustomCapeRenderLayer extends RenderLayer<PlayerRenderState, Player
     //$$}
     //#endif
 
-    //spotless:off
     //#if MC >= 12102
     public void render(PoseStack poseStack, MultiBufferSource multiBufferSource, int i,
             PlayerRenderState renderState, float f, float g) {
@@ -160,7 +155,6 @@ public class CustomCapeRenderLayer extends RenderLayer<PlayerRenderState, Player
             modifyPoseStackSimulation(poseStack, capeRenderInfo, h, part);
             return;
         }
-        //spotless:off
         //#if MC < 12102
         //$$modifyPoseStackVanilla(poseStack, capeRenderInfo.getPlayer(), h, part);
         //#else
@@ -171,7 +165,6 @@ public class CustomCapeRenderLayer extends RenderLayer<PlayerRenderState, Player
         poseStack.mulPose(NMSHelper.ZP.rotationDegrees(renderState.capeLean2 / 2.0F));
         poseStack.mulPose(NMSHelper.YP.rotationDegrees(180.0F - renderState.capeLean2 / 2.0F));
         //#endif
-        //spotless:on
     }
 
     private void modifyPoseStackSimulation(PoseStack poseStack, CapeRenderInfo capeRenderInfo, float delta, int part) {

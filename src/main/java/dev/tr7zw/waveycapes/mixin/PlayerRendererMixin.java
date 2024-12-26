@@ -14,7 +14,6 @@ import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 
-// spotless:off
 //#if MC >= 12102
 import net.minecraft.client.renderer.entity.state.PlayerRenderState;
 //#endif
@@ -25,10 +24,8 @@ import net.minecraft.client.renderer.entity.state.PlayerRenderState;
 //#else
 import net.minecraft.client.renderer.entity.EntityRendererProvider.Context;
 //#endif
-//spotless:on
 
 @Mixin(PlayerRenderer.class)
-//spotless:off
 //#if MC >= 12102
 public abstract class PlayerRendererMixin
         extends LivingEntityRenderer<AbstractClientPlayer, PlayerRenderState, PlayerModel> {
@@ -40,7 +37,6 @@ public abstract class PlayerRendererMixin
     @Unique
     private boolean injectedCape = false;
 
-    // spotless:off
     //#if MC >= 12102
     public PlayerRendererMixin(Context context, PlayerModel entityModel, float f) {
         super(context, entityModel, f);
@@ -55,7 +51,6 @@ public abstract class PlayerRendererMixin
     //$$    super(entityRenderDispatcher, entityModel, f);
     //$$}
     //#endif
-    //spotless:on
 
     @Inject(method = "<init>*", at = @At("RETURN"))
     public void onCreate(CallbackInfo info) {
@@ -63,7 +58,6 @@ public abstract class PlayerRendererMixin
         addLayer(new CustomCapeRenderLayer(this));
     }
 
-    //spotless:off
     //#if MC >= 12102
     @Inject(method = "extractRenderState(Lnet/minecraft/client/player/AbstractClientPlayer;Lnet/minecraft/client/renderer/entity/state/PlayerRenderState;F)V", at = @At("HEAD"))
     private void addCapeHolder(AbstractClientPlayer abstractClientPlayer, PlayerRenderState playerRenderState, float f, CallbackInfo ci) {
@@ -72,10 +66,8 @@ public abstract class PlayerRendererMixin
         extendedPlayerRenderState.setUnderwater(abstractClientPlayer.isUnderWater());
     }
     //#endif
-    //spotless:on
 
     // Dirty 1.16 workaround for slim skins for whatever reason not working right
-    // spotless:off
     //#if MC < 11700
     //$$@Inject(method = "render", at = @At("HEAD"))
     //$$public void renderLegacyWorkaround(AbstractClientPlayer abstractClientPlayer, float f, float g, PoseStack poseStack,
@@ -86,6 +78,5 @@ public abstract class PlayerRendererMixin
     //$$    }
     //$$}
     //#endif
-    //spotless:on
 
 }

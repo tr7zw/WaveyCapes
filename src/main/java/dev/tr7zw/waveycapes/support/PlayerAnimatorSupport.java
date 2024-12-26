@@ -9,7 +9,6 @@ import dev.tr7zw.waveycapes.versionless.CapeHolder;
 import dev.tr7zw.waveycapes.versionless.util.Vector3;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.util.Mth;
-//spotless:off
 //#if MC >= 11903
 import org.joml.Matrix4f;
 import org.joml.Vector4f;
@@ -17,7 +16,6 @@ import org.joml.Vector4f;
 //$$ import com.mojang.math.Matrix4f;
 //$$ import com.mojang.math.Vector4f;
 //#endif
-//spotless:on
 
 public class PlayerAnimatorSupport implements AnimationSupport {
 
@@ -34,7 +32,6 @@ public class PlayerAnimatorSupport implements AnimationSupport {
                                                                                          // pre-scaled
             Vec3f headPos = anim.get3DTransform("head", TransformType.POSITION, Vec3f.ZERO).scale(1 / 16f);
 
-            // spotless:off
           //#if MC >= 11903
             // Matrix4f#translate is an offset applied from LEFT (or absolute)
             Matrix4f relativeTranslation = new Matrix4f();
@@ -138,7 +135,6 @@ public class PlayerAnimatorSupport implements AnimationSupport {
           //$$          Vector4f offset = new Vector4f(0, 0, 0, 1);
           //$$          offset.transform(matrix);
           //#endif
-          //spotless:on
 
             float scale = -16;
             Vector3 curOffset = new Vector3(offset.x() * scale, offset.y() * scale, offset.z() + scale);
