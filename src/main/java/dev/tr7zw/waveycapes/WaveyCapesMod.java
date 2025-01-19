@@ -15,19 +15,19 @@ public class WaveyCapesMod extends WaveyCapesBase implements ClientModInitialize
     public void onInitializeClient() {
         init();
     }
-//#else
-//$$public class WaveyCapesMod extends WaveyCapesBase{  
-//#endif
+    //#else
+    //$$public class WaveyCapesMod extends WaveyCapesBase{  
+    //#endif
 
     @Override
     public void initSupportHooks() {
         super.initSupportHooks();
-      //#if FABRIC && MC < 12102
+        //#if FABRIC && MC < 12102
         //$$if (doesClassExist("de.kxmischesdomi.morebannerfeatures.MoreBannerFeatures")) {
         //$$    SupportManager.mods.add(new MoreBannerFeaturesSupport());
         //$$    LOGGER.info("Wavey Capes loaded MoreBannerFeatures support!");
         //$$}
-      //#endif
+        //#endif
 
         if (doesClassExist("net.minecraftcapes.MinecraftCapes")) {
             SupportManager.mods.add(new MinecraftCapesSupport());

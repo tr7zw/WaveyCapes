@@ -2,8 +2,10 @@ package dev.tr7zw.waveycapes.renderlayers;
 
 //#if MC >= 11903
 import org.joml.Matrix4f;
+import org.joml.Vector4f;
 //#else
 //$$import com.mojang.math.Matrix4f;
+//$$import com.mojang.math.Vector4f;
 //#endif
 
 //#if MC >= 12102
@@ -31,6 +33,7 @@ import dev.tr7zw.waveycapes.versionless.ModBase;
 import dev.tr7zw.waveycapes.versionless.WindMode;
 import dev.tr7zw.waveycapes.versionless.sim.BasicSimulation;
 import dev.tr7zw.waveycapes.versionless.util.Vector3;
+import dev.tr7zw.waveycapes.versionless.util.Vector4;
 import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -38,6 +41,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+
 //#if MC < 12102
 //$$import net.minecraft.util.Mth;
 //$$import net.minecraft.client.player.AbstractClientPlayer;
@@ -45,16 +49,15 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 
 //#if MC >= 12102
 public class CustomCapeRenderLayer extends RenderLayer<PlayerRenderState, PlayerModel> {
-//#else
-//$$public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, PlayerModel<AbstractClientPlayer>> {
-//#endif
+    //#else
+    //$$public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, PlayerModel<AbstractClientPlayer>> {
+    //#endif
 
     private static final int PART_COUNT = 16;
     private ModelPart[] customCape = NMSUtil.buildCape(64, 64, x -> 0, y -> y);
 
     //#if MC >= 12102
-    public CustomCapeRenderLayer(
-            RenderLayerParent<PlayerRenderState, PlayerModel> renderLayerParent) {
+    public CustomCapeRenderLayer(RenderLayerParent<PlayerRenderState, PlayerModel> renderLayerParent) {
         super(renderLayerParent);
     }
     //#else
@@ -65,15 +68,15 @@ public class CustomCapeRenderLayer extends RenderLayer<PlayerRenderState, Player
     //#endif
 
     //#if MC >= 12102
-    public void render(PoseStack poseStack, MultiBufferSource multiBufferSource, int i,
-            PlayerRenderState renderState, float f, float g) {
+    public void render(PoseStack poseStack, MultiBufferSource multiBufferSource, int i, PlayerRenderState renderState,
+            float f, float g) {
         CapeRenderInfo capeRenderInfo = new CapeRenderInfo(renderState);
         float delta = Minecraft.getInstance().getDeltaTracker().getGameTimeDeltaPartialTick(false);
-    //#else
-    //$$public void render(PoseStack poseStack, MultiBufferSource multiBufferSource, int i,
-    //$$        AbstractClientPlayer abstractClientPlayer, float f, float g, float delta, float j, float k, float l) {
-    //$$    CapeRenderInfo capeRenderInfo = new CapeRenderInfo(abstractClientPlayer);
-    //#endif
+        //#else
+        //$$public void render(PoseStack poseStack, MultiBufferSource multiBufferSource, int i,
+        //$$        AbstractClientPlayer abstractClientPlayer, float f, float g, float delta, float j, float k, float l) {
+        //$$    CapeRenderInfo capeRenderInfo = new CapeRenderInfo(abstractClientPlayer);
+        //#endif
         if (capeRenderInfo.isPlayerInvisible())
             return;
         CapeRenderer renderer = getCapeRenderer(capeRenderInfo, multiBufferSource);
@@ -121,28 +124,36 @@ public class CustomCapeRenderLayer extends RenderLayer<PlayerRenderState, Player
                 oldPositionMatrix = poseStack.last().pose();
             }
 
+            float capeWidth = 10F / 16F;
+            float capeHeight = 1.0F;
+            float capeDepth = 1F / 16F;
+
             if (part == 0) {
-                addTopVertex(bufferBuilder, poseStack.last().pose(), oldPositionMatrix, 0.3F, 0, 0F, -0.3F, 0, -0.06F,
-                        part, light);
+                addTopVertex(bufferBuilder, poseStack.last().pose(), oldPositionMatrix, capeWidth / 2F, 0, 0F,
+                        -capeWidth / 2F, 0, -capeDepth, light);
             }
 
             if (part == PART_COUNT - 1) {
-                addBottomVertex(bufferBuilder, poseStack.last().pose(), poseStack.last().pose(), 0.3F,
-                        (part + 1) * (0.96F / PART_COUNT), 0F, -0.3F, (part + 1) * (0.96F / PART_COUNT), -0.06F, part,
-                        light);
+                addBottomVertex(bufferBuilder, poseStack.last().pose(), poseStack.last().pose(), capeWidth / 2F,
+                        (part + 1) * (capeHeight / PART_COUNT), 0F, -capeWidth / 2F,
+                        (part + 1) * (capeHeight / PART_COUNT), -capeDepth, light);
             }
 
-            addLeftVertex(bufferBuilder, poseStack.last().pose(), oldPositionMatrix, -0.3F,
-                    (part + 1) * (0.96F / PART_COUNT), 0F, -0.3F, part * (0.96F / PART_COUNT), -0.06F, part, light);
+            addLeftVertex(bufferBuilder, poseStack.last().pose(), oldPositionMatrix, -capeWidth / 2F,
+                    (part + 1) * (capeHeight / PART_COUNT), 0F, -capeWidth / 2F, part * (capeHeight / PART_COUNT),
+                    -capeDepth, part, light);
 
-            addRightVertex(bufferBuilder, poseStack.last().pose(), oldPositionMatrix, 0.3F,
-                    (part + 1) * (0.96F / PART_COUNT), 0F, 0.3F, part * (0.96F / PART_COUNT), -0.06F, part, light);
+            addRightVertex(bufferBuilder, poseStack.last().pose(), oldPositionMatrix, capeWidth / 2F,
+                    (part + 1) * (capeHeight / PART_COUNT), 0F, capeWidth / 2F, part * (capeHeight / PART_COUNT),
+                    -capeDepth, part, light);
 
-            addBackVertex(bufferBuilder, poseStack.last().pose(), oldPositionMatrix, 0.3F,
-                    (part + 1) * (0.96F / PART_COUNT), -0.06F, -0.3F, part * (0.96F / PART_COUNT), -0.06F, part, light);
+            addBackVertex(bufferBuilder, poseStack.last().pose(), oldPositionMatrix, capeWidth / 2F,
+                    (part + 1) * (capeHeight / PART_COUNT), -capeDepth, -capeWidth / 2F,
+                    part * (capeHeight / PART_COUNT), -capeDepth, part, light);
 
-            addFrontVertex(bufferBuilder, oldPositionMatrix, poseStack.last().pose(), 0.3F,
-                    (part + 1) * (0.96F / PART_COUNT), 0F, -0.3F, part * (0.96F / PART_COUNT), 0F, part, light);
+            addFrontVertex(bufferBuilder, oldPositionMatrix, poseStack.last().pose(), capeWidth / 2F,
+                    (part + 1) * (capeHeight / PART_COUNT), 0F, -capeWidth / 2F, part * (capeHeight / PART_COUNT), 0F,
+                    part, light);
 
             oldPositionMatrix = new Matrix4f(poseStack.last().pose());
             poseStack.popPose();
@@ -161,7 +172,8 @@ public class CustomCapeRenderLayer extends RenderLayer<PlayerRenderState, Player
         PlayerRenderState renderState = capeRenderInfo.getRenderState();
         poseStack.pushPose();
         poseStack.translate(0.0D, 0.0D, 0.125D);
-        poseStack.mulPose(NMSHelper.XP.rotationDegrees(6.0F + renderState.capeLean / 2.0F + renderState.capeFlap + getNatrualWindSwing(part, capeRenderInfo.isPlayerUnderwater())));
+        poseStack.mulPose(NMSHelper.XP.rotationDegrees(6.0F + renderState.capeLean / 2.0F + renderState.capeFlap
+                + getNatrualWindSwing(part, capeRenderInfo.isPlayerUnderwater())));
         poseStack.mulPose(NMSHelper.ZP.rotationDegrees(renderState.capeLean2 / 2.0F));
         poseStack.mulPose(NMSHelper.YP.rotationDegrees(180.0F - renderState.capeLean2 / 2.0F));
         //#endif
@@ -301,12 +313,17 @@ public class CustomCapeRenderLayer extends RenderLayer<PlayerRenderState, Player
         maxV = minV + (vPerPart * (part + 1));
         minV = minV + (vPerPart * part);
 
-        NMSHelper.addVertex(bufferBuilder, oldMatrix, x1, y2, z1, maxU, minV, OverlayTexture.NO_OVERLAY, light, 1, 0,
-                0);
-        NMSHelper.addVertex(bufferBuilder, oldMatrix, x2, y2, z1, minU, minV, OverlayTexture.NO_OVERLAY, light, 1, 0,
-                0);
-        NMSHelper.addVertex(bufferBuilder, matrix, x2, y1, z2, minU, maxV, OverlayTexture.NO_OVERLAY, light, 1, 0, 0);
-        NMSHelper.addVertex(bufferBuilder, matrix, x1, y1, z2, maxU, maxV, OverlayTexture.NO_OVERLAY, light, 1, 0, 0);
+        Vector3 normalVec = getNormalVec(oldMatrix, oldMatrix, matrix, new Vector3(x1, y2, z1), new Vector3(x2, y2, z1),
+                new Vector3(x1, y1, z2), light == 15728880);
+
+        NMSHelper.addVertex(bufferBuilder, oldMatrix, x1, y2, z1, maxU, minV, OverlayTexture.NO_OVERLAY, light,
+                normalVec.x, normalVec.y, normalVec.z);
+        NMSHelper.addVertex(bufferBuilder, oldMatrix, x2, y2, z1, minU, minV, OverlayTexture.NO_OVERLAY, light,
+                normalVec.x, normalVec.y, normalVec.z);
+        NMSHelper.addVertex(bufferBuilder, matrix, x2, y1, z2, minU, maxV, OverlayTexture.NO_OVERLAY, light,
+                normalVec.x, normalVec.y, normalVec.z);
+        NMSHelper.addVertex(bufferBuilder, matrix, x1, y1, z2, maxU, maxV, OverlayTexture.NO_OVERLAY, light,
+                normalVec.x, normalVec.y, normalVec.z);
     }
 
     private static void addFrontVertex(VertexConsumer bufferBuilder, Matrix4f matrix, Matrix4f oldMatrix, float x1,
@@ -340,12 +357,17 @@ public class CustomCapeRenderLayer extends RenderLayer<PlayerRenderState, Player
         maxV = minV + (vPerPart * (part + 1));
         minV = minV + (vPerPart * part);
 
-        NMSHelper.addVertex(bufferBuilder, oldMatrix, x1, y1, z1, minU, maxV, OverlayTexture.NO_OVERLAY, light, 1, 0,
-                0);
-        NMSHelper.addVertex(bufferBuilder, oldMatrix, x2, y1, z1, maxU, maxV, OverlayTexture.NO_OVERLAY, light, 1, 0,
-                0);
-        NMSHelper.addVertex(bufferBuilder, matrix, x2, y2, z2, maxU, minV, OverlayTexture.NO_OVERLAY, light, 1, 0, 0);
-        NMSHelper.addVertex(bufferBuilder, matrix, x1, y2, z2, minU, minV, OverlayTexture.NO_OVERLAY, light, 1, 0, 0);
+        Vector3 normalVec = getNormalVec(oldMatrix, oldMatrix, matrix, new Vector3(x1, y1, z1), new Vector3(x2, y1, z1),
+                new Vector3(x1, y2, z2), light == 15728880);
+
+        NMSHelper.addVertex(bufferBuilder, oldMatrix, x1, y1, z1, minU, maxV, OverlayTexture.NO_OVERLAY, light,
+                normalVec.x, normalVec.y, normalVec.z);
+        NMSHelper.addVertex(bufferBuilder, oldMatrix, x2, y1, z1, maxU, maxV, OverlayTexture.NO_OVERLAY, light,
+                normalVec.x, normalVec.y, normalVec.z);
+        NMSHelper.addVertex(bufferBuilder, matrix, x2, y2, z2, maxU, minV, OverlayTexture.NO_OVERLAY, light,
+                normalVec.x, normalVec.y, normalVec.z);
+        NMSHelper.addVertex(bufferBuilder, matrix, x1, y2, z2, minU, minV, OverlayTexture.NO_OVERLAY, light,
+                normalVec.x, normalVec.y, normalVec.z);
     }
 
     private static void addLeftVertex(VertexConsumer bufferBuilder, Matrix4f matrix, Matrix4f oldMatrix, float x1,
@@ -374,12 +396,17 @@ public class CustomCapeRenderLayer extends RenderLayer<PlayerRenderState, Player
         maxV = minV + (vPerPart * (part + 1));
         minV = minV + (vPerPart * part);
 
-        NMSHelper.addVertex(bufferBuilder, matrix, x2, y1, z1, minU, maxV, OverlayTexture.NO_OVERLAY, light, 1, 0, 0);
-        NMSHelper.addVertex(bufferBuilder, matrix, x2, y1, z2, maxU, maxV, OverlayTexture.NO_OVERLAY, light, 1, 0, 0);
-        NMSHelper.addVertex(bufferBuilder, oldMatrix, x2, y2, z2, maxU, minV, OverlayTexture.NO_OVERLAY, light, 1, 0,
-                0);
-        NMSHelper.addVertex(bufferBuilder, oldMatrix, x2, y2, z1, minU, minV, OverlayTexture.NO_OVERLAY, light, 1, 0,
-                0);
+        Vector3 normalVec = getNormalVec(matrix, matrix, oldMatrix, new Vector3(x2, y1, z1), new Vector3(x2, y1, z2),
+                new Vector3(x2, y2, z1), light == 15728880);
+
+        NMSHelper.addVertex(bufferBuilder, matrix, x2, y1, z1, minU, maxV, OverlayTexture.NO_OVERLAY, light,
+                normalVec.x, normalVec.y, normalVec.z);
+        NMSHelper.addVertex(bufferBuilder, matrix, x2, y1, z2, maxU, maxV, OverlayTexture.NO_OVERLAY, light,
+                normalVec.x, normalVec.y, normalVec.z);
+        NMSHelper.addVertex(bufferBuilder, oldMatrix, x2, y2, z2, maxU, minV, OverlayTexture.NO_OVERLAY, light,
+                normalVec.x, normalVec.y, normalVec.z);
+        NMSHelper.addVertex(bufferBuilder, oldMatrix, x2, y2, z1, minU, minV, OverlayTexture.NO_OVERLAY, light,
+                normalVec.x, normalVec.y, normalVec.z);
     }
 
     private static void addRightVertex(VertexConsumer bufferBuilder, Matrix4f matrix, Matrix4f oldMatrix, float x1,
@@ -408,16 +435,21 @@ public class CustomCapeRenderLayer extends RenderLayer<PlayerRenderState, Player
         maxV = minV + (vPerPart * (part + 1));
         minV = minV + (vPerPart * part);
 
-        NMSHelper.addVertex(bufferBuilder, matrix, x2, y1, z2, minU, maxV, OverlayTexture.NO_OVERLAY, light, 1, 0, 0);
-        NMSHelper.addVertex(bufferBuilder, matrix, x2, y1, z1, maxU, maxV, OverlayTexture.NO_OVERLAY, light, 1, 0, 0);
-        NMSHelper.addVertex(bufferBuilder, oldMatrix, x2, y2, z1, maxU, minV, OverlayTexture.NO_OVERLAY, light, 1, 0,
-                0);
-        NMSHelper.addVertex(bufferBuilder, oldMatrix, x2, y2, z2, minU, minV, OverlayTexture.NO_OVERLAY, light, 1, 0,
-                0);
+        Vector3 normalVec = getNormalVec(matrix, matrix, oldMatrix, new Vector3(x2, y1, z2), new Vector3(x2, y1, z1),
+                new Vector3(x2, y2, z2), light == 15728880);
+
+        NMSHelper.addVertex(bufferBuilder, matrix, x2, y1, z2, minU, maxV, OverlayTexture.NO_OVERLAY, light,
+                normalVec.x, normalVec.y, normalVec.z);
+        NMSHelper.addVertex(bufferBuilder, matrix, x2, y1, z1, maxU, maxV, OverlayTexture.NO_OVERLAY, light,
+                normalVec.x, normalVec.y, normalVec.z);
+        NMSHelper.addVertex(bufferBuilder, oldMatrix, x2, y2, z1, maxU, minV, OverlayTexture.NO_OVERLAY, light,
+                normalVec.x, normalVec.y, normalVec.z);
+        NMSHelper.addVertex(bufferBuilder, oldMatrix, x2, y2, z2, minU, minV, OverlayTexture.NO_OVERLAY, light,
+                normalVec.x, normalVec.y, normalVec.z);
     }
 
     private static void addBottomVertex(VertexConsumer bufferBuilder, Matrix4f matrix, Matrix4f oldMatrix, float x1,
-            float y1, float z1, float x2, float y2, float z2, int part, int light) {
+            float y1, float z1, float x2, float y2, float z2, int light) {
         float i;
         if (x1 < x2) {
             i = x1;
@@ -437,21 +469,21 @@ public class CustomCapeRenderLayer extends RenderLayer<PlayerRenderState, Player
         float minV = 0;
         float maxV = .03125F;
 
-        float deltaV = maxV - minV;
-        float vPerPart = deltaV / PART_COUNT;
-        maxV = minV + (vPerPart * (part + 1));
-        minV = minV + (vPerPart * part);
+        Vector3 normalVec = getNormalVec(oldMatrix, oldMatrix, matrix, new Vector3(x1, y2, z2), new Vector3(x2, y2, z2),
+                new Vector3(x1, y1, z1), light == 15728880);
 
-        NMSHelper.addVertex(bufferBuilder, oldMatrix, x1, y2, z2, maxU, minV, OverlayTexture.NO_OVERLAY, light, 1, 0,
-                0);
-        NMSHelper.addVertex(bufferBuilder, oldMatrix, x2, y2, z2, minU, minV, OverlayTexture.NO_OVERLAY, light, 1, 0,
-                0);
-        NMSHelper.addVertex(bufferBuilder, matrix, x2, y1, z1, minU, maxV, OverlayTexture.NO_OVERLAY, light, 1, 0, 0);
-        NMSHelper.addVertex(bufferBuilder, matrix, x1, y1, z1, maxU, maxV, OverlayTexture.NO_OVERLAY, light, 1, 0, 0);
+        NMSHelper.addVertex(bufferBuilder, oldMatrix, x1, y2, z2, maxU, minV, OverlayTexture.NO_OVERLAY, light,
+                normalVec.x, normalVec.y, normalVec.z);
+        NMSHelper.addVertex(bufferBuilder, oldMatrix, x2, y2, z2, minU, minV, OverlayTexture.NO_OVERLAY, light,
+                normalVec.x, normalVec.y, normalVec.z);
+        NMSHelper.addVertex(bufferBuilder, matrix, x2, y1, z1, minU, maxV, OverlayTexture.NO_OVERLAY, light,
+                normalVec.x, normalVec.y, normalVec.z);
+        NMSHelper.addVertex(bufferBuilder, matrix, x1, y1, z1, maxU, maxV, OverlayTexture.NO_OVERLAY, light,
+                normalVec.x, normalVec.y, normalVec.z);
     }
 
     private static void addTopVertex(VertexConsumer bufferBuilder, Matrix4f matrix, Matrix4f oldMatrix, float x1,
-            float y1, float z1, float x2, float y2, float z2, int part, int light) {
+            float y1, float z1, float x2, float y2, float z2, int light) {
         float i;
         if (x1 < x2) {
             i = x1;
@@ -471,17 +503,42 @@ public class CustomCapeRenderLayer extends RenderLayer<PlayerRenderState, Player
         float minV = 0;
         float maxV = .03125F;
 
-        float deltaV = maxV - minV;
-        float vPerPart = deltaV / PART_COUNT;
-        maxV = minV + (vPerPart * (part + 1));
-        minV = minV + (vPerPart * part);
+        Vector3 normalVec = getNormalVec(oldMatrix, oldMatrix, matrix, new Vector3(x1, y2, z1), new Vector3(x2, y2, z1),
+                new Vector3(x1, y1, z2), light == 15728880);
 
-        NMSHelper.addVertex(bufferBuilder, oldMatrix, x1, y2, z1, maxU, maxV, OverlayTexture.NO_OVERLAY, light, 0, 1,
-                0);
-        NMSHelper.addVertex(bufferBuilder, oldMatrix, x2, y2, z1, minU, maxV, OverlayTexture.NO_OVERLAY, light, 0, 1,
-                0);
-        NMSHelper.addVertex(bufferBuilder, matrix, x2, y1, z2, minU, minV, OverlayTexture.NO_OVERLAY, light, 0, 1, 0);
-        NMSHelper.addVertex(bufferBuilder, matrix, x1, y1, z2, maxU, minV, OverlayTexture.NO_OVERLAY, light, 0, 1, 0);
+        NMSHelper.addVertex(bufferBuilder, oldMatrix, x1, y2, z1, maxU, maxV, OverlayTexture.NO_OVERLAY, light,
+                normalVec.x, normalVec.y, normalVec.z);
+        NMSHelper.addVertex(bufferBuilder, oldMatrix, x2, y2, z1, minU, maxV, OverlayTexture.NO_OVERLAY, light,
+                normalVec.x, normalVec.y, normalVec.z);
+        NMSHelper.addVertex(bufferBuilder, matrix, x2, y1, z2, minU, minV, OverlayTexture.NO_OVERLAY, light,
+                normalVec.x, normalVec.y, normalVec.z);
+        NMSHelper.addVertex(bufferBuilder, matrix, x1, y1, z2, maxU, minV, OverlayTexture.NO_OVERLAY, light,
+                normalVec.x, normalVec.y, normalVec.z);
+    }
+
+    private static Vector3 getNormalVec(Matrix4f matrix1, Matrix4f matrix2, Matrix4f matrix3, Vector3 vector1,
+            Vector3 vector2, Vector3 vector3, boolean inverse) {
+        Vector3 vector1Transformed = transform(matrix1, new Vector4(vector1.x, vector1.y, vector1.z, 1)).toVec3();
+        Vector3 vector2Transformed = transform(matrix2, new Vector4(vector2.x, vector2.y, vector2.z, 1)).toVec3();
+        Vector3 vector3Transformed = transform(matrix3, new Vector4(vector3.x, vector3.y, vector3.z, 1)).toVec3();
+
+        vector2Transformed.subtract(vector1Transformed);
+        vector3Transformed.subtract(vector1Transformed);
+
+        vector2Transformed.cross(vector3Transformed);
+        vector2Transformed.normalize();
+        return inverse ? vector2Transformed.mul(-1) : vector2Transformed;
+    }
+
+    private static Vector4 transform(Matrix4f matrix, Vector4 vector) {
+        //#if MC >= 11903
+        Vector4f vector4f = matrix.transform(new Vector4f(vector.x, vector.y, vector.z, vector.w));
+        return new Vector4(vector4f.x, vector4f.y, vector4f.z, vector4f.w);
+        //#else
+        //$$Vector4f vector4f = new Vector4f(vector.x, vector.y, vector.z, vector.w);
+        //$$vector4f.transform(matrix);
+        //$$return new Vector4(vector4f.x(), vector4f.y(), vector4f.z(), vector4f.w());
+        //#endif
     }
 
     private static VanillaCapeRenderer vanillaCape = new VanillaCapeRenderer();

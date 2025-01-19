@@ -116,11 +116,11 @@ public abstract class WaveyCapesBase extends ModBase {
             }
 
             @Override
-          //#if MC >= 12000
+            //#if MC >= 12000
             public void render(GuiGraphics guiGraphics, int xMouse, int yMouse, float f) {
-          //#else
-          //$$public void render(PoseStack guiGraphics, int xMouse, int yMouse, float f) {
-          //#endif
+                //#else
+                //$$public void render(PoseStack guiGraphics, int xMouse, int yMouse, float f) {
+                //#endif
                 super.render(guiGraphics, xMouse, yMouse, f);
                 if (this.minecraft.level != null) {
                     int x = minecraft.getWindow().getGuiScaledWidth() / 2;
@@ -172,8 +172,8 @@ public abstract class WaveyCapesBase extends ModBase {
         float yHeadRotO = livingEntity.yHeadRotO;
         float yHeadRot = livingEntity.yHeadRot;
         Vec3 vel = livingEntity.getDeltaMovement();
-        livingEntity.yBodyRot = 180.0F + (lookX * rotationModifyer);
-        NMSHelper.setYRot(livingEntity, 180.0F + (lookX * rotationModifyer));
+        livingEntity.yBodyRot = (180.0F + lookX * rotationModifyer);
+        NMSHelper.setYRot(livingEntity, (180.0F + lookX * rotationModifyer));
         livingEntity.yBodyRotO = livingEntity.yBodyRot;
         livingEntity.yRotO = NMSHelper.getYRot(livingEntity);
         livingEntity.setDeltaMovement(Vec3.ZERO);

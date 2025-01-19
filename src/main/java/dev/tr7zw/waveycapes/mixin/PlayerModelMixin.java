@@ -5,7 +5,8 @@ import net.minecraft.client.Minecraft;
 import org.spongepowered.asm.mixin.Mixin;
 
 @Mixin(Minecraft.class)
-public class PlayerModelMixin {}
+public class PlayerModelMixin {
+}
 
 //#else
 //$$import org.spongepowered.asm.mixin.Final;
