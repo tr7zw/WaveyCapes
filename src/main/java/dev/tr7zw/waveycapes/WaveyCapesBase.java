@@ -2,7 +2,6 @@ package dev.tr7zw.waveycapes;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -25,7 +24,6 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.phys.Vec3;
 
 //#if MC >= 11903
