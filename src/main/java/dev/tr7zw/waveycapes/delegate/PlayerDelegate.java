@@ -41,14 +41,14 @@ public class PlayerDelegate implements MinecraftPlayer {
         return player.zo;
     }
 
-  //#if MC <= 11605
-  //$$  public float getXRot() {
-  //$$      return player.xRot;
-  //$$  }
-  //$$  
-  //$$  public float getYRot() {
-  //$$      return player.yRot;
-  //$$  }
-  //#endif
+    //#if MC <= 11605
+    //$$  public float getXRot() {
+    //$$      return player.xRot;
+    //$$  }
+    //$$  
+    //$$  public float getYRot() {
+    //$$      return player.yRot;
+    //$$  }
+    //#endif
 
 }

@@ -19,9 +19,9 @@ import net.minecraft.world.entity.LivingEntity;
 @Mixin(LivingEntityRenderer.class)
 //#if MC >= 12102
 public class LivingEntityRendererMixin<S extends LivingEntity, T extends LivingEntityRenderState, M extends EntityModel<? super T>> {
-//#else
-//$$public class LivingEntityRendererMixin<T extends LivingEntity, M extends EntityModel<T>> {
-//#endif
+    //#else
+    //$$public class LivingEntityRendererMixin<T extends LivingEntity, M extends EntityModel<T>> {
+    //#endif
 
     @Inject(method = "addLayer", at = @At("HEAD"), cancellable = true)
     private void addLayer(RenderLayer<T, M> renderLayer, CallbackInfoReturnable<Boolean> info) {

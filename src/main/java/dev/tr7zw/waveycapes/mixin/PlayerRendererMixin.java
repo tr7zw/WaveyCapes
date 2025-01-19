@@ -29,10 +29,10 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider.Context;
 //#if MC >= 12102
 public abstract class PlayerRendererMixin
         extends LivingEntityRenderer<AbstractClientPlayer, PlayerRenderState, PlayerModel> {
-//#else
-//$$public abstract class PlayerRendererMixin
-//$$        extends LivingEntityRenderer<AbstractClientPlayer, PlayerModel<AbstractClientPlayer>> {
-//#endif
+    //#else
+    //$$public abstract class PlayerRendererMixin
+    //$$        extends LivingEntityRenderer<AbstractClientPlayer, PlayerModel<AbstractClientPlayer>> {
+    //#endif
 
     @Unique
     private boolean injectedCape = false;
@@ -60,7 +60,8 @@ public abstract class PlayerRendererMixin
 
     //#if MC >= 12102
     @Inject(method = "extractRenderState(Lnet/minecraft/client/player/AbstractClientPlayer;Lnet/minecraft/client/renderer/entity/state/PlayerRenderState;F)V", at = @At("HEAD"))
-    private void addCapeHolder(AbstractClientPlayer abstractClientPlayer, PlayerRenderState playerRenderState, float f, CallbackInfo ci) {
+    private void addCapeHolder(AbstractClientPlayer abstractClientPlayer, PlayerRenderState playerRenderState, float f,
+            CallbackInfo ci) {
         ExtendedPlayerRenderState extendedPlayerRenderState = (ExtendedPlayerRenderState) playerRenderState;
         extendedPlayerRenderState.setCapeHolder((CapeHolder) abstractClientPlayer);
         extendedPlayerRenderState.setUnderwater(abstractClientPlayer.isUnderWater());

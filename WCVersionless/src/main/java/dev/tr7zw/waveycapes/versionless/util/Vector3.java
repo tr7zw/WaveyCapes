@@ -57,6 +57,19 @@ public class Vector3 {
         return this;
     }
 
+    public Vector3 cross(Vector3 vec) {
+        float f = this.x;
+        float g = this.y;
+        float h = this.z;
+        float i = vec.x;
+        float j = vec.y;
+        float k = vec.z;
+        this.x = g * k - h * j;
+        this.y = h * i - f * k;
+        this.z = f * j - g * i;
+        return this;
+    }
+
     public Vector3 normalize() {
         float f = Mth.sqrt(this.x * this.x + this.y * this.y + this.z * this.z);
         if (f < 1.0E-4F) {

@@ -27,11 +27,11 @@ public class NMSUtil {
 
     //#if MC >= 11903
     public static void conjugate(Quaternionf quaternion2) {
-    quaternion2.conjugate();
-    //#else
-    //$$public static void conjugate(Quaternion quaternion2) {
-    //$$ quaternion2.conj();
-    //#endif
+        quaternion2.conjugate();
+        //#else
+        //$$public static void conjugate(Quaternion quaternion2) {
+        //$$ quaternion2.conj();
+        //#endif
     }
 
     public static ModelPart[] buildCape(int texWidth, int texHight, IntUnaryOperator uvX, IntUnaryOperator uvY) {
@@ -92,7 +92,7 @@ public class NMSUtil {
         //#if MC >= 11700 && MC <= 12004
         //$$ return RenderSystem.getModelViewStack();
         //#else
-         return new PoseStack();
+        return new PoseStack();
         //#endif
     }
 
