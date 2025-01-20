@@ -85,4 +85,14 @@ public class CapeRenderInfo {
         //$$return player.getItemBySlot(EquipmentSlot.CHEST).getItem().equals(Items.ELYTRA);
         //#endif
     }
+
+    public boolean hasChestplateEquipped() {
+        //#if MC >= 12104
+        return !hasElytraEquipped() && !renderState.chestEquipment.isEmpty();
+        //#elseif MC >= 12102
+        //$$return !hasElytraEquipped() && !renderState.chestItem.isEmpty();
+        //#else
+        //$$return !hasElytraEquipped() && !player.getItemBySlot(EquipmentSlot.CHEST).isEmpty();
+        //#endif
+    }
 }

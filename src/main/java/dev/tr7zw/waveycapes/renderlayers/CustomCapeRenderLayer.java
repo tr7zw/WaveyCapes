@@ -92,6 +92,11 @@ public class CustomCapeRenderLayer extends RenderLayer<PlayerRenderState, Player
         holder.updateSimulation(PART_COUNT);
         poseStack.pushPose();
         getParentModel().body.translateAndRotate(poseStack);
+
+        if (capeRenderInfo.hasChestplateEquipped()) {
+            poseStack.translate(0.0F, -0.053125F, 0.06875F);
+        }
+
         if (ModBase.config.capeStyle == CapeStyle.SMOOTH && renderer.vanillaUvValues()) {
             renderSmoothCape(poseStack, multiBufferSource, renderer, capeRenderInfo, delta, i);
         } else {
