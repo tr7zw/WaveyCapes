@@ -46,7 +46,10 @@ public class EarsSupport implements ModSupport, EarsInhibitor {
 
     private ResourceLocation getPlayerCape(CapeRenderInfo capeRenderInfo, EarsFeatures playerFeatures) {
         ResourceLocation skin = capeRenderInfo.getCapeTexture();
-        return NMSHelper.getResourceLocation(skin.getNamespace(), TexSource.CAPE.addSuffix(skin.getPath()));
+        if (skin != null) {
+            return NMSHelper.getResourceLocation(skin.getNamespace(), TexSource.CAPE.addSuffix(skin.getPath()));
+        }
+        return null;
     }
 
     private class EarsRenderer implements CapeRenderer {
