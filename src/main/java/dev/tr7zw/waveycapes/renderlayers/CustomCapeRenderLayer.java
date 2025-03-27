@@ -126,8 +126,10 @@ public class CustomCapeRenderLayer extends RenderLayer<PlayerRenderState, Player
         if (bufferBuilder == null) {
             return;
         }
-        RenderSystem.enableBlend();
-        RenderSystem.defaultBlendFunc();
+        //#if MC < 12105
+        //$$ RenderSystem.enableBlend();
+        //$$ RenderSystem.defaultBlendFunc();
+        //#endif
 
         Matrix4f oldPositionMatrix = null;
         for (int part = 0; part < PART_COUNT; part++) {
