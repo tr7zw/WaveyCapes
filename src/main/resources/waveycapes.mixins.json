@@ -6,7 +6,6 @@
     "client": [
         "LivingEntityRendererMixin",
         "PlayerMixin",
-        "PlayerModelMixin",
         "PlayerRendererMixin",
         "PlayerRenderStateMixin"
     ],

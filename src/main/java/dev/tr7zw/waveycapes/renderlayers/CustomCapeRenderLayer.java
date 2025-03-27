@@ -21,7 +21,6 @@ import dev.tr7zw.waveycapes.CapeRenderInfo;
 import dev.tr7zw.util.NMSHelper;
 import dev.tr7zw.waveycapes.CapeRenderer;
 import dev.tr7zw.waveycapes.NMSUtil;
-import dev.tr7zw.waveycapes.PlayerModelAccess;
 import dev.tr7zw.waveycapes.VanillaCapeRenderer;
 import dev.tr7zw.waveycapes.WaveyCapesBase;
 import dev.tr7zw.waveycapes.support.ModSupport;
@@ -41,6 +40,9 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+//#if MC < 12103
+//$$import net.minecraft.world.entity.player.PlayerModelPart;
+//#endif
 
 //#if MC < 12102
 //$$import net.minecraft.util.Mth;
@@ -84,9 +86,15 @@ public class CustomCapeRenderLayer extends RenderLayer<PlayerRenderState, Player
             return;
         if (capeRenderInfo.hasElytraEquipped())
             return;
-        if (getParentModel() instanceof PlayerModelAccess pma && !pma.getCloak().visible) {
+        //#if MC >= 12102
+        if (!renderState.showCape) {
             return;
         }
+        //#else
+        //$$ if (!abstractClientPlayer.isModelPartShown(PlayerModelPart.CAPE)) {
+        //$$     return;
+        //$$ }
+        //#endif
 
         CapeHolder holder = capeRenderInfo.getCapeHolder();
         holder.updateSimulation(PART_COUNT);
