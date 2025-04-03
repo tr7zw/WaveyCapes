@@ -1,5 +1,5 @@
 version: '0.0.2'
-source: "https://github.com/tr7zw/ProcessedModTemplate/tree/master"
+source: "https://github.com/tr7zw/ProcessedModTemplate/tree/libworld"
 replacements:
   name: "WaveyCapes"
   id: "waveycapes"
@@ -38,6 +38,9 @@ enabledFlags:
   - modrinth
   - curseforge
   - versionless
+  - includeLibs
+  - addTRenderLib
+  - addTRansitionLib
 rootProject:
   template: "."
 subProjects:

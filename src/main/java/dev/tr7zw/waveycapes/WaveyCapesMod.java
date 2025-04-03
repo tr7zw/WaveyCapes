@@ -1,6 +1,6 @@
 package dev.tr7zw.waveycapes;
 
-import dev.tr7zw.util.ModLoaderUtil;
+import dev.tr7zw.transition.loader.ModLoaderUtil;
 import dev.tr7zw.waveycapes.support.EarsSupport;
 import dev.tr7zw.waveycapes.support.MinecraftCapesSupport;
 import dev.tr7zw.waveycapes.support.SupportManager;
@@ -44,7 +44,7 @@ public class WaveyCapesMod extends WaveyCapesBase implements ClientModInitialize
     public void init() {
         super.init();
         ModLoaderUtil.disableDisplayTest();
-        ModLoaderUtil.registerConfigScreen(WaveyCapesBase.INSTANCE::createConfigScreen);
+        ModLoaderUtil.registerConfigScreen(WaveyCapesConfigScreen::createConfigScreen);
     }
 
 }

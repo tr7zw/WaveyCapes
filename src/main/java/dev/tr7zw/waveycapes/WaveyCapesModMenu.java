@@ -9,7 +9,7 @@ public class WaveyCapesModMenu implements ModMenuApi {
     @Override
     public ConfigScreenFactory<?> getModConfigScreenFactory() {
         return parent -> {
-            return WaveyCapesBase.INSTANCE.createConfigScreen(parent);
+            return WaveyCapesConfigScreen.createConfigScreen(parent);
         };
     }
 

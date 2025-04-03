@@ -5,8 +5,9 @@ import java.util.List;
 
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.vertex.PoseStack;
-import dev.tr7zw.config.CustomConfigScreen;
-import dev.tr7zw.util.NMSHelper;
+
+import dev.tr7zw.transition.mc.EntityUtil;
+import dev.tr7zw.transition.mc.MathUtil;
 import dev.tr7zw.waveycapes.delegate.PlayerDelegate;
 import dev.tr7zw.waveycapes.support.AnimationSupport;
 import dev.tr7zw.waveycapes.support.PlayerAnimatorSupport;
@@ -61,86 +62,6 @@ public abstract class WaveyCapesBase extends ModBase {
         return pos;
     }
 
-    public Screen createConfigScreen(Screen parent) {
-        return new CustomConfigScreen(parent, "text.wc.title") {
-
-            private int rotationX = 164;
-            private int rotationY = 5;
-
-            @Override
-            public void initialize() {
-                List<Object> options = new ArrayList<>();
-                options.add(getEnumOption("text.wc.setting.capestyle", CapeStyle.class, () -> config.capeStyle,
-                        (v) -> config.capeStyle = v));
-                options.add(getEnumOption("text.wc.setting.windmode", WindMode.class, () -> config.windMode,
-                        (v) -> config.windMode = v));
-                options.add(getEnumOption("text.wc.setting.capemovement", CapeMovement.class, () -> config.capeMovement,
-                        (v) -> config.capeMovement = v));
-                // options.add(getIntOption("text.wc.setting.capeparts", 16, 64, () ->
-                // config.capeParts, (v) -> config.capeParts = v));
-                options.add(getIntOption("text.wc.setting.gravity", 5, 32, () -> config.gravity,
-                        (v) -> config.gravity = v));
-                options.add(getIntOption("text.wc.setting.heightMultiplier", 4, 16, () -> config.heightMultiplier,
-                        (v) -> config.heightMultiplier = v));
-                // options.add(getIntOption("text.wc.setting.maxBend", 1, 20, () ->
-                // config.maxBend, (v) -> config.maxBend = v));
-
-                //#if MC >= 11900
-                getOptions().addSmall(options.toArray(new OptionInstance[0]));
-                //#else
-                //$$getOptions().addSmall(options.toArray(new Option[0]));
-                //#endif
-
-            }
-
-            @Override
-            public void save() {
-                writeConfig();
-            }
-
-            @Override
-            public boolean keyPressed(int i, int j, int k) {
-                if (i == 263) { // left
-                    rotationX--;
-                }
-                if (i == 262) { // right
-                    rotationX++;
-                }
-                if (i == 264) { // down
-                    rotationY--;
-                }
-                if (i == 265) { // up
-                    rotationY++;
-                }
-                return super.keyPressed(i, j, k);
-            }
-
-            @Override
-            //#if MC >= 12000
-            public void render(GuiGraphics guiGraphics, int xMouse, int yMouse, float f) {
-                //#else
-                //$$public void render(PoseStack guiGraphics, int xMouse, int yMouse, float f) {
-                //#endif
-                super.render(guiGraphics, xMouse, yMouse, f);
-                if (this.minecraft.level != null) {
-                    int x = minecraft.getWindow().getGuiScaledWidth() / 2;
-                    int y = minecraft.getWindow().getGuiScaledHeight()
-                            - (minecraft.getWindow().getGuiScaledHeight() / 3);
-                    int size = (int) (40f * (minecraft.getWindow().getGuiScaledHeight() / 200f));
-                    drawEntity(x, y, size, rotationX, rotationY, this.minecraft.player, f);
-                }
-            }
-
-            @Override
-            public void reset() {
-                config = new Config();
-                writeConfig();
-            }
-
-        };
-
-    }
-
     // Modified version from InventoryScreen
     private void drawEntity(int x, int y, int size, float lookX, float lookY, LivingEntity livingEntity, float delta) {
         float rotationModifyer = 3;
@@ -153,34 +74,29 @@ public abstract class WaveyCapesBase extends ModBase {
         matrixStack.translate(x, y, 1000.0D);
         matrixStack.scale((float) size, (float) size, (float) size);
         matrixStack.scale(1.0F, 1.0F, -1.0F);
-        //#if MC >= 11903
-        Quaternionf quaternion = NMSHelper.ZP.rotationDegrees(180.0F);
-        Quaternionf quaternion2 = NMSHelper.XP.rotationDegrees(lookY * rotationModifyer);
-        //#else
-        //$$Quaternion quaternion = NMSHelper.ZP.rotationDegrees(180.0F);
-        //$$Quaternion quaternion2 = NMSHelper.XP.rotationDegrees(lookY * rotationModifyer);
-        //#endif
+        var quaternion = MathUtil.ZP.rotationDegrees(180.0F);
+        var quaternion2 = MathUtil.XP.rotationDegrees(lookY * rotationModifyer);
         quaternion.mul(quaternion2);
         matrixStack.mulPose(quaternion);
         matrixStack.translate(0.0D, -1, 0D);
         float yBodyRot = livingEntity.yBodyRot;
-        float yRot = NMSHelper.getYRot(livingEntity);
+        float yRot = EntityUtil.getYRot(livingEntity);
         float yRotO = livingEntity.yRotO;
         float yBodyRotO = livingEntity.yBodyRotO;
-        float xRot = NMSHelper.getXRot(livingEntity);
+        float xRot = EntityUtil.getXRot(livingEntity);
         float xRotO = livingEntity.xRotO;
         float yHeadRotO = livingEntity.yHeadRotO;
         float yHeadRot = livingEntity.yHeadRot;
         Vec3 vel = livingEntity.getDeltaMovement();
         livingEntity.yBodyRot = (180.0F + lookX * rotationModifyer);
-        NMSHelper.setYRot(livingEntity, (180.0F + lookX * rotationModifyer));
+        EntityUtil.setYRot(livingEntity, (180.0F + lookX * rotationModifyer));
         livingEntity.yBodyRotO = livingEntity.yBodyRot;
-        livingEntity.yRotO = NMSHelper.getYRot(livingEntity);
+        livingEntity.yRotO = EntityUtil.getYRot(livingEntity);
         livingEntity.setDeltaMovement(Vec3.ZERO);
-        NMSHelper.setXRot(livingEntity, 0);
-        livingEntity.xRotO = NMSHelper.getXRot(livingEntity);
-        livingEntity.yHeadRot = NMSHelper.getYRot(livingEntity);
-        livingEntity.yHeadRotO = NMSHelper.getYRot(livingEntity);
+        EntityUtil.setXRot(livingEntity, 0);
+        livingEntity.xRotO = EntityUtil.getXRot(livingEntity);
+        livingEntity.yHeadRot = EntityUtil.getYRot(livingEntity);
+        livingEntity.yHeadRotO = EntityUtil.getYRot(livingEntity);
         NMSUtil.prepareLighting();
         EntityRenderDispatcher entityRenderDispatcher = Minecraft.getInstance().getEntityRenderDispatcher();
         NMSUtil.conjugate(quaternion2);
@@ -198,9 +114,9 @@ public abstract class WaveyCapesBase extends ModBase {
         entityRenderDispatcher.setRenderShadow(true);
         livingEntity.yBodyRot = yBodyRot;
         livingEntity.yBodyRotO = yBodyRotO;
-        NMSHelper.setYRot(livingEntity, yRot);
+        EntityUtil.setYRot(livingEntity, yRot);
         livingEntity.yRotO = yRotO;
-        NMSHelper.setXRot(livingEntity, xRot);
+        EntityUtil.setXRot(livingEntity, xRot);
         livingEntity.xRotO = xRotO;
         livingEntity.yHeadRotO = yHeadRotO;
         livingEntity.yHeadRot = yHeadRot;

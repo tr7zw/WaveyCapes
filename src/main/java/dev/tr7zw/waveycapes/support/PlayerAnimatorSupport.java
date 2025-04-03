@@ -4,7 +4,7 @@ import dev.kosmx.playerAnim.api.TransformType;
 import dev.kosmx.playerAnim.core.impl.AnimationProcessor;
 import dev.kosmx.playerAnim.core.util.Vec3f;
 import dev.kosmx.playerAnim.impl.IAnimatedPlayer;
-import dev.tr7zw.util.NMSHelper;
+import dev.tr7zw.transition.mc.MathUtil;
 import dev.tr7zw.waveycapes.versionless.CapeHolder;
 import dev.tr7zw.waveycapes.versionless.util.Vector3;
 import net.minecraft.client.player.AbstractClientPlayer;
@@ -43,9 +43,9 @@ public class PlayerAnimatorSupport implements AnimationSupport {
             relativeTranslation.translate(pos.getX(), pos.getY(), pos.getZ()); // Apply torso
                                                                                // transformation
 
-            relativeTranslation.rotate(NMSHelper.ZP.rotation(rot.getZ()));
-            relativeTranslation.rotate(NMSHelper.YP.rotation(rot.getY()));
-            relativeTranslation.rotate(NMSHelper.XP.rotation(rot.getX()));
+            relativeTranslation.rotate(MathUtil.ZP.rotation(rot.getZ()));
+            relativeTranslation.rotate(MathUtil.YP.rotation(rot.getY()));
+            relativeTranslation.rotate(MathUtil.XP.rotation(rot.getX()));
             // relativeTranslation.multiply(Quaternion.fromXYZ(rot.getX(), rot.getY(),
             // rot.getZ()));
 
@@ -59,7 +59,7 @@ public class PlayerAnimatorSupport implements AnimationSupport {
             Matrix4f matrix = new Matrix4f(); // To multiply from LEFT, I have to create a new instance?!
             matrix.mul(new Matrix4f().scale(-1, 1, 1)); // What is going on with this?!
 
-            matrix.mul(new Matrix4f().rotate(NMSHelper.YP.rotationDegrees(realYaw)));
+            matrix.mul(new Matrix4f().rotate(MathUtil.YP.rotationDegrees(realYaw)));
 
             matrix.mul(new Matrix4f().scale(1, 1, -1));
             matrix.mul(relativeTranslation);
@@ -76,9 +76,9 @@ public class PlayerAnimatorSupport implements AnimationSupport {
             //$$   relativeTranslation.multiplyWithTranslation(pos.getX(), pos.getY(), pos.getZ()); // Apply torso
             //$$                                                                                     // transformation
             //$$
-            //$$    relativeTranslation.multiply(NMSHelper.ZP.rotation(rot.getZ()));
-            //$$    relativeTranslation.multiply(NMSHelper.YP.rotation(rot.getY()));
-            //$$     relativeTranslation.multiply(NMSHelper.XP.rotation(rot.getX()));
+            //$$    relativeTranslation.multiply(MathUtil.ZP.rotation(rot.getZ()));
+            //$$    relativeTranslation.multiply(MathUtil.YP.rotation(rot.getY()));
+            //$$     relativeTranslation.multiply(MathUtil.XP.rotation(rot.getX()));
             //$$     // relativeTranslation.multiply(Quaternion.fromXYZ(rot.getX(), rot.getY(),
             //$$     // rot.getZ()));
             //$$
@@ -93,7 +93,7 @@ public class PlayerAnimatorSupport implements AnimationSupport {
             //$$      matrix.setIdentity();
             //$$      matrix.multiply(Matrix4f.createScaleMatrix(-1, 1, 1)); // What is going on with this?!
             //$$
-            //$$       matrix.multiply(new Matrix4f(NMSHelper.YP.rotationDegrees(realYaw)));
+            //$$       matrix.multiply(new Matrix4f(MathUtil.YP.rotationDegrees(realYaw)));
             //$$
             //$$        matrix.multiply(Matrix4f.createScaleMatrix(1, 1, -1));
             //$$          matrix.multiply(relativeTranslation);
@@ -110,9 +110,9 @@ public class PlayerAnimatorSupport implements AnimationSupport {
             //$$ relativeTranslation.multiply(Matrix4f.createTranslateMatrix(pos.getX(), pos.getY(), pos.getZ())); // Apply torso
             //$$                                                                                    // transformation
             //$$
-            //$$  relativeTranslation.multiply(NMSHelper.ZP.rotation(rot.getZ()));
-            //$$  relativeTranslation.multiply(NMSHelper.YP.rotation(rot.getY()));
-            //$$   relativeTranslation.multiply(NMSHelper.XP.rotation(rot.getX()));
+            //$$  relativeTranslation.multiply(MathUtil.ZP.rotation(rot.getZ()));
+            //$$  relativeTranslation.multiply(MathUtil.YP.rotation(rot.getY()));
+            //$$   relativeTranslation.multiply(MathUtil.XP.rotation(rot.getX()));
             //$$   // relativeTranslation.multiply(Quaternion.fromXYZ(rot.getX(), rot.getY(),
             //$$   // rot.getZ()));
             //$$
@@ -127,7 +127,7 @@ public class PlayerAnimatorSupport implements AnimationSupport {
             //$$    matrix.setIdentity();
             //$$    matrix.multiply(Matrix4f.createScaleMatrix(-1, 1, 1)); // What is going on with this?!
             //$$
-            //$$     matrix.multiply(new Matrix4f(NMSHelper.YP.rotationDegrees(realYaw)));
+            //$$     matrix.multiply(new Matrix4f(MathUtil.YP.rotationDegrees(realYaw)));
             //$$
             //$$      matrix.multiply(Matrix4f.createScaleMatrix(1, 1, -1));
             //$$        matrix.multiply(relativeTranslation);
