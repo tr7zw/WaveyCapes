@@ -7,7 +7,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import dev.tr7zw.waveycapes.versionless.CapeHolder;
-import dev.tr7zw.waveycapes.versionless.ExtendedPlayerRenderState;
 import dev.tr7zw.waveycapes.renderlayers.CustomCapeRenderLayer;
 import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.player.AbstractClientPlayer;
@@ -57,16 +56,6 @@ public abstract class PlayerRendererMixin
         injectedCape = true;
         addLayer(new CustomCapeRenderLayer(this));
     }
-
-    //#if MC >= 12102
-    @Inject(method = "extractRenderState(Lnet/minecraft/client/player/AbstractClientPlayer;Lnet/minecraft/client/renderer/entity/state/PlayerRenderState;F)V", at = @At("HEAD"))
-    private void addCapeHolder(AbstractClientPlayer abstractClientPlayer, PlayerRenderState playerRenderState, float f,
-            CallbackInfo ci) {
-        ExtendedPlayerRenderState extendedPlayerRenderState = (ExtendedPlayerRenderState) playerRenderState;
-        extendedPlayerRenderState.setCapeHolder((CapeHolder) abstractClientPlayer);
-        extendedPlayerRenderState.setUnderwater(abstractClientPlayer.isUnderWater());
-    }
-    //#endif
 
     // Dirty 1.16 workaround for slim skins for whatever reason not working right
     //#if MC < 11700
