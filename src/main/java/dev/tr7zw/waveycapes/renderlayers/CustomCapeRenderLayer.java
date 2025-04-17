@@ -73,12 +73,12 @@ public class CustomCapeRenderLayer extends RenderLayer<PlayerRenderState, Player
     //#endif
 
     //#if MC >= 12102
-    public void render(PoseStack poseStack, MultiBufferSource multiBufferSource, int i, PlayerRenderState renderState,
-            float f, float g) {
+    public void render(PoseStack poseStack, MultiBufferSource multiBufferSource, int packedLight,
+            PlayerRenderState renderState, float yRot, float xRot) {
         PlayerWrapper capeRenderInfo = new PlayerWrapper(renderState);
         float delta = Minecraft.getInstance().getDeltaTracker().getGameTimeDeltaPartialTick(false);
         //#else
-        //$$public void render(PoseStack poseStack, MultiBufferSource multiBufferSource, int i,
+        //$$public void render(PoseStack poseStack, MultiBufferSource multiBufferSource, int packedLight,
         //$$        AbstractClientPlayer abstractClientPlayer, float f, float g, float delta, float j, float k, float l) {
         //$$    PlayerWrapper capeRenderInfo = new PlayerWrapper(abstractClientPlayer);
         //#endif
@@ -104,13 +104,13 @@ public class CustomCapeRenderLayer extends RenderLayer<PlayerRenderState, Player
         }
 
         if (ModBase.config.capeStyle == CapeStyle.SMOOTH && renderer.vanillaUvValues()) {
-            renderSmoothCape(poseStack, multiBufferSource, renderer, capeRenderInfo, delta, i);
+            renderSmoothCape(poseStack, multiBufferSource, renderer, capeRenderInfo, delta, packedLight);
         } else {
             ModelPart[] parts = customCape;
             for (int part = 0; part < PART_COUNT; part++) {
                 ModelPart model = parts[part];
                 modifyPoseStack(poseStack, capeRenderInfo, delta, part);
-                renderer.render(capeRenderInfo, part, model, poseStack, multiBufferSource, i,
+                renderer.render(capeRenderInfo, part, model, poseStack, multiBufferSource, packedLight,
                         OverlayTexture.NO_OVERLAY);
                 poseStack.popPose();
             }
@@ -129,6 +129,8 @@ public class CustomCapeRenderLayer extends RenderLayer<PlayerRenderState, Player
         //$$ RenderSystem.defaultBlendFunc();
         //#endif
 
+        float alpha = SupportManager.getAlphaSupplier().get();
+
         Matrix4f oldPositionMatrix = null;
         for (int part = 0; part < PART_COUNT; part++) {
             modifyPoseStack(poseStack, capeRenderInfo, delta, part);
@@ -143,30 +145,30 @@ public class CustomCapeRenderLayer extends RenderLayer<PlayerRenderState, Player
 
             if (part == 0) {
                 addTopVertex(bufferBuilder, poseStack.last().pose(), oldPositionMatrix, capeWidth / 2F, 0, 0F,
-                        -capeWidth / 2F, 0, -capeDepth, light);
+                        -capeWidth / 2F, 0, -capeDepth, light, alpha);
             }
 
             if (part == PART_COUNT - 1) {
                 addBottomVertex(bufferBuilder, poseStack.last().pose(), poseStack.last().pose(), capeWidth / 2F,
                         (part + 1) * (capeHeight / PART_COUNT), 0F, -capeWidth / 2F,
-                        (part + 1) * (capeHeight / PART_COUNT), -capeDepth, light);
+                        (part + 1) * (capeHeight / PART_COUNT), -capeDepth, light, alpha);
             }
 
             addLeftVertex(bufferBuilder, poseStack.last().pose(), oldPositionMatrix, -capeWidth / 2F,
                     (part + 1) * (capeHeight / PART_COUNT), 0F, -capeWidth / 2F, part * (capeHeight / PART_COUNT),
-                    -capeDepth, part, light);
+                    -capeDepth, part, light, alpha);
 
             addRightVertex(bufferBuilder, poseStack.last().pose(), oldPositionMatrix, capeWidth / 2F,
                     (part + 1) * (capeHeight / PART_COUNT), 0F, capeWidth / 2F, part * (capeHeight / PART_COUNT),
-                    -capeDepth, part, light);
+                    -capeDepth, part, light, alpha);
 
             addBackVertex(bufferBuilder, poseStack.last().pose(), oldPositionMatrix, capeWidth / 2F,
                     (part + 1) * (capeHeight / PART_COUNT), -capeDepth, -capeWidth / 2F,
-                    part * (capeHeight / PART_COUNT), -capeDepth, part, light);
+                    part * (capeHeight / PART_COUNT), -capeDepth, part, light, alpha);
 
             addFrontVertex(bufferBuilder, oldPositionMatrix, poseStack.last().pose(), capeWidth / 2F,
                     (part + 1) * (capeHeight / PART_COUNT), 0F, -capeWidth / 2F, part * (capeHeight / PART_COUNT), 0F,
-                    part, light);
+                    part, light, alpha);
 
             oldPositionMatrix = new Matrix4f(poseStack.last().pose());
             poseStack.popPose();
@@ -296,7 +298,7 @@ public class CustomCapeRenderLayer extends RenderLayer<PlayerRenderState, Player
     }
 
     private static void addBackVertex(VertexConsumer bufferBuilder, Matrix4f matrix, Matrix4f oldMatrix, float x1,
-            float y1, float z1, float x2, float y2, float z2, int part, int light) {
+            float y1, float z1, float x2, float y2, float z2, int part, int light, float alpha) {
         float i;
         Matrix4f k;
         if (x1 < x2) {
@@ -330,17 +332,17 @@ public class CustomCapeRenderLayer extends RenderLayer<PlayerRenderState, Player
                 new Vector3(x1, y1, z2), light == 15728880);
 
         VertexConsumerUtil.addVertex(bufferBuilder, oldMatrix, x1, y2, z1, maxU, minV, OverlayTexture.NO_OVERLAY, light,
-                normalVec.x, normalVec.y, normalVec.z);
+                normalVec.x, normalVec.y, normalVec.z, alpha);
         VertexConsumerUtil.addVertex(bufferBuilder, oldMatrix, x2, y2, z1, minU, minV, OverlayTexture.NO_OVERLAY, light,
-                normalVec.x, normalVec.y, normalVec.z);
+                normalVec.x, normalVec.y, normalVec.z, alpha);
         VertexConsumerUtil.addVertex(bufferBuilder, matrix, x2, y1, z2, minU, maxV, OverlayTexture.NO_OVERLAY, light,
-                normalVec.x, normalVec.y, normalVec.z);
+                normalVec.x, normalVec.y, normalVec.z, alpha);
         VertexConsumerUtil.addVertex(bufferBuilder, matrix, x1, y1, z2, maxU, maxV, OverlayTexture.NO_OVERLAY, light,
-                normalVec.x, normalVec.y, normalVec.z);
+                normalVec.x, normalVec.y, normalVec.z, alpha);
     }
 
     private static void addFrontVertex(VertexConsumer bufferBuilder, Matrix4f matrix, Matrix4f oldMatrix, float x1,
-            float y1, float z1, float x2, float y2, float z2, int part, int light) {
+            float y1, float z1, float x2, float y2, float z2, int part, int light, float alpha) {
         float i;
         Matrix4f k;
         if (x1 < x2) {
@@ -374,17 +376,17 @@ public class CustomCapeRenderLayer extends RenderLayer<PlayerRenderState, Player
                 new Vector3(x1, y2, z2), light == 15728880);
 
         VertexConsumerUtil.addVertex(bufferBuilder, oldMatrix, x1, y1, z1, minU, maxV, OverlayTexture.NO_OVERLAY, light,
-                normalVec.x, normalVec.y, normalVec.z);
+                normalVec.x, normalVec.y, normalVec.z, alpha);
         VertexConsumerUtil.addVertex(bufferBuilder, oldMatrix, x2, y1, z1, maxU, maxV, OverlayTexture.NO_OVERLAY, light,
-                normalVec.x, normalVec.y, normalVec.z);
+                normalVec.x, normalVec.y, normalVec.z, alpha);
         VertexConsumerUtil.addVertex(bufferBuilder, matrix, x2, y2, z2, maxU, minV, OverlayTexture.NO_OVERLAY, light,
-                normalVec.x, normalVec.y, normalVec.z);
+                normalVec.x, normalVec.y, normalVec.z, alpha);
         VertexConsumerUtil.addVertex(bufferBuilder, matrix, x1, y2, z2, minU, minV, OverlayTexture.NO_OVERLAY, light,
-                normalVec.x, normalVec.y, normalVec.z);
+                normalVec.x, normalVec.y, normalVec.z, alpha);
     }
 
     private static void addLeftVertex(VertexConsumer bufferBuilder, Matrix4f matrix, Matrix4f oldMatrix, float x1,
-            float y1, float z1, float x2, float y2, float z2, int part, int light) {
+            float y1, float z1, float x2, float y2, float z2, int part, int light, float alpha) {
         float i;
         if (x1 < x2) {
             i = x1;
@@ -413,17 +415,17 @@ public class CustomCapeRenderLayer extends RenderLayer<PlayerRenderState, Player
                 new Vector3(x2, y2, z1), light == 15728880);
 
         VertexConsumerUtil.addVertex(bufferBuilder, matrix, x2, y1, z1, minU, maxV, OverlayTexture.NO_OVERLAY, light,
-                normalVec.x, normalVec.y, normalVec.z);
+                normalVec.x, normalVec.y, normalVec.z, alpha);
         VertexConsumerUtil.addVertex(bufferBuilder, matrix, x2, y1, z2, maxU, maxV, OverlayTexture.NO_OVERLAY, light,
-                normalVec.x, normalVec.y, normalVec.z);
+                normalVec.x, normalVec.y, normalVec.z, alpha);
         VertexConsumerUtil.addVertex(bufferBuilder, oldMatrix, x2, y2, z2, maxU, minV, OverlayTexture.NO_OVERLAY, light,
-                normalVec.x, normalVec.y, normalVec.z);
+                normalVec.x, normalVec.y, normalVec.z, alpha);
         VertexConsumerUtil.addVertex(bufferBuilder, oldMatrix, x2, y2, z1, minU, minV, OverlayTexture.NO_OVERLAY, light,
-                normalVec.x, normalVec.y, normalVec.z);
+                normalVec.x, normalVec.y, normalVec.z, alpha);
     }
 
     private static void addRightVertex(VertexConsumer bufferBuilder, Matrix4f matrix, Matrix4f oldMatrix, float x1,
-            float y1, float z1, float x2, float y2, float z2, int part, int light) {
+            float y1, float z1, float x2, float y2, float z2, int part, int light, float alpha) {
         float i;
         if (x1 < x2) {
             i = x1;
@@ -452,17 +454,17 @@ public class CustomCapeRenderLayer extends RenderLayer<PlayerRenderState, Player
                 new Vector3(x2, y2, z2), light == 15728880);
 
         VertexConsumerUtil.addVertex(bufferBuilder, matrix, x2, y1, z2, minU, maxV, OverlayTexture.NO_OVERLAY, light,
-                normalVec.x, normalVec.y, normalVec.z);
+                normalVec.x, normalVec.y, normalVec.z, alpha);
         VertexConsumerUtil.addVertex(bufferBuilder, matrix, x2, y1, z1, maxU, maxV, OverlayTexture.NO_OVERLAY, light,
-                normalVec.x, normalVec.y, normalVec.z);
+                normalVec.x, normalVec.y, normalVec.z, alpha);
         VertexConsumerUtil.addVertex(bufferBuilder, oldMatrix, x2, y2, z1, maxU, minV, OverlayTexture.NO_OVERLAY, light,
-                normalVec.x, normalVec.y, normalVec.z);
+                normalVec.x, normalVec.y, normalVec.z, alpha);
         VertexConsumerUtil.addVertex(bufferBuilder, oldMatrix, x2, y2, z2, minU, minV, OverlayTexture.NO_OVERLAY, light,
-                normalVec.x, normalVec.y, normalVec.z);
+                normalVec.x, normalVec.y, normalVec.z, alpha);
     }
 
     private static void addBottomVertex(VertexConsumer bufferBuilder, Matrix4f matrix, Matrix4f oldMatrix, float x1,
-            float y1, float z1, float x2, float y2, float z2, int light) {
+            float y1, float z1, float x2, float y2, float z2, int light, float alpha) {
         float i;
         if (x1 < x2) {
             i = x1;
@@ -486,17 +488,17 @@ public class CustomCapeRenderLayer extends RenderLayer<PlayerRenderState, Player
                 new Vector3(x1, y1, z1), light == 15728880);
 
         VertexConsumerUtil.addVertex(bufferBuilder, oldMatrix, x1, y2, z2, maxU, minV, OverlayTexture.NO_OVERLAY, light,
-                normalVec.x, normalVec.y, normalVec.z);
+                normalVec.x, normalVec.y, normalVec.z, alpha);
         VertexConsumerUtil.addVertex(bufferBuilder, oldMatrix, x2, y2, z2, minU, minV, OverlayTexture.NO_OVERLAY, light,
-                normalVec.x, normalVec.y, normalVec.z);
+                normalVec.x, normalVec.y, normalVec.z, alpha);
         VertexConsumerUtil.addVertex(bufferBuilder, matrix, x2, y1, z1, minU, maxV, OverlayTexture.NO_OVERLAY, light,
-                normalVec.x, normalVec.y, normalVec.z);
+                normalVec.x, normalVec.y, normalVec.z, alpha);
         VertexConsumerUtil.addVertex(bufferBuilder, matrix, x1, y1, z1, maxU, maxV, OverlayTexture.NO_OVERLAY, light,
-                normalVec.x, normalVec.y, normalVec.z);
+                normalVec.x, normalVec.y, normalVec.z, alpha);
     }
 
     private static void addTopVertex(VertexConsumer bufferBuilder, Matrix4f matrix, Matrix4f oldMatrix, float x1,
-            float y1, float z1, float x2, float y2, float z2, int light) {
+            float y1, float z1, float x2, float y2, float z2, int light, float alpha) {
         float i;
         if (x1 < x2) {
             i = x1;
@@ -520,13 +522,13 @@ public class CustomCapeRenderLayer extends RenderLayer<PlayerRenderState, Player
                 new Vector3(x1, y1, z2), light == 15728880);
 
         VertexConsumerUtil.addVertex(bufferBuilder, oldMatrix, x1, y2, z1, maxU, maxV, OverlayTexture.NO_OVERLAY, light,
-                normalVec.x, normalVec.y, normalVec.z);
+                normalVec.x, normalVec.y, normalVec.z, alpha);
         VertexConsumerUtil.addVertex(bufferBuilder, oldMatrix, x2, y2, z1, minU, maxV, OverlayTexture.NO_OVERLAY, light,
-                normalVec.x, normalVec.y, normalVec.z);
+                normalVec.x, normalVec.y, normalVec.z, alpha);
         VertexConsumerUtil.addVertex(bufferBuilder, matrix, x2, y1, z2, minU, minV, OverlayTexture.NO_OVERLAY, light,
-                normalVec.x, normalVec.y, normalVec.z);
+                normalVec.x, normalVec.y, normalVec.z, alpha);
         VertexConsumerUtil.addVertex(bufferBuilder, matrix, x1, y1, z2, maxU, minV, OverlayTexture.NO_OVERLAY, light,
-                normalVec.x, normalVec.y, normalVec.z);
+                normalVec.x, normalVec.y, normalVec.z, alpha);
     }
 
     private static Vector3 getNormalVec(Matrix4f matrix1, Matrix4f matrix2, Matrix4f matrix3, Vector3 vector1,
@@ -566,7 +568,7 @@ public class CustomCapeRenderLayer extends RenderLayer<PlayerRenderState, Player
             return null;
         } else {
             vanillaCape.vertexConsumer = multiBufferSource
-                    .getBuffer(RenderType.entityCutout(capeRenderInfo.getCapeTexture()));
+                    .getBuffer(RenderType.entityTranslucent(capeRenderInfo.getCapeTexture()));
             return vanillaCape;
         }
     }

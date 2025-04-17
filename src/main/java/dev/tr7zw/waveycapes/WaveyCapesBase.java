@@ -11,6 +11,7 @@ import dev.tr7zw.transition.mc.MathUtil;
 import dev.tr7zw.waveycapes.delegate.PlayerDelegate;
 import dev.tr7zw.waveycapes.support.AnimationSupport;
 import dev.tr7zw.waveycapes.support.PlayerAnimatorSupport;
+import dev.tr7zw.waveycapes.support.ShoulderSurfingSupport;
 import dev.tr7zw.waveycapes.support.SupportManager;
 import dev.tr7zw.waveycapes.versionless.CapeMovement;
 import dev.tr7zw.waveycapes.versionless.CapeStyle;
@@ -99,7 +100,7 @@ public abstract class WaveyCapesBase extends ModBase {
         livingEntity.yHeadRotO = EntityUtil.getYRot(livingEntity);
         NMSUtil.prepareLighting();
         EntityRenderDispatcher entityRenderDispatcher = Minecraft.getInstance().getEntityRenderDispatcher();
-        NMSUtil.conjugate(quaternion2);
+        MathUtil.conjugate(quaternion2);
         entityRenderDispatcher.overrideCameraOrientation(quaternion2);
         entityRenderDispatcher.setRenderShadow(false);
         MultiBufferSource.BufferSource bufferSource = Minecraft.getInstance().renderBuffers().bufferSource();
@@ -134,6 +135,10 @@ public abstract class WaveyCapesBase extends ModBase {
             LOGGER.info("Wavey Capes loaded PlayerAnimator support!");
         }
         //#endif
+        if (doesClassExist("com.github.exopandora.shouldersurfing.api.client.ICameraEntityRenderer")) {
+            ShoulderSurfingSupport.init();
+            LOGGER.info("Wavey Capes loaded Shoulder Surfing support!");
+        }
     }
 
 }

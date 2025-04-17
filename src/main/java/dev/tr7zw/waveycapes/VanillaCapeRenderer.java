@@ -24,7 +24,7 @@ public class VanillaCapeRenderer implements CapeRenderer {
     public VertexConsumer getVertexConsumer(MultiBufferSource multiBufferSource, PlayerWrapper capeRenderInfo) {
         ResourceLocation cape = capeRenderInfo.getCapeTexture();
         if (cape != null) {
-            return multiBufferSource.getBuffer(RenderType.entityCutout(cape));
+            return multiBufferSource.getBuffer(RenderType.entityTranslucent(cape));
         }
         return null;
     }
