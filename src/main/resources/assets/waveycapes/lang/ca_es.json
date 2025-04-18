@@ -1,1 +1,21 @@
-
+{
+    "text.wc.title": "WaveyCapes Configuració",
+    "text.wc.setting.capestyle": "Estil de la capa",
+    "text.wc.setting.capestyle.tooltip": "Canviar entre una capa suaument corbada o blocada.",
+    "text.wc.setting.capestyle.BLOCKY": "Blocada",
+    "text.wc.setting.capestyle.SMOOTH": "Suau",
+    "text.wc.setting.windmode": "Mode Vent",
+    "text.wc.setting.windmode.tooltip": "Afegir moviment extra a la capa.",
+    "text.wc.setting.windmode.NONE": "Sense Vent",
+    "text.wc.setting.windmode.WAVES": "Onades",
+    "text.wc.setting.capemovement": "Moviment de la capa",
+    "text.wc.setting.capemovement.tooltip": "Canviar la manera en la que la capa es comporta.",
+    "text.wc.setting.capemovement.VANILLA": "Clàssic",
+    "text.wc.setting.capemovement.BASIC_SIMULATION": "Simulació",
+    "text.wc.setting.capemovement.BASIC_SIMULATION_3D": "Simulació V2",
+    "text.wc.setting.capemovement.DUNGEONS": "Masmorres",
+    "text.wc.setting.gravity": "Gravetat",
+    "text.wc.setting.gravity.tooltip": "Canviar la quantitat de gravetat afegida a la capa.",
+    "text.wc.setting.heightMultiplier": "Multiplicador d'alçada",
+    "text.wc.setting.heightMultiplier.tooltip": "Canviar com extremadament reacciona la capa al moviment Y."
+}
