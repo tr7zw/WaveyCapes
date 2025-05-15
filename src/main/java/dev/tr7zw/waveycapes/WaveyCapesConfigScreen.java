@@ -6,14 +6,19 @@ import java.util.List;
 import dev.tr7zw.transition.mc.ComponentProvider;
 import dev.tr7zw.trender.gui.client.AbstractConfigScreen;
 import dev.tr7zw.trender.gui.client.BackgroundPainter;
+import dev.tr7zw.trender.gui.client.RenderContext;
 import dev.tr7zw.trender.gui.widget.WButton;
 import dev.tr7zw.trender.gui.widget.WGridPanel;
+import dev.tr7zw.trender.gui.widget.WWidget;
+import dev.tr7zw.trender.gui.widget.data.InputResult;
 import dev.tr7zw.trender.gui.widget.data.Insets;
+import dev.tr7zw.waveycapes.versionless.CapeHolder;
 import dev.tr7zw.waveycapes.versionless.CapeMovement;
 import dev.tr7zw.waveycapes.versionless.CapeStyle;
 import dev.tr7zw.waveycapes.versionless.ModBase;
 import dev.tr7zw.waveycapes.versionless.WindMode;
 import dev.tr7zw.waveycapes.versionless.config.Config;
+import dev.tr7zw.waveycapes.versionless.nms.MinecraftPlayer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.CommonComponents;
@@ -66,6 +71,36 @@ public class WaveyCapesConfigScreen {
 
     }
 
+    private static class PlayerPreview extends WWidget {
+        private final Minecraft mc;
+        private int rotationX = 164;
+        private int rotationY = 5;
+
+        public PlayerPreview(Minecraft mc) {
+            this.mc = mc;
+            setSize(60, 90);
+        }
+
+        @Override
+        public void paint(RenderContext context, int x, int y, int mouseX, int mouseY) {
+//            context.fill(x, y, x + getWidth(), y + getHeight(), 0xFF000000);
+            if (mc.level != null) {
+                WaveyCapesBase.INSTANCE.drawEntity(x + getWidth() / 2, y + getHeight() / 2, 40, rotationX, rotationY,
+                        mc.player, 0); //FIXME
+            }
+        }
+
+        @Override
+        public InputResult onMouseDrag(int x, int y, int button, double deltaX, double deltaY) {
+            rotationX -= deltaX;
+            rotationY -= deltaY;
+            return InputResult.PROCESSED;
+        }
+
+        
+    }
+    
+    
     private static class CustomConfigScreen extends AbstractConfigScreen {
 
         public CustomConfigScreen(Screen previous) {
@@ -104,6 +139,8 @@ public class WaveyCapesConfigScreen {
                 Minecraft.getInstance().setScreen(previous);
             });
             root.add(doneButton, 0, 26, 6, 2);
+            
+            root.add(new PlayerPreview(Minecraft.getInstance()), 10, 14);
 
             WButton resetButton = new WButton(ComponentProvider.translatable("controls.reset"));
             resetButton.setOnClick(() -> {

@@ -64,7 +64,7 @@ public abstract class WaveyCapesBase extends ModBase {
     }
 
     // Modified version from InventoryScreen
-    private void drawEntity(int x, int y, int size, float lookX, float lookY, LivingEntity livingEntity, float delta) {
+    void drawEntity(int x, int y, int size, float lookX, float lookY, LivingEntity livingEntity, float delta) {
         float rotationModifyer = 3;
         //        PoseStack poseStack = NMSUtil.getPoseStack();
         //        poseStack.pushPose();
