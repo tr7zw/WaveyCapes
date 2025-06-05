@@ -12,11 +12,6 @@ import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
 //#endif
 
-import com.mojang.blaze3d.platform.Lighting;
-//#if MC < 12102
-//$$import com.mojang.blaze3d.systems.RenderSystem;
-//#endif
-
 public class NMSUtil {
 
     public static ModelPart[] buildCape(int texWidth, int texHight, IntUnaryOperator uvX, IntUnaryOperator uvY) {
@@ -42,34 +37,5 @@ public class NMSUtil {
         return customCape;
     }
 
-    public static void prepareViewMatrix(double xpos, double ypos) {
-        //#if MC >= 12102
-        // nothing
-        //#elseif MC >= 11700
-        //$$ RenderSystem.applyModelViewMatrix();
-        //#else
-        //$$ RenderSystem.pushMatrix();
-        //$$ RenderSystem.translatef((float)xpos, (float)ypos, 1050.0F);
-        //$$ RenderSystem.scalef(1.0F, 1.0F, -1.0F);
-        //#endif
-    }
-
-    public static void resetViewMatrix() {
-        //#if MC >= 12102
-        // nothing
-        //#elseif MC >= 11700
-        //$$ RenderSystem.applyModelViewMatrix();
-        //#else
-        //$$ RenderSystem.popMatrix();
-        //#endif
-    }
-
-    public static void prepareLighting() {
-        //#if MC >= 11700
-        Lighting.setupForEntityInInventory();
-        //#else
-        //$$ Lighting.setupForFlatItems();
-        //#endif
-    }
 
 }

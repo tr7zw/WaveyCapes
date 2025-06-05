@@ -6,19 +6,15 @@ import java.util.List;
 import dev.tr7zw.transition.mc.ComponentProvider;
 import dev.tr7zw.trender.gui.client.AbstractConfigScreen;
 import dev.tr7zw.trender.gui.client.BackgroundPainter;
-import dev.tr7zw.trender.gui.client.RenderContext;
 import dev.tr7zw.trender.gui.widget.WButton;
 import dev.tr7zw.trender.gui.widget.WGridPanel;
-import dev.tr7zw.trender.gui.widget.WWidget;
-import dev.tr7zw.trender.gui.widget.data.InputResult;
+import dev.tr7zw.trender.gui.widget.WPlayerPreview;
 import dev.tr7zw.trender.gui.widget.data.Insets;
-import dev.tr7zw.waveycapes.versionless.CapeHolder;
 import dev.tr7zw.waveycapes.versionless.CapeMovement;
 import dev.tr7zw.waveycapes.versionless.CapeStyle;
 import dev.tr7zw.waveycapes.versionless.ModBase;
 import dev.tr7zw.waveycapes.versionless.WindMode;
 import dev.tr7zw.waveycapes.versionless.config.Config;
-import dev.tr7zw.waveycapes.versionless.nms.MinecraftPlayer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.CommonComponents;
@@ -27,79 +23,7 @@ public class WaveyCapesConfigScreen {
 
     public static Screen createConfigScreen(Screen parent) {
         return new CustomConfigScreen(parent).createScreen();
-        //        return new CustomConfigScreen(parent, "text.wc.title") {
-        //
-        //            private int rotationX = 164;
-        //            private int rotationY = 5;
-        //
-        //
-        //            @Override
-        //            public boolean keyPressed(int i, int j, int k) {
-        //                if (i == 263) { // left
-        //                    rotationX--;
-        //                }
-        //                if (i == 262) { // right
-        //                    rotationX++;
-        //                }
-        //                if (i == 264) { // down
-        //                    rotationY--;
-        //                }
-        //                if (i == 265) { // up
-        //                    rotationY++;
-        //                }
-        //                return super.keyPressed(i, j, k);
-        //            }
-        //
-        //            @Override
-        //            //#if MC >= 12000
-        //            public void render(GuiGraphics guiGraphics, int xMouse, int yMouse, float f) {
-        //                //#else
-        //                //$$public void render(PoseStack guiGraphics, int xMouse, int yMouse, float f) {
-        //                //#endif
-        //                super.render(guiGraphics, xMouse, yMouse, f);
-        //                if (this.minecraft.level != null) {
-        //                    int x = minecraft.getWindow().getGuiScaledWidth() / 2;
-        //                    int y = minecraft.getWindow().getGuiScaledHeight()
-        //                            - (minecraft.getWindow().getGuiScaledHeight() / 3);
-        //                    int size = (int) (40f * (minecraft.getWindow().getGuiScaledHeight() / 200f));
-        //                    drawEntity(x, y, size, rotationX, rotationY, this.minecraft.player, f);
-        //                }
-        //            }
-        //
-        //
-        //        };
-
     }
-
-    private static class PlayerPreview extends WWidget {
-        private final Minecraft mc;
-        private int rotationX = 164;
-        private int rotationY = 5;
-
-        public PlayerPreview(Minecraft mc) {
-            this.mc = mc;
-            setSize(60, 90);
-        }
-
-        @Override
-        public void paint(RenderContext context, int x, int y, int mouseX, int mouseY) {
-//            context.fill(x, y, x + getWidth(), y + getHeight(), 0xFF000000);
-            if (mc.level != null) {
-                WaveyCapesBase.INSTANCE.drawEntity(x + getWidth() / 2, y + getHeight() / 2, 40, rotationX, rotationY,
-                        mc.player, 0); //FIXME
-            }
-        }
-
-        @Override
-        public InputResult onMouseDrag(int x, int y, int button, double deltaX, double deltaY) {
-            rotationX -= deltaX;
-            rotationY -= deltaY;
-            return InputResult.PROCESSED;
-        }
-
-        
-    }
-    
     
     private static class CustomConfigScreen extends AbstractConfigScreen {
 
@@ -140,7 +64,11 @@ public class WaveyCapesConfigScreen {
             });
             root.add(doneButton, 0, 26, 6, 2);
             
-            root.add(new PlayerPreview(Minecraft.getInstance()), 10, 14);
+            var playerPreview = new WPlayerPreview();
+            playerPreview.setRotationX(164);
+            playerPreview.setRotationY(5);
+            playerPreview.setShowBackground(true);
+            root.add(playerPreview, 10, 14);
 
             WButton resetButton = new WButton(ComponentProvider.translatable("controls.reset"));
             resetButton.setOnClick(() -> {
@@ -164,6 +92,8 @@ public class WaveyCapesConfigScreen {
         public void save() {
             WaveyCapesBase.INSTANCE.writeConfig();
         }
+        
+        
 
     }
 
