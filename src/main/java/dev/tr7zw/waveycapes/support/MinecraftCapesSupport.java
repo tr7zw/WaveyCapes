@@ -8,7 +8,7 @@ import java.util.function.Function;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 
-import dev.tr7zw.waveycapes.CapeRenderInfo;
+import dev.tr7zw.transition.mc.entitywrapper.PlayerWrapper;
 import dev.tr7zw.waveycapes.CapeRenderer;
 import dev.tr7zw.waveycapes.NMSUtil;
 import dev.tr7zw.waveycapes.versionless.ModBase;
@@ -24,12 +24,12 @@ import net.minecraftcapes.player.PlayerHandler;
 public class MinecraftCapesSupport implements ModSupport {
 
     private MinecraftCapesRenderer render = new MinecraftCapesRenderer();
-    private Function<CapeRenderInfo, PlayerHandler> getCape = null;
+    private Function<PlayerWrapper, PlayerHandler> getCape = null;
 
-    private void init(CapeRenderInfo test) {
+    private void init(PlayerWrapper test) {
         try {
-            PlayerHandler.get(test.getCapeHolder().getWCUUID()).getCapeLocation();
-            getCape = player -> PlayerHandler.get(player.getCapeHolder().getWCUUID());
+            PlayerHandler.get(test.getEntity().getUUID()).getCapeLocation();
+            getCape = player -> PlayerHandler.get(player.getEntity().getUUID());
             ModBase.LOGGER.info("Using 'get(UUID)' method for MinecraftCapes.");
             return;
         } catch (Throwable ex) {
@@ -63,7 +63,7 @@ public class MinecraftCapesSupport implements ModSupport {
     }
 
     @Override
-    public boolean shouldBeUsed(CapeRenderInfo capeRenderInfo) {
+    public boolean shouldBeUsed(PlayerWrapper capeRenderInfo) {
         if (!MinecraftCapesConfig.isCapeVisible())
             return false;
         if (getCape == null)
@@ -80,50 +80,50 @@ public class MinecraftCapesSupport implements ModSupport {
     private class MinecraftCapesRenderer implements CapeRenderer {
 
         @Override
-        public void render(CapeRenderInfo capeRenderInfo, int part, ModelPart model, PoseStack poseStack,
+        public void render(PlayerWrapper capeRenderInfo, int part, ModelPart model, PoseStack poseStack,
                 MultiBufferSource multiBufferSource, int light, int overlay) {
             PlayerHandler playerHandler = getCape.apply(capeRenderInfo);
             VertexConsumer vertexConsumer;
             if (MinecraftCapesConfig.isCapeVisible() && playerHandler.getCapeLocation() != null) {
                 //#if MC >= 12100
                 vertexConsumer = ItemRenderer.getArmorFoilBuffer(multiBufferSource,
-                        RenderType.armorCutoutNoCull(playerHandler.getCapeLocation()), playerHandler.getHasCapeGlint());
+                        RenderType.entityTranslucent(playerHandler.getCapeLocation()), playerHandler.getHasCapeGlint());
                 //#else
                 //$$ vertexConsumer = ItemRenderer.getArmorFoilBuffer(multiBufferSource,
-                //$$         RenderType.armorCutoutNoCull(playerHandler.getCapeLocation()), false,
+                //$$         RenderType.entityTranslucent(playerHandler.getCapeLocation()), false,
                 //$$         playerHandler.getHasCapeGlint());
                 //#endif
             } else {
                 //#if MC >= 12100
                 vertexConsumer = ItemRenderer.getArmorFoilBuffer(multiBufferSource,
-                        RenderType.armorCutoutNoCull(capeRenderInfo.getCapeTexture()), false);
+                        RenderType.entityTranslucent(capeRenderInfo.getCapeTexture()), false);
                 //#else
                 //$$  vertexConsumer = ItemRenderer.getArmorFoilBuffer(multiBufferSource,
-                //$$          RenderType.armorCutoutNoCull(capeRenderInfo.getCapeTexture()), false, false);
+                //$$          RenderType.entityTranslucent(capeRenderInfo.getCapeTexture()), false, false);
                 //#endif
             }
             model.render(poseStack, vertexConsumer, light, OverlayTexture.NO_OVERLAY);
         }
 
         @Override
-        public VertexConsumer getVertexConsumer(MultiBufferSource multiBufferSource, CapeRenderInfo capeRenderInfo) {
+        public VertexConsumer getVertexConsumer(MultiBufferSource multiBufferSource, PlayerWrapper capeRenderInfo) {
             PlayerHandler playerHandler = getCape.apply(capeRenderInfo);
             if (MinecraftCapesConfig.isCapeVisible() && playerHandler.getCapeLocation() != null) {
                 //#if MC >= 12100
                 return ItemRenderer.getArmorFoilBuffer(multiBufferSource,
-                        RenderType.armorCutoutNoCull(playerHandler.getCapeLocation()), playerHandler.getHasCapeGlint());
+                        RenderType.entityTranslucent(playerHandler.getCapeLocation()), playerHandler.getHasCapeGlint());
                 //#else
                 //$$  return ItemRenderer.getArmorFoilBuffer(multiBufferSource,
-                //$$          RenderType.armorCutoutNoCull(playerHandler.getCapeLocation()), false,
+                //$$          RenderType.entityTranslucent(playerHandler.getCapeLocation()), false,
                 //$$          playerHandler.getHasCapeGlint());
                 //#endif
             } else {
                 //#if MC >= 12100
                 return ItemRenderer.getArmorFoilBuffer(multiBufferSource,
-                        RenderType.armorCutoutNoCull(capeRenderInfo.getCapeTexture()), false);
+                        RenderType.entityTranslucent(capeRenderInfo.getCapeTexture()), false);
                 //#else
                 //$$  return ItemRenderer.getArmorFoilBuffer(multiBufferSource,
-                //$$          RenderType.armorCutoutNoCull(capeRenderInfo.getCapeTexture()), false, false);
+                //$$          RenderType.entityTranslucent(capeRenderInfo.getCapeTexture()), false, false);
                 //#endif
             }
         }

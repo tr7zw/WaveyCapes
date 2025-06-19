@@ -2,6 +2,7 @@ package dev.tr7zw.waveycapes.support;
 
 import java.util.WeakHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
+
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.unascribed.ears.api.EarsFeatureType;
@@ -10,12 +11,11 @@ import com.unascribed.ears.api.iface.EarsInhibitor;
 import com.unascribed.ears.api.registry.EarsInhibitorRegistry;
 import com.unascribed.ears.common.render.EarsRenderDelegate.TexSource;
 
-import dev.tr7zw.waveycapes.CapeRenderInfo;
-import dev.tr7zw.util.NMSHelper;
+import dev.tr7zw.transition.mc.GeneralUtil;
+import dev.tr7zw.transition.mc.entitywrapper.PlayerWrapper;
 import dev.tr7zw.waveycapes.CapeRenderer;
 import dev.tr7zw.waveycapes.NMSUtil;
 import net.minecraft.client.model.geom.ModelPart;
-import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.ItemRenderer;
@@ -34,8 +34,8 @@ public class EarsSupport implements ModSupport, EarsInhibitor {
     }
 
     @Override
-    public boolean shouldBeUsed(CapeRenderInfo capeRenderInfo) {
-        EarsFeatures playerFeatures = EarsFeatures.getById(capeRenderInfo.getCapeHolder().getWCUUID());
+    public boolean shouldBeUsed(PlayerWrapper capeRenderInfo) {
+        EarsFeatures playerFeatures = EarsFeatures.getById(capeRenderInfo.getEntity().getUUID());
         return playerFeatures != null && playerFeatures.capeEnabled;
     }
 
@@ -44,10 +44,10 @@ public class EarsSupport implements ModSupport, EarsInhibitor {
         return render;
     }
 
-    private ResourceLocation getPlayerCape(CapeRenderInfo capeRenderInfo, EarsFeatures playerFeatures) {
+    private ResourceLocation getPlayerCape(PlayerWrapper capeRenderInfo, EarsFeatures playerFeatures) {
         ResourceLocation skin = capeRenderInfo.getCapeTexture();
         if (skin != null) {
-            return NMSHelper.getResourceLocation(skin.getNamespace(), TexSource.CAPE.addSuffix(skin.getPath()));
+            return GeneralUtil.getResourceLocation(skin.getNamespace(), TexSource.CAPE.addSuffix(skin.getPath()));
         }
         return null;
     }
@@ -55,9 +55,9 @@ public class EarsSupport implements ModSupport, EarsInhibitor {
     private class EarsRenderer implements CapeRenderer {
 
         @Override
-        public void render(CapeRenderInfo capeRenderInfo, int part, ModelPart model, PoseStack poseStack,
+        public void render(PlayerWrapper capeRenderInfo, int part, ModelPart model, PoseStack poseStack,
                 MultiBufferSource multiBufferSource, int light, int overlay) {
-            EarsFeatures playerFeatures = EarsFeatures.getById(capeRenderInfo.getCapeHolder().getWCUUID());
+            EarsFeatures playerFeatures = EarsFeatures.getById(capeRenderInfo.getEntity().getUUID());
 
             VertexConsumer vertexConsumer = null;
             if (playerFeatures != null && playerFeatures.capeEnabled) {
