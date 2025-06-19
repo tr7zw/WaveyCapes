@@ -24,7 +24,7 @@ public class WaveyCapesConfigScreen {
     public static Screen createConfigScreen(Screen parent) {
         return new CustomConfigScreen(parent).createScreen();
     }
-    
+
     private static class CustomConfigScreen extends AbstractConfigScreen {
 
         public CustomConfigScreen(Screen previous) {
@@ -63,7 +63,7 @@ public class WaveyCapesConfigScreen {
                 Minecraft.getInstance().setScreen(previous);
             });
             root.add(doneButton, 0, 26, 6, 2);
-            
+
             var playerPreview = new WPlayerPreview();
             playerPreview.setRotationX(164);
             playerPreview.setRotationY(5);
@@ -92,8 +92,6 @@ public class WaveyCapesConfigScreen {
         public void save() {
             WaveyCapesBase.INSTANCE.writeConfig();
         }
-        
-        
 
     }
 

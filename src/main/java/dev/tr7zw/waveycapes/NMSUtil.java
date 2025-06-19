@@ -37,5 +37,4 @@ public class NMSUtil {
         return customCape;
     }
 
-
 }

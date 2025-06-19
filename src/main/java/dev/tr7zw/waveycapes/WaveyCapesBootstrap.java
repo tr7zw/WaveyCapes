@@ -4,11 +4,14 @@
 //$$import net.minecraftforge.api.distmarker.Dist;
 //$$import net.minecraftforge.fml.DistExecutor;
 //$$import net.minecraftforge.fml.common.Mod;
+//$$import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+//$$import dev.tr7zw.transition.loader.ModLoaderUtil;
 //$$
 //$$@Mod("waveycapes")
 //$$public class WaveyCapesBootstrap {
 //$$
-//$$	public WaveyCapesBootstrap() {
+//$$	public WaveyCapesBootstrap(FMLJavaModLoadingContext context) {
+//$$        ModLoaderUtil.setModLoadingContext(context);
 //$$		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> { 
 //$$         new WaveyCapesMod().init();
 //$$        });
