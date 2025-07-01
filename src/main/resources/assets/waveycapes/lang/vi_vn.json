@@ -1,0 +1,21 @@
+{
+    "text.wc.title": "Cài Đặt WaveyCapes",
+    "text.wc.setting.capestyle": "Kiểu Áo Choàng",
+    "text.wc.setting.capestyle.tooltip": "Chuyển đổi giữa áo choàng mềm mại và áo choàng khối.",
+    "text.wc.setting.capestyle.BLOCKY": "Khối",
+    "text.wc.setting.capestyle.SMOOTH": "Mềm Mại",
+    "text.wc.setting.windmode": "Chế Độ Gió",
+    "text.wc.setting.windmode.tooltip": "Thêm chuyển động cho áo choàng.",
+    "text.wc.setting.windmode.NONE": "Không Gió",
+    "text.wc.setting.windmode.WAVES": "Sóng",
+    "text.wc.setting.capemovement": "Chuyển Động Áo Choàng",
+    "text.wc.setting.capemovement.tooltip": "Thay đổi cách áo choàng hoạt động.",
+    "text.wc.setting.capemovement.VANILLA": "Cổ Điển",
+    "text.wc.setting.capemovement.BASIC_SIMULATION": "Mô Phỏng",
+    "text.wc.setting.capemovement.BASIC_SIMULATION_3D": "Mô Phỏng V2",
+    "text.wc.setting.capemovement.DUNGEONS": "Hầm Ngục",
+    "text.wc.setting.gravity": "Trọng Lực",
+    "text.wc.setting.gravity.tooltip": "Thay đổi lượng trọng lực tác dụng lên áo choàng.",
+    "text.wc.setting.heightMultiplier": "Hệ Số Chiều Cao",
+    "text.wc.setting.heightMultiplier.tooltip": "Thay đổi mức độ áo choàng phản ứng với chuyển động trục Y."
+}
