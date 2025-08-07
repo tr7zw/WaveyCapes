@@ -3,7 +3,7 @@ source: "https://github.com/tr7zw/ProcessedModTemplate/tree/master"
 replacements:
   name: "WaveyCapes"
   id: "waveycapes"
-  version: "1.6.1.1"
+  version: "1.6.2"
   description: "The cape shouldn't be a static slab!"
   homepageUrl: "https://modrinth.com/mod/wavey-capes"
   sourcesUrl: "https://github.com/tr7zw/WaveyCapes"
