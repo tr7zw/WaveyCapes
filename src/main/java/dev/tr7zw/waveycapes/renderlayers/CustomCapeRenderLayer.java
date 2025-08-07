@@ -95,6 +95,9 @@ public class CustomCapeRenderLayer extends RenderLayer<PlayerRenderState, Player
         }
 
         CapeHolder holder = (CapeHolder) capeRenderInfo.getEntity();
+        if (holder == null) {
+            return;
+        }
         holder.updateSimulation(PART_COUNT);
         poseStack.pushPose();
         getParentModel().body.translateAndRotate(poseStack);
