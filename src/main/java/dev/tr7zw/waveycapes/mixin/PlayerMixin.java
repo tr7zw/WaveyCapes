@@ -2,6 +2,7 @@ package dev.tr7zw.waveycapes.mixin;
 
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 
 import java.util.UUID;
@@ -19,9 +20,12 @@ import dev.tr7zw.waveycapes.versionless.util.Vector3;
 import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.client.player.AbstractClientPlayer;
-import net.minecraft.world.entity.player.Player;
 
-@Mixin(Player.class)
+//#if MC >= 12109
+@Mixin(value = LivingEntity.class)
+//#else
+//$$@Mixin(net.minecraft.world.entity.player.Player.class)
+//#endif
 public abstract class PlayerMixin extends Entity implements CapeHolder {
 
     public PlayerMixin(EntityType<?> entityType, Level level) {
@@ -46,8 +50,13 @@ public abstract class PlayerMixin extends Entity implements CapeHolder {
         this.dirty = true;
     }
 
-    @Inject(method = "moveCloak", at = @At("HEAD"))
+    @Inject(method = "tick", at = @At("HEAD"))
     private void moveCloakUpdate(CallbackInfo info) {
+        //#if MC >= 12109
+        if(!((Object)this instanceof net.minecraft.world.entity.Avatar)) {
+            return;
+        }
+        //#endif
         if ((Object) this instanceof AbstractClientPlayer player) {
             updateSimulation(16);
             PlayerDelegate playerDelegate = new PlayerDelegate(player);

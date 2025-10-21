@@ -7,6 +7,7 @@ import dev.tr7zw.transition.mc.entitywrapper.PlayerWrapper;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
 
 public interface CapeRenderer {
 
@@ -30,5 +31,9 @@ public interface CapeRenderer {
     }
 
     public boolean vanillaUvValues();
+    
+    public default RenderType getRenderType() {
+        return null;
+    }
 
 }

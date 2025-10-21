@@ -11,10 +11,8 @@ import dev.tr7zw.waveycapes.renderlayers.CustomCapeRenderLayer;
 import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
-import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 
 //#if MC >= 12102
-import net.minecraft.client.renderer.entity.state.PlayerRenderState;
 //#endif
 //#if MC < 11700
 //$$import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
@@ -24,10 +22,19 @@ import net.minecraft.client.renderer.entity.state.PlayerRenderState;
 import net.minecraft.client.renderer.entity.EntityRendererProvider.Context;
 //#endif
 
-@Mixin(PlayerRenderer.class)
+//#if MC >= 12109
+@Mixin(net.minecraft.client.renderer.entity.player.AvatarRenderer.class)
+//#else
+//$$@Mixin(net.minecraft.client.renderer.entity.player.PlayerRenderer.class)
+//#endif
 //#if MC >= 12102
 public abstract class PlayerRendererMixin
-        extends LivingEntityRenderer<AbstractClientPlayer, PlayerRenderState, PlayerModel> {
+        //#if MC >= 12109
+        extends
+        LivingEntityRenderer<AbstractClientPlayer, net.minecraft.client.renderer.entity.state.AvatarRenderState, PlayerModel> {
+    //#else
+    //$$        extends LivingEntityRenderer<AbstractClientPlayer, net.minecraft.client.renderer.entity.state.PlayerRenderState, PlayerModel> {
+    //#endif
     //#else
     //$$public abstract class PlayerRendererMixin
     //$$        extends LivingEntityRenderer<AbstractClientPlayer, PlayerModel<AbstractClientPlayer>> {

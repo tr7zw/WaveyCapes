@@ -14,11 +14,19 @@ public class PlayerDelegate implements MinecraftPlayer {
     private AbstractClientPlayer player;
 
     public double getXCloak() {
-        return player.xCloak;
+        //#if MC >= 12109
+        return player.avatarState().getInterpolatedCloakX(0);
+        //else
+        //$$return player.xCloak;
+        //#endif
     }
 
     public double getZCloak() {
-        return player.zCloak;
+      //#if MC >= 12109
+        return player.avatarState().getInterpolatedCloakZ(0);
+        //else
+        //$$return player.zCloak;
+        //#endif
     }
 
     public float getYBodyRotO() {

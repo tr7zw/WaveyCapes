@@ -8,7 +8,6 @@ import org.objenesis.ObjenesisStd;
 import net.minecraft.SharedConstants;
 import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.server.Bootstrap;
 
 public class MixinTests {
@@ -24,7 +23,11 @@ public class MixinTests {
         Objenesis objenesis = new ObjenesisStd();
         objenesis.newInstance(LocalPlayer.class);
         objenesis.newInstance(PlayerModel.class);
-        objenesis.newInstance(PlayerRenderer.class);
+        //#if MC >= 12109
+        objenesis.newInstance(net.minecraft.client.renderer.entity.player.AvatarRenderer.class);
+        //#else
+        //$$objenesis.newInstance(net.minecraft.client.renderer.entity.player.PlayerRenderer.class);
+        //#endif
     }
 
 }

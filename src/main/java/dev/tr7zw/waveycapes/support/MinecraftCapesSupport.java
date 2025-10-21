@@ -28,7 +28,12 @@ public class MinecraftCapesSupport implements ModSupport {
 
     private void init(PlayerWrapper test) {
         try {
-            PlayerHandler.get(test.getEntity().getUUID()).getCapeLocation();
+            //#if MC >= 12109
+            var entity = test.getAvatar();
+            //#else
+            //$$var entity = capeRenderInfo.getEntity();
+            //#endif
+            PlayerHandler.get(entity.getUUID()).getCapeLocation();
             getCape = player -> PlayerHandler.get(player.getEntity().getUUID());
             ModBase.LOGGER.info("Using 'get(UUID)' method for MinecraftCapes.");
             return;
@@ -82,50 +87,51 @@ public class MinecraftCapesSupport implements ModSupport {
         @Override
         public void render(PlayerWrapper capeRenderInfo, int part, ModelPart model, PoseStack poseStack,
                 MultiBufferSource multiBufferSource, int light, int overlay) {
-            PlayerHandler playerHandler = getCape.apply(capeRenderInfo);
-            VertexConsumer vertexConsumer;
-            if (MinecraftCapesConfig.isCapeVisible() && playerHandler.getCapeLocation() != null) {
-                //#if MC >= 12100
-                vertexConsumer = ItemRenderer.getArmorFoilBuffer(multiBufferSource,
-                        RenderType.entityTranslucent(playerHandler.getCapeLocation()), playerHandler.getHasCapeGlint());
-                //#else
-                //$$ vertexConsumer = ItemRenderer.getArmorFoilBuffer(multiBufferSource,
-                //$$         RenderType.entityTranslucent(playerHandler.getCapeLocation()), false,
-                //$$         playerHandler.getHasCapeGlint());
-                //#endif
-            } else {
-                //#if MC >= 12100
-                vertexConsumer = ItemRenderer.getArmorFoilBuffer(multiBufferSource,
-                        RenderType.entityTranslucent(capeRenderInfo.getCapeTexture()), false);
-                //#else
-                //$$  vertexConsumer = ItemRenderer.getArmorFoilBuffer(multiBufferSource,
-                //$$          RenderType.entityTranslucent(capeRenderInfo.getCapeTexture()), false, false);
-                //#endif
-            }
-            model.render(poseStack, vertexConsumer, light, OverlayTexture.NO_OVERLAY);
+//            PlayerHandler playerHandler = getCape.apply(capeRenderInfo);
+//            VertexConsumer vertexConsumer;
+//            if (MinecraftCapesConfig.isCapeVisible() && playerHandler.getCapeLocation() != null) {
+//                //#if MC >= 12100
+//                vertexConsumer = ItemRenderer.getArmorFoilBuffer(multiBufferSource,
+//                        RenderType.entityTranslucent(playerHandler.getCapeLocation()), playerHandler.getHasCapeGlint());
+//                //#else
+//                //$$ vertexConsumer = ItemRenderer.getArmorFoilBuffer(multiBufferSource,
+//                //$$         RenderType.entityTranslucent(playerHandler.getCapeLocation()), false,
+//                //$$         playerHandler.getHasCapeGlint());
+//                //#endif
+//            } else {
+//                //#if MC >= 12100
+//                vertexConsumer = ItemRenderer.getArmorFoilBuffer(multiBufferSource,
+//                        RenderType.entityTranslucent(capeRenderInfo.getCapeTexture()), false);
+//                //#else
+//                //$$  vertexConsumer = ItemRenderer.getArmorFoilBuffer(multiBufferSource,
+//                //$$          RenderType.entityTranslucent(capeRenderInfo.getCapeTexture()), false, false);
+//                //#endif
+//            }
+//            model.render(poseStack, vertexConsumer, light, OverlayTexture.NO_OVERLAY);
         }
 
         @Override
         public VertexConsumer getVertexConsumer(MultiBufferSource multiBufferSource, PlayerWrapper capeRenderInfo) {
             PlayerHandler playerHandler = getCape.apply(capeRenderInfo);
-            if (MinecraftCapesConfig.isCapeVisible() && playerHandler.getCapeLocation() != null) {
-                //#if MC >= 12100
-                return ItemRenderer.getArmorFoilBuffer(multiBufferSource,
-                        RenderType.entityTranslucent(playerHandler.getCapeLocation()), playerHandler.getHasCapeGlint());
-                //#else
-                //$$  return ItemRenderer.getArmorFoilBuffer(multiBufferSource,
-                //$$          RenderType.entityTranslucent(playerHandler.getCapeLocation()), false,
-                //$$          playerHandler.getHasCapeGlint());
-                //#endif
-            } else {
-                //#if MC >= 12100
-                return ItemRenderer.getArmorFoilBuffer(multiBufferSource,
-                        RenderType.entityTranslucent(capeRenderInfo.getCapeTexture()), false);
-                //#else
-                //$$  return ItemRenderer.getArmorFoilBuffer(multiBufferSource,
-                //$$          RenderType.entityTranslucent(capeRenderInfo.getCapeTexture()), false, false);
-                //#endif
-            }
+//            if (MinecraftCapesConfig.isCapeVisible() && playerHandler.getCapeLocation() != null) {
+//                //#if MC >= 12100
+//                return ItemRenderer.getArmorFoilBuffer(multiBufferSource,
+//                        RenderType.entityTranslucent(playerHandler.getCapeLocation()), playerHandler.getHasCapeGlint());
+//                //#else
+//                //$$  return ItemRenderer.getArmorFoilBuffer(multiBufferSource,
+//                //$$          RenderType.entityTranslucent(playerHandler.getCapeLocation()), false,
+//                //$$          playerHandler.getHasCapeGlint());
+//                //#endif
+//            } else {
+//                //#if MC >= 12100
+//                return ItemRenderer.getArmorFoilBuffer(multiBufferSource,
+//                        RenderType.entityTranslucent(capeRenderInfo.getCapeTexture()), false);
+//                //#else
+//                //$$  return ItemRenderer.getArmorFoilBuffer(multiBufferSource,
+//                //$$          RenderType.entityTranslucent(capeRenderInfo.getCapeTexture()), false, false);
+//                //#endif
+//            }
+            return null;
         }
 
         @Override

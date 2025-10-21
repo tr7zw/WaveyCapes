@@ -9,7 +9,6 @@ import org.joml.Vector4f;
 //#endif
 
 //#if MC >= 12102
-import net.minecraft.client.renderer.entity.state.PlayerRenderState;
 import net.minecraft.client.Minecraft;
 //#endif
 
@@ -40,8 +39,10 @@ import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
+import net.minecraft.client.renderer.entity.state.AvatarRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 //#if MC < 12103
 //$$import net.minecraft.world.entity.player.PlayerModelPart;
@@ -52,8 +53,10 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 //$$import net.minecraft.client.player.AbstractClientPlayer;
 //#endif
 
-//#if MC >= 12102
-public class CustomCapeRenderLayer extends RenderLayer<PlayerRenderState, PlayerModel> {
+//#if MC >= 12109
+public class CustomCapeRenderLayer extends RenderLayer<net.minecraft.client.renderer.entity.state.AvatarRenderState, PlayerModel> {
+//#elseif MC >= 12102
+//$$public class CustomCapeRenderLayer extends RenderLayer<net.minecraft.client.renderer.entity.state.PlayerRenderState, PlayerModel> {
     //#else
     //$$public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, PlayerModel<AbstractClientPlayer>> {
     //#endif
@@ -61,10 +64,14 @@ public class CustomCapeRenderLayer extends RenderLayer<PlayerRenderState, Player
     private static final int PART_COUNT = 16;
     private ModelPart[] customCape = NMSUtil.buildCape(64, 64, x -> 0, y -> y);
 
-    //#if MC >= 12102
-    public CustomCapeRenderLayer(RenderLayerParent<PlayerRenderState, PlayerModel> renderLayerParent) {
+    //#if MC >= 12109
+    public CustomCapeRenderLayer(RenderLayerParent<net.minecraft.client.renderer.entity.state.AvatarRenderState, PlayerModel> renderLayerParent) {
         super(renderLayerParent);
     }
+    //#elseif MC >= 12102
+    //$$public CustomCapeRenderLayer(RenderLayerParent<net.minecraft.client.renderer.entity.state.PlayerRenderState, PlayerModel> renderLayerParent) {
+    //$$    super(renderLayerParent);
+    //$$}
     //#else
     //$$public CustomCapeRenderLayer(
     //$$        RenderLayerParent<AbstractClientPlayer, PlayerModel<AbstractClientPlayer>> renderLayerParent) {
@@ -72,11 +79,17 @@ public class CustomCapeRenderLayer extends RenderLayer<PlayerRenderState, Player
     //$$}
     //#endif
 
-    //#if MC >= 12102
-    public void render(PoseStack poseStack, MultiBufferSource multiBufferSource, int packedLight,
-            PlayerRenderState renderState, float yRot, float xRot) {
+    //#if MC >= 12109
+    @Override
+    public void submit(PoseStack poseStack, SubmitNodeCollector submitNodeCollector, int packedLight,
+            AvatarRenderState renderState, float f, float g) {
         PlayerWrapper capeRenderInfo = new PlayerWrapper(renderState);
         float delta = Minecraft.getInstance().getDeltaTracker().getGameTimeDeltaPartialTick(false);
+    //#elseif MC >= 12102
+    //$$public void render(PoseStack poseStack, MultiBufferSource multiBufferSource, int packedLight,
+    //$$        net.minecraft.client.renderer.entity.state.PlayerRenderState renderState, float yRot, float xRot) {
+    //$$    PlayerWrapper capeRenderInfo = new PlayerWrapper(renderState);
+    //$$    float delta = Minecraft.getInstance().getDeltaTracker().getGameTimeDeltaPartialTick(false);
         //#else
         //$$public void render(PoseStack poseStack, MultiBufferSource multiBufferSource, int packedLight,
         //$$        AbstractClientPlayer abstractClientPlayer, float f, float g, float delta, float j, float k, float l) {
@@ -84,8 +97,8 @@ public class CustomCapeRenderLayer extends RenderLayer<PlayerRenderState, Player
         //#endif
         if (capeRenderInfo.isPlayerInvisible())
             return;
-        CapeRenderer renderer = getCapeRenderer(capeRenderInfo, multiBufferSource);
-        if (renderer == null)
+        CapeRenderer renderer = getCapeRenderer(capeRenderInfo);
+        if (renderer == null || renderer.getRenderType() == null)
             return;
         if (capeRenderInfo.hasElytraEquipped())
             return;
@@ -94,7 +107,11 @@ public class CustomCapeRenderLayer extends RenderLayer<PlayerRenderState, Player
             return;
         }
 
-        CapeHolder holder = (CapeHolder) capeRenderInfo.getEntity();
+        //#if MC >= 12109
+        CapeHolder holder = (CapeHolder) capeRenderInfo.getAvatar();
+        //#else
+        //$$CapeHolder holder = (CapeHolder) capeRenderInfo.getEntity();
+        //#endif
         if (holder == null) {
             return;
         }
@@ -106,24 +123,34 @@ public class CustomCapeRenderLayer extends RenderLayer<PlayerRenderState, Player
             poseStack.translate(0.0F, -0.053125F, 0.06875F);
         }
 
-        if (ModBase.config.capeStyle == CapeStyle.SMOOTH && renderer.vanillaUvValues()) {
-            renderSmoothCape(poseStack, multiBufferSource, renderer, capeRenderInfo, delta, packedLight);
-        } else {
-            ModelPart[] parts = customCape;
-            for (int part = 0; part < PART_COUNT; part++) {
-                ModelPart model = parts[part];
-                modifyPoseStack(poseStack, capeRenderInfo, delta, part);
-                renderer.render(capeRenderInfo, part, model, poseStack, multiBufferSource, packedLight,
-                        OverlayTexture.NO_OVERLAY);
-                poseStack.popPose();
+        //#if MC >= 12109
+        submitNodeCollector.submitCustomGeometry(poseStack, renderer.getRenderType(), (pose, vertexConsumer) -> {
+            var nPose = new PoseStack();
+            nPose.last().set(pose);
+            //#else
+            //$$VertexConsumer vertexConsumer = capeRenderInfo.getVertexConsumer(multiBufferSource, capeRenderInfo);
+            //$$var nPose = poseStack;
+            //#endif
+            
+            if (ModBase.config.capeStyle == CapeStyle.SMOOTH && renderer.vanillaUvValues()) {
+                renderSmoothCape(nPose, vertexConsumer, capeRenderInfo, delta, packedLight);
+            } else {
+                ModelPart[] parts = customCape;
+                for (int part = 0; part < PART_COUNT; part++) {
+                    ModelPart model = parts[part];
+                    modifyPoseStack(nPose, capeRenderInfo, delta, part);
+//                    renderer.render(capeRenderInfo, part, model, poseStack, multiBufferSource, packedLight,
+//                            OverlayTexture.NO_OVERLAY);
+                    nPose.popPose();
+                }
             }
-        }
+            //#if MC >= 12109
+        });     
+        //#endif
         poseStack.popPose();
     }
 
-    private void renderSmoothCape(PoseStack poseStack, MultiBufferSource multiBufferSource, CapeRenderer capeRenderer,
-            PlayerWrapper capeRenderInfo, float delta, int light) {
-        VertexConsumer bufferBuilder = capeRenderer.getVertexConsumer(multiBufferSource, capeRenderInfo);
+    private void renderSmoothCape(PoseStack poseStack, VertexConsumer bufferBuilder, PlayerWrapper capeRenderInfo, float delta, int light) {
         if (bufferBuilder == null) {
             return;
         }
@@ -187,18 +214,28 @@ public class CustomCapeRenderLayer extends RenderLayer<PlayerRenderState, Player
         //#if MC < 12102
         //$$modifyPoseStackVanilla(poseStack, (AbstractClientPlayer) capeRenderInfo.getEntity(), h, part);
         //#else
-        PlayerRenderState renderState = capeRenderInfo.getRenderState();
+        var renderState = capeRenderInfo.getRenderState();
         poseStack.pushPose();
         poseStack.translate(0.0D, 0.0D, 0.125D);
+        //#if MC >= 12109
+        var entity = capeRenderInfo.getAvatar();
+        //#else
+        //$$var entity = capeRenderInfo.getEntity();
+        //#endif
         poseStack.mulPose(MathUtil.XP.rotationDegrees(6.0F + renderState.capeLean / 2.0F + renderState.capeFlap
-                + getNatrualWindSwing(part, capeRenderInfo.getEntity().isUnderWater())));
+                + getNatrualWindSwing(part, entity.isUnderWater())));
         poseStack.mulPose(MathUtil.ZP.rotationDegrees(renderState.capeLean2 / 2.0F));
         poseStack.mulPose(MathUtil.YP.rotationDegrees(180.0F - renderState.capeLean2 / 2.0F));
         //#endif
     }
 
     private void modifyPoseStackSimulation(PoseStack poseStack, PlayerWrapper capeRenderInfo, float delta, int part) {
-        BasicSimulation simulation = ((CapeHolder) capeRenderInfo.getEntity()).getSimulation();
+        //#if MC >= 12109
+        var entity = capeRenderInfo.getAvatar();
+        //#else
+        //$$var entity = capeRenderInfo.getEntity();
+        //#endif
+        BasicSimulation simulation = ((CapeHolder) entity).getSimulation();
         poseStack.pushPose();
         poseStack.translate(0.0D, 0.0D, 0.125D);
 
@@ -219,7 +256,7 @@ public class CustomCapeRenderLayer extends RenderLayer<PlayerRenderState, Player
         //            poseStack.translate(0, 0.15F, 0);
         //        }
 
-        float naturalWindSwing = getNatrualWindSwing(part, capeRenderInfo.getEntity().isUnderWater());
+        float naturalWindSwing = getNatrualWindSwing(part, entity.isUnderWater());
 
         // vanilla rotating and wind
         poseStack.mulPose(MathUtil.XP.rotationDegrees(6.0F + height + naturalWindSwing));
@@ -561,7 +598,7 @@ public class CustomCapeRenderLayer extends RenderLayer<PlayerRenderState, Player
 
     private static VanillaCapeRenderer vanillaCape = new VanillaCapeRenderer();
 
-    private CapeRenderer getCapeRenderer(PlayerWrapper capeRenderInfo, MultiBufferSource multiBufferSource) {
+    private CapeRenderer getCapeRenderer(PlayerWrapper capeRenderInfo) {
         for (ModSupport support : SupportManager.getSupportedMods()) {
             if (support.shouldBeUsed(capeRenderInfo)) {
                 return support.getRenderer();
@@ -570,8 +607,7 @@ public class CustomCapeRenderLayer extends RenderLayer<PlayerRenderState, Player
         if (capeRenderInfo.getCapeTexture() == null || !capeRenderInfo.isCapeVisible()) {
             return null;
         } else {
-            vanillaCape.vertexConsumer = multiBufferSource
-                    .getBuffer(RenderType.entityTranslucent(capeRenderInfo.getCapeTexture()));
+            vanillaCape.renderType = RenderType.entityTranslucent(capeRenderInfo.getCapeTexture());
             return vanillaCape;
         }
     }
