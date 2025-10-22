@@ -56,15 +56,9 @@ public abstract class PlayerMixin extends Entity implements CapeHolder {
         if (!((Object) this instanceof net.minecraft.world.entity.Avatar)) {
             return;
         }
-        if (!this.level().isClientSide()) {
-            return;
-        }
         var entity = (net.minecraft.world.entity.Avatar) (Object) this;
         //#else
         //$$if (!((Object) this instanceof AbstractClientPlayer)) {
-        //$$    return;
-        //$$}
-        //$$if (!this.level().isClientSide) {
         //$$    return;
         //$$}
         //$$var entity = (AbstractClientPlayer) (Object) this;
