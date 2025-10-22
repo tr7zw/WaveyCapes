@@ -53,23 +53,27 @@ public abstract class PlayerMixin extends Entity implements CapeHolder {
     @Inject(method = "tick", at = @At("HEAD"))
     private void moveCloakUpdate(CallbackInfo info) {
         //#if MC >= 12109
-        if(!((Object)this instanceof net.minecraft.world.entity.Avatar)) {
+        if (!((Object) this instanceof net.minecraft.world.entity.Avatar)) {
             return;
         }
+        var entity = (net.minecraft.world.entity.Avatar) (Object) this;
+        //#else
+        //$$if (!((Object) this instanceof AbstractClientPlayer)) {
+        //$$    return;
+        //$$}
+        //$$var entity = (AbstractClientPlayer) (Object) this;
         //#endif
-        if ((Object) this instanceof AbstractClientPlayer player) {
-            updateSimulation(16);
-            PlayerDelegate playerDelegate = new PlayerDelegate(player);
-            if (dirty) {
-                dirty = false;
-                simulation.applyMovement(new Vector3(1f, 1f, 0));
-                for (int i = 0; i < 5; i++) { // quickly doing a few simulation steps to get the cape int a stable
-                    // configuration
-                    simulate(playerDelegate);
-                }
+        updateSimulation(16);
+        PlayerDelegate playerDelegate = new PlayerDelegate(entity);
+        if (dirty) {
+            dirty = false;
+            simulation.applyMovement(new Vector3(1f, 1f, 0));
+            for (int i = 0; i < 5; i++) { // quickly doing a few simulation steps to get the cape int a stable
+                // configuration
+                simulate(playerDelegate);
             }
-            simulate(playerDelegate);
         }
+        simulate(playerDelegate);
     }
 
     @Override

@@ -31,7 +31,7 @@ public interface CapeRenderer {
     }
 
     public boolean vanillaUvValues();
-    
+
     public default RenderType getRenderType() {
         return null;
     }
