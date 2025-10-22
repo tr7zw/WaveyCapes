@@ -33,7 +33,11 @@
 //$$public class WaveyCapesBootstrap {
 //$$
 //$$    public WaveyCapesBootstrap() {
-//$$            if(FMLEnvironment.dist == Dist.CLIENT) {
+//#if MC < 12109
+//$$        if(FMLEnvironment.dist == Dist.CLIENT) {
+//#else
+//$$        if(FMLEnvironment.getDist() == Dist.CLIENT) {
+//#endif
 //$$                    ModLoaderEventUtil.registerClientSetupListener(() -> new WaveyCapesMod().init());
 //$$            }
 //$$    }
