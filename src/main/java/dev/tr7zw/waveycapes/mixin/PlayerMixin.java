@@ -50,15 +50,21 @@ public abstract class PlayerMixin extends Entity implements CapeHolder {
         this.dirty = true;
     }
 
-    @Inject(method = "tick", at = @At("HEAD"))
+    @Inject(method = "tick", at = @At("TAIL"))
     private void moveCloakUpdate(CallbackInfo info) {
         //#if MC >= 12109
         if (!((Object) this instanceof net.minecraft.world.entity.Avatar)) {
             return;
         }
+        if (!this.level().isClientSide()) {
+            return;
+        }
         var entity = (net.minecraft.world.entity.Avatar) (Object) this;
         //#else
         //$$if (!((Object) this instanceof AbstractClientPlayer)) {
+        //$$    return;
+        //$$}
+        //$$if (!this.level().isClientSide) {
         //$$    return;
         //$$}
         //$$var entity = (AbstractClientPlayer) (Object) this;
