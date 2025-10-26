@@ -1,5 +1,6 @@
 package dev.tr7zw.waveycapes.mixin;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import org.spongepowered.asm.mixin.Mixin;
 
 //#if MC >= 12109
@@ -24,9 +25,13 @@ public class FeatureRenderDispatcherMixin {
     @Inject(method = "renderAllFeatures", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/SubmitNodeStorage;clear()V"))
     private void renderCapes(CallbackInfo ci) {
         CapeNodeCollector collector = WaveyCapesMod.INSTANCE.getCapeNodeCollector();
+        PoseStack sharedStack = new PoseStack();
         for (CapeNodeCollector.CapeNode cape : collector.getCapes()) {
-            WaveyCapesBase.INSTANCE.getRenderer().render(new PlayerWrapper(cape.state()), cape.stack(),
+            sharedStack.last().set(cape.pose());
+            sharedStack.pushPose();
+            WaveyCapesBase.INSTANCE.getRenderer().render(new PlayerWrapper(cape.state()), sharedStack,
                     this.bufferSource, cape.packedLight());
+            sharedStack.popPose();
         }
         collector.clear();
     }

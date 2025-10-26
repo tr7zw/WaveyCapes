@@ -14,14 +14,14 @@ public class CapeNodeCollector {
     private final List<CapeNode> capes = new ArrayList<>();
 
     public void submitCape(AvatarRenderState state, PoseStack stack, int packedLight) {
-        capes.add(new CapeNode(state, stack, packedLight));
+        capes.add(new CapeNode(state, stack.last().copy(), packedLight));
     }
 
     public void clear() {
         capes.clear();
     }
 
-    public record CapeNode(AvatarRenderState state, PoseStack stack, int packedLight) {
+    public record CapeNode(AvatarRenderState state, PoseStack.Pose pose, int packedLight) {
     }
 }
 //#endif
