@@ -113,25 +113,31 @@ public class MinecraftCapesSupport implements ModSupport {
         @Override
         public VertexConsumer getVertexConsumer(MultiBufferSource multiBufferSource, PlayerWrapper capeRenderInfo) {
             PlayerHandler playerHandler = getCape.apply(capeRenderInfo);
-            //            if (MinecraftCapesConfig.isCapeVisible() && playerHandler.getCapeLocation() != null) {
-            //                //#if MC >= 12100
-            //                return ItemRenderer.getArmorFoilBuffer(multiBufferSource,
-            //                        RenderType.entityTranslucent(playerHandler.getCapeLocation()), playerHandler.getHasCapeGlint());
-            //                //#else
-            //                //$$  return ItemRenderer.getArmorFoilBuffer(multiBufferSource,
-            //                //$$          RenderType.entityTranslucent(playerHandler.getCapeLocation()), false,
-            //                //$$          playerHandler.getHasCapeGlint());
-            //                //#endif
-            //            } else {
-            //                //#if MC >= 12100
-            //                return ItemRenderer.getArmorFoilBuffer(multiBufferSource,
-            //                        RenderType.entityTranslucent(capeRenderInfo.getCapeTexture()), false);
-            //                //#else
-            //                //$$  return ItemRenderer.getArmorFoilBuffer(multiBufferSource,
-            //                //$$          RenderType.entityTranslucent(capeRenderInfo.getCapeTexture()), false, false);
-            //                //#endif
-            //            }
-            return null;
+            if (MinecraftCapesConfig.isCapeVisible() && playerHandler.getCapeLocation() != null) {
+                //#if MC >= 12109
+                return ItemRenderer.getFoilBuffer(multiBufferSource,
+                        RenderType.entityTranslucent(playerHandler.getCapeLocation()), false,
+                        playerHandler.getHasCapeGlint());
+                //#elseif MC >= 12100
+                //$$return ItemRenderer.getArmorFoilBuffer(multiBufferSource,
+                //$$        RenderType.entityTranslucent(playerHandler.getCapeLocation()), playerHandler.getHasCapeGlint());
+                //#else
+                //$$  return ItemRenderer.getArmorFoilBuffer(multiBufferSource,
+                //$$          RenderType.entityTranslucent(playerHandler.getCapeLocation()), false,
+                //$$          playerHandler.getHasCapeGlint());
+                //#endif
+            } else {
+                //#if MC >= 12109
+                return ItemRenderer.getFoilBuffer(multiBufferSource,
+                        RenderType.entityTranslucent(capeRenderInfo.getCapeTexture()), false, false);
+                //#elseif MC >= 12100
+                //$$return ItemRenderer.getArmorFoilBuffer(multiBufferSource,
+                //$$        RenderType.entityTranslucent(capeRenderInfo.getCapeTexture()), false);
+                //#else
+                //$$  return ItemRenderer.getArmorFoilBuffer(multiBufferSource,
+                //$$          RenderType.entityTranslucent(capeRenderInfo.getCapeTexture()), false, false);
+                //#endif
+            }
         }
 
         @Override

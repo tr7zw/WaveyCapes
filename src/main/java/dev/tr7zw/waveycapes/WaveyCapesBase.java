@@ -15,6 +15,13 @@ public abstract class WaveyCapesBase extends ModBase {
     @Getter
     public static WaveyCapesBase INSTANCE;
 
+    //#if MC >= 12109
+    @Getter
+    private final CapeNodeCollector capeNodeCollector = new CapeNodeCollector();
+    //#endif
+    @Getter
+    private final CustomCapeRenderer renderer = new CustomCapeRenderer();
+
     public void init() {
         INSTANCE = this;
         super.init();
