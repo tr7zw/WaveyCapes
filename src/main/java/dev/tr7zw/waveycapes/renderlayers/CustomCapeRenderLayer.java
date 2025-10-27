@@ -1,47 +1,13 @@
 package dev.tr7zw.waveycapes.renderlayers;
 
-//#if MC >= 11903
-import org.joml.Matrix4f;
-import org.joml.Vector4f;
-//#else
-//$$import com.mojang.math.Matrix4f;
-//$$import com.mojang.math.Vector4f;
-//#endif
-
-//#if MC >= 12102
-import net.minecraft.client.Minecraft;
-//#endif
-
-//#if MC < 12105
-//$$import com.mojang.blaze3d.systems.RenderSystem;
-//#endif
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
-
-import dev.tr7zw.transition.mc.MathUtil;
-import dev.tr7zw.transition.mc.VertexConsumerUtil;
 import dev.tr7zw.transition.mc.entitywrapper.PlayerWrapper;
-import dev.tr7zw.waveycapes.CapeRenderer;
-import dev.tr7zw.waveycapes.NMSUtil;
-import dev.tr7zw.waveycapes.VanillaCapeRenderer;
 import dev.tr7zw.waveycapes.WaveyCapesBase;
-import dev.tr7zw.waveycapes.support.ModSupport;
-import dev.tr7zw.waveycapes.support.SupportManager;
-import dev.tr7zw.waveycapes.versionless.CapeHolder;
-import dev.tr7zw.waveycapes.versionless.CapeMovement;
-import dev.tr7zw.waveycapes.versionless.CapeStyle;
-import dev.tr7zw.waveycapes.versionless.ModBase;
-import dev.tr7zw.waveycapes.versionless.WindMode;
-import dev.tr7zw.waveycapes.versionless.sim.BasicSimulation;
-import dev.tr7zw.waveycapes.versionless.util.Vector3;
-import dev.tr7zw.waveycapes.versionless.util.Vector4;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.PlayerModel;
-import net.minecraft.client.model.geom.ModelPart;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 
-import net.minecraft.client.renderer.texture.OverlayTexture;
 //#if MC >= 12109
 import net.minecraft.client.renderer.entity.state.AvatarRenderState;
 import net.minecraft.client.renderer.SubmitNodeCollector;
@@ -87,10 +53,12 @@ public class CustomCapeRenderLayer
     public void submit(PoseStack poseStack, SubmitNodeCollector submitNodeCollector, int packedLight,
             AvatarRenderState renderState, float f, float g) {
         PlayerWrapper capeRenderInfo = new PlayerWrapper(renderState);
+        float delta = Minecraft.getInstance().getDeltaTracker().getGameTimeDeltaPartialTick(false);
         //#elseif MC >= 12102
         //$$public void render(PoseStack poseStack, MultiBufferSource multiBufferSource, int packedLight,
         //$$        net.minecraft.client.renderer.entity.state.PlayerRenderState renderState, float yRot, float xRot) {
         //$$    PlayerWrapper capeRenderInfo = new PlayerWrapper(renderState);
+        //$$         float delta = Minecraft.getInstance().getDeltaTracker().getGameTimeDeltaPartialTick(false);
         //#else
         //$$public void render(PoseStack poseStack, MultiBufferSource multiBufferSource, int packedLight,
         //$$        AbstractClientPlayer abstractClientPlayer, float f, float g, float delta, float j, float k, float l) {
@@ -117,7 +85,7 @@ public class CustomCapeRenderLayer
         stack.last().set(poseStack.last());
         WaveyCapesBase.INSTANCE.getCapeNodeCollector().submitCape(renderState, stack, packedLight);
         //#else
-        //$$WaveyCapesBase.INSTANCE.getRenderer().render(capeRenderInfo, poseStack, multiBufferSource, packedLight);
+        //$$WaveyCapesBase.INSTANCE.getRenderer().render(capeRenderInfo, poseStack, multiBufferSource, packedLight, delta);
         //#endif
         poseStack.popPose();
     }

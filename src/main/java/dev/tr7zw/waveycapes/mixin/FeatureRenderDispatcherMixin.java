@@ -8,6 +8,7 @@ import dev.tr7zw.transition.mc.entitywrapper.PlayerWrapper;
 import dev.tr7zw.waveycapes.CapeNodeCollector;
 import dev.tr7zw.waveycapes.WaveyCapesBase;
 import dev.tr7zw.waveycapes.WaveyCapesMod;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.feature.FeatureRenderDispatcher;
 import org.spongepowered.asm.mixin.Final;
@@ -26,11 +27,12 @@ public class FeatureRenderDispatcherMixin {
     private void renderCapes(CallbackInfo ci) {
         CapeNodeCollector collector = WaveyCapesMod.INSTANCE.getCapeNodeCollector();
         PoseStack sharedStack = new PoseStack();
+        float delta = Minecraft.getInstance().getDeltaTracker().getGameTimeDeltaPartialTick(false);
         for (CapeNodeCollector.CapeNode cape : collector.getCapes()) {
             sharedStack.last().set(cape.pose());
             sharedStack.pushPose();
             WaveyCapesBase.INSTANCE.getRenderer().render(new PlayerWrapper(cape.state()), sharedStack,
-                    this.bufferSource, cape.packedLight());
+                    this.bufferSource, cape.packedLight(), delta);
             sharedStack.popPose();
         }
         collector.clear();

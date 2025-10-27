@@ -1,5 +1,20 @@
 package dev.tr7zw.waveycapes;
 
+//#if MC >= 11903
+import org.joml.Matrix4f;
+import org.joml.Vector4f;
+//#else
+//$$import com.mojang.math.Matrix4f;
+//$$import com.mojang.math.Vector4f;
+//#endif
+//#if MC < 12102
+//$$import net.minecraft.client.player.AbstractClientPlayer;
+//$$import net.minecraft.util.Mth;
+//#endif
+//#if MC < 12105
+//$$import com.mojang.blaze3d.systems.RenderSystem;
+//#endif
+
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import dev.tr7zw.transition.mc.MathUtil;
@@ -11,13 +26,9 @@ import dev.tr7zw.waveycapes.versionless.*;
 import dev.tr7zw.waveycapes.versionless.sim.BasicSimulation;
 import dev.tr7zw.waveycapes.versionless.util.Vector3;
 import dev.tr7zw.waveycapes.versionless.util.Vector4;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import org.joml.Matrix4f;
-import org.joml.Vector4f;
 
 public class CustomCapeRenderer {
 
@@ -25,42 +36,49 @@ public class CustomCapeRenderer {
     private final ModelPart[] customCape = NMSUtil.buildCape(64, 64, x -> 0, y -> y);
 
     public void render(PlayerWrapper capeRenderInfo, PoseStack poseStack, MultiBufferSource multiBufferSource,
-            int packedLight) {
-        float delta = Minecraft.getInstance().getDeltaTracker().getGameTimeDeltaPartialTick(false);
-        CapeRenderer renderer = getCapeRenderer(capeRenderInfo, multiBufferSource);
+            int packedLight, float delta) {
+        CapeRenderer renderer = getCapeRenderer(capeRenderInfo);
         if (renderer == null)
             return;
 
-        //#if MC >= 12109
-        CapeHolder holder = (CapeHolder) capeRenderInfo.getAvatar();
-        //#else
-        //$$CapeHolder holder = (CapeHolder) capeRenderInfo.getEntity();
-        //#endif
-        if (holder == null) {
+        if (!prepareCape(capeRenderInfo)) {
             return;
         }
-        holder.updateSimulation(PART_COUNT);
+
+        VertexConsumer bufferBuilder = renderer.getVertexConsumer(multiBufferSource, capeRenderInfo);
+        if (bufferBuilder == null) {
+            return;
+        }
 
         if (ModBase.config.capeStyle == CapeStyle.SMOOTH && renderer.vanillaUvValues()) {
-            renderSmoothCape(poseStack, multiBufferSource, renderer, capeRenderInfo, delta, packedLight);
+            renderSmoothCape(poseStack, bufferBuilder, capeRenderInfo, delta, packedLight);
         } else {
             ModelPart[] parts = customCape;
             for (int part = 0; part < PART_COUNT; part++) {
                 ModelPart model = parts[part];
                 modifyPoseStack(poseStack, capeRenderInfo, delta, part);
-                renderer.render(capeRenderInfo, part, model, poseStack, multiBufferSource, packedLight,
+                renderer.render(capeRenderInfo, part, model, poseStack, bufferBuilder, packedLight,
                         OverlayTexture.NO_OVERLAY);
                 poseStack.popPose();
             }
         }
     }
 
-    private void renderSmoothCape(PoseStack poseStack, MultiBufferSource multiBufferSource, CapeRenderer capeRenderer,
-            PlayerWrapper capeRenderInfo, float delta, int light) {
-        VertexConsumer bufferBuilder = capeRenderer.getVertexConsumer(multiBufferSource, capeRenderInfo);
-        if (bufferBuilder == null) {
-            return;
+    private boolean prepareCape(PlayerWrapper capeRenderInfo) {
+        //#if MC >= 12109
+        CapeHolder holder = (CapeHolder) capeRenderInfo.getAvatar();
+        //#else
+        //$$CapeHolder holder = (CapeHolder) capeRenderInfo.getEntity();
+        //#endif
+        if (holder == null) {
+            return false;
         }
+        holder.updateSimulation(PART_COUNT);
+        return true;
+    }
+
+    private void renderSmoothCape(PoseStack poseStack, VertexConsumer bufferBuilder, PlayerWrapper capeRenderInfo,
+            float delta, int light) {
         //#if MC < 12105
         //$$ RenderSystem.enableBlend();
         //$$ RenderSystem.defaultBlendFunc();
@@ -124,15 +142,25 @@ public class CustomCapeRenderer {
         var renderState = capeRenderInfo.getRenderState();
         poseStack.pushPose();
         poseStack.translate(0.0D, 0.0D, 0.125D);
+        //#if MC >= 12109
+        var entity = capeRenderInfo.getAvatar();
+        //#else
+        //$$var entity = capeRenderInfo.getEntity();
+        //#endif
         poseStack.mulPose(MathUtil.XP.rotationDegrees(6.0F + renderState.capeLean / 2.0F + renderState.capeFlap
-                + getNatrualWindSwing(part, capeRenderInfo.getEntity().isUnderWater())));
+                + getNatrualWindSwing(part, entity.isUnderWater())));
         poseStack.mulPose(MathUtil.ZP.rotationDegrees(renderState.capeLean2 / 2.0F));
         poseStack.mulPose(MathUtil.YP.rotationDegrees(180.0F - renderState.capeLean2 / 2.0F));
         //#endif
     }
 
     private void modifyPoseStackSimulation(PoseStack poseStack, PlayerWrapper capeRenderInfo, float delta, int part) {
-        BasicSimulation simulation = ((CapeHolder) capeRenderInfo.getEntity()).getSimulation();
+        //#if MC >= 12109
+        var entity = capeRenderInfo.getAvatar();
+        //#else
+        //$$var entity = capeRenderInfo.getEntity();
+        //#endif
+        BasicSimulation simulation = ((CapeHolder) entity).getSimulation();
         poseStack.pushPose();
         poseStack.translate(0.0D, 0.0D, 0.125D);
 
@@ -153,7 +181,7 @@ public class CustomCapeRenderer {
         //            poseStack.translate(0, 0.15F, 0);
         //        }
 
-        float naturalWindSwing = getNatrualWindSwing(part, capeRenderInfo.getEntity().isUnderWater());
+        float naturalWindSwing = getNatrualWindSwing(part, entity.isUnderWater());
 
         // vanilla rotating and wind
         poseStack.mulPose(MathUtil.XP.rotationDegrees(6.0F + height + naturalWindSwing));
@@ -495,7 +523,7 @@ public class CustomCapeRenderer {
 
     private static VanillaCapeRenderer vanillaCape = new VanillaCapeRenderer();
 
-    private CapeRenderer getCapeRenderer(PlayerWrapper capeRenderInfo, MultiBufferSource multiBufferSource) {
+    private CapeRenderer getCapeRenderer(PlayerWrapper capeRenderInfo) {
         for (ModSupport support : SupportManager.getSupportedMods()) {
             if (support.shouldBeUsed(capeRenderInfo)) {
                 return support.getRenderer();
@@ -504,8 +532,6 @@ public class CustomCapeRenderer {
         if (capeRenderInfo.getCapeTexture() == null || !capeRenderInfo.isCapeVisible()) {
             return null;
         } else {
-            vanillaCape.vertexConsumer = multiBufferSource
-                    .getBuffer(RenderType.entityTranslucent(capeRenderInfo.getCapeTexture()));
             return vanillaCape;
         }
     }

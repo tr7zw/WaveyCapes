@@ -41,7 +41,8 @@ public class EarsSupport implements ModSupport, EarsInhibitor {
         //$$var entity = capeRenderInfo.getEntity();
         //#endif
         EarsFeatures playerFeatures = EarsFeatures.getById(entity.getUUID());
-        return playerFeatures != null && playerFeatures.capeEnabled;
+        return playerFeatures != null && playerFeatures.capeEnabled
+                && getPlayerCape(capeRenderInfo, playerFeatures) != null;
     }
 
     @Override
@@ -61,43 +62,35 @@ public class EarsSupport implements ModSupport, EarsInhibitor {
 
         @Override
         public void render(PlayerWrapper capeRenderInfo, int part, ModelPart model, PoseStack poseStack,
-                MultiBufferSource multiBufferSource, int light, int overlay) {
-            EarsFeatures playerFeatures = EarsFeatures.getById(capeRenderInfo.getEntity().getUUID());
-
-            VertexConsumer vertexConsumer = null;
-            if (playerFeatures != null && playerFeatures.capeEnabled) {
-                ResourceLocation cape = getPlayerCape(capeRenderInfo, playerFeatures);
-                if (cape != null) {
-                    //#if MC >= 12109
-                    vertexConsumer = ItemRenderer.getFoilBuffer(multiBufferSource, RenderType.armorCutoutNoCull(cape),
-                            false, false);
-                    //#elseif MC >= 12100
-                    //$$vertexConsumer = ItemRenderer.getArmorFoilBuffer(multiBufferSource,
-                    //$$        RenderType.armorCutoutNoCull(cape), false);
-                    //#else
-                    //$$  vertexConsumer = ItemRenderer.getArmorFoilBuffer(multiBufferSource,
-                    //$$          RenderType.armorCutoutNoCull(cape), false, false);
-                    //#endif
-                }
-            }
-            if (vertexConsumer == null) {
-                //#if MC >= 12109
-                vertexConsumer = ItemRenderer.getFoilBuffer(multiBufferSource,
-                        RenderType.armorCutoutNoCull(capeRenderInfo.getCapeTexture()), false, false);
-                //#elseif MC >= 12100
-                //$$vertexConsumer = ItemRenderer.getArmorFoilBuffer(multiBufferSource,
-                //$$        RenderType.armorCutoutNoCull(capeRenderInfo.getCapeTexture()), false);
-                //#else
-                //$$  vertexConsumer = ItemRenderer.getArmorFoilBuffer(multiBufferSource,
-                //$$  RenderType.armorCutoutNoCull(capeRenderInfo.getCapeTexture()), false, false);
-                //#endif
-            }
+                VertexConsumer vertexConsumer, int light, int overlay) {
             customCape[part].render(poseStack, vertexConsumer, light, OverlayTexture.NO_OVERLAY);
         }
 
         @Override
         public boolean vanillaUvValues() {
             return false;
+        }
+
+        @Override
+        public VertexConsumer getVertexConsumer(MultiBufferSource multiBufferSource, PlayerWrapper capeRenderInfo) {
+            EarsFeatures playerFeatures = EarsFeatures.getById(capeRenderInfo.getEntity().getUUID());
+
+            if (playerFeatures != null && playerFeatures.capeEnabled) {
+                ResourceLocation cape = getPlayerCape(capeRenderInfo, playerFeatures);
+                if (cape != null) {
+                    //#if MC >= 12109
+                    return ItemRenderer.getFoilBuffer(multiBufferSource, RenderType.armorCutoutNoCull(cape), false,
+                            false);
+                    //#elseif MC >= 12100
+                    //$$return ItemRenderer.getArmorFoilBuffer(multiBufferSource,
+                    //$$        RenderType.armorCutoutNoCull(cape), false);
+                    //#else
+                    //$$return ItemRenderer.getArmorFoilBuffer(multiBufferSource,
+                    //$$          RenderType.armorCutoutNoCull(cape), false, false);
+                    //#endif
+                }
+            }
+            return null; // should not happen
         }
 
     }

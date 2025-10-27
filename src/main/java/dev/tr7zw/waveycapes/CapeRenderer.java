@@ -5,35 +5,20 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 
 import dev.tr7zw.transition.mc.entitywrapper.PlayerWrapper;
 import net.minecraft.client.model.geom.ModelPart;
-import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 
 public interface CapeRenderer {
 
-    @Deprecated
-    public default void render(AbstractClientPlayer player, int part, ModelPart model, PoseStack poseStack,
-            MultiBufferSource multiBufferSource, int light, int overlay) {
+    public default void render(PlayerWrapper capeRenderInfo, int part, ModelPart model, PoseStack poseStack,
+            VertexConsumer vertexConsumer, int light, int overlay) {
+        model.render(poseStack, vertexConsumer, light, OverlayTexture.NO_OVERLAY);
     }
 
-    //#if MC >= 12102
-    public void render(PlayerWrapper capeRenderInfo, int part, ModelPart model, PoseStack poseStack,
-            MultiBufferSource multiBufferSource, int light, int overlay);
-    //#else
-    //$$public default void render(PlayerWrapper capeRenderInfo, int part, ModelPart model, PoseStack poseStack,
-    //$$        MultiBufferSource multiBufferSource, int light, int overlay) {
-    //$$    render((AbstractClientPlayer) capeRenderInfo.getEntity(), part, model, poseStack, multiBufferSource, light, overlay);
-    //$$}
-    //#endif
+    public VertexConsumer getVertexConsumer(MultiBufferSource multiBufferSource, PlayerWrapper capeRenderInfo);
 
-    public default VertexConsumer getVertexConsumer(MultiBufferSource multiBufferSource, PlayerWrapper capeRenderInfo) {
-        return null;
-    }
-
-    public boolean vanillaUvValues();
-
-    public default RenderType getRenderType() {
-        return null;
+    public default boolean vanillaUvValues() {
+        return true;
     }
 
 }
