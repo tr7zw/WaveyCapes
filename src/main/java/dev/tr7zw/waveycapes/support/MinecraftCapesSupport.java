@@ -26,7 +26,7 @@ public class MinecraftCapesSupport implements ModSupport {
             //$$var entity = test.getEntity();
             //#endif
             PlayerHandler.get(entity.getUUID()).getCapeLocation();
-            getCape = player -> PlayerHandler.get(player.getEntity().getUUID());
+            getCape = player -> PlayerHandler.get(entity.getUUID());
             ModBase.LOGGER.info("Using 'get(UUID)' method for MinecraftCapes.");
             return;
         } catch (Throwable ex) {
