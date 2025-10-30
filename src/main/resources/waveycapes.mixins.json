@@ -4,6 +4,7 @@
     "package": "dev.tr7zw.waveycapes.mixin",
     "mixins": [],
     "client": [
+        "FeatureRenderDispatcherMixin",
         "LivingEntityRendererMixin",
         "PlayerMixin",
         "PlayerRendererMixin"
