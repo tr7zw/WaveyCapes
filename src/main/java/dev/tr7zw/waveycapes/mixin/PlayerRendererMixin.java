@@ -12,51 +12,63 @@ import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 
-//#if MC >= 12102
-//#endif
-//#if MC < 11700
-//$$import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
-//$$ import com.mojang.blaze3d.vertex.PoseStack;
-//$$ import net.minecraft.client.renderer.MultiBufferSource;
-//#else
-import net.minecraft.client.renderer.entity.EntityRendererProvider.Context;
-//#endif
+//? if >= 1.21.2 {
 
-//#if MC >= 12109
+//? }
+//? if < 1.17.0 {
+/*
+ import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
+ import com.mojang.blaze3d.vertex.PoseStack;
+ import net.minecraft.client.renderer.MultiBufferSource;
+*///? } else {
+
+import net.minecraft.client.renderer.entity.EntityRendererProvider.Context;
+//? }
+
+//? if >= 1.21.9 {
+
 @Mixin(net.minecraft.client.renderer.entity.player.AvatarRenderer.class)
-//#else
-//$$@Mixin(net.minecraft.client.renderer.entity.player.PlayerRenderer.class)
-//#endif
-//#if MC >= 12102
+//? } else {
+/*
+ @Mixin(net.minecraft.client.renderer.entity.player.PlayerRenderer.class)
+*///? }
+   //? if >= 1.21.2 {
+
 public abstract class PlayerRendererMixin
-        //#if MC >= 12109
+        //? if >= 1.21.9 {
+
         extends
         LivingEntityRenderer<AbstractClientPlayer, net.minecraft.client.renderer.entity.state.AvatarRenderState, PlayerModel> {
-    //#else
-    //$$        extends LivingEntityRenderer<AbstractClientPlayer, net.minecraft.client.renderer.entity.state.PlayerRenderState, PlayerModel> {
-    //#endif
-    //#else
-    //$$public abstract class PlayerRendererMixin
-    //$$        extends LivingEntityRenderer<AbstractClientPlayer, PlayerModel<AbstractClientPlayer>> {
-    //#endif
+    //? } else {
+    /*
+            extends LivingEntityRenderer<AbstractClientPlayer, net.minecraft.client.renderer.entity.state.PlayerRenderState, PlayerModel> {
+    *///? }
+       //? } else {
+       /*
+        public abstract class PlayerRendererMixin
+               extends LivingEntityRenderer<AbstractClientPlayer, PlayerModel<AbstractClientPlayer>> {
+       *///? }
 
     @Unique
     private boolean injectedCape = false;
 
-    //#if MC >= 12102
+    //? if >= 1.21.2 {
+
     public PlayerRendererMixin(Context context, PlayerModel entityModel, float f) {
         super(context, entityModel, f);
     }
-    //#elseif MC >= 11700
-    //$$public PlayerRendererMixin(Context context, PlayerModel<AbstractClientPlayer> entityModel, float f) {
-    //$$    super(context, entityModel, f);
-    //$$}
-    //#else
-    //$$public PlayerRendererMixin(EntityRenderDispatcher entityRenderDispatcher,
-    //$$        PlayerModel<AbstractClientPlayer> entityModel, float f) {
-    //$$    super(entityRenderDispatcher, entityModel, f);
-    //$$}
-    //#endif
+    //? } else if >= 1.17.0 {
+    /*
+     public PlayerRendererMixin(Context context, PlayerModel<AbstractClientPlayer> entityModel, float f) {
+        super(context, entityModel, f);
+     }
+    *///? } else {
+    /*
+     public PlayerRendererMixin(EntityRenderDispatcher entityRenderDispatcher,
+            PlayerModel<AbstractClientPlayer> entityModel, float f) {
+        super(entityRenderDispatcher, entityModel, f);
+     }
+    *///? }
 
     @Inject(method = "<init>*", at = @At("RETURN"))
     public void onCreate(CallbackInfo info) {
@@ -65,15 +77,16 @@ public abstract class PlayerRendererMixin
     }
 
     // Dirty 1.16 workaround for slim skins for whatever reason not working right
-    //#if MC < 11700
-    //$$@Inject(method = "render", at = @At("HEAD"))
-    //$$public void renderLegacyWorkaround(AbstractClientPlayer abstractClientPlayer, float f, float g, PoseStack poseStack,
-    //$$        MultiBufferSource multiBufferSource, int i, CallbackInfo ci) {
-    //$$    if(!injectedCape) {
-    //$$        addLayer(new CustomCapeRenderLayer(this));
-    //$$        injectedCape = true;
-    //$$    }
-    //$$}
-    //#endif
+    //? if < 1.17.0 {
+    /*
+     @Inject(method = "render", at = @At("HEAD"))
+     public void renderLegacyWorkaround(AbstractClientPlayer abstractClientPlayer, float f, float g, PoseStack poseStack,
+            MultiBufferSource multiBufferSource, int i, CallbackInfo ci) {
+        if(!injectedCape) {
+            addLayer(new CustomCapeRenderLayer(this));
+            injectedCape = true;
+        }
+     }
+    *///? }
 
 }

@@ -35,11 +35,13 @@ public class EarsSupport implements ModSupport, EarsInhibitor {
 
     @Override
     public boolean shouldBeUsed(PlayerWrapper capeRenderInfo) {
-        //#if MC >= 12109
+        //? if >= 1.21.9 {
+
         var entity = capeRenderInfo.getAvatar();
-        //#else
-        //$$var entity = capeRenderInfo.getEntity();
-        //#endif
+        //? } else {
+        /*
+         var entity = capeRenderInfo.getEntity();
+        *///? }
         EarsFeatures playerFeatures = EarsFeatures.getById(entity.getUUID());
         return playerFeatures != null && playerFeatures.capeEnabled
                 && getPlayerCape(capeRenderInfo, playerFeatures) != null;
@@ -78,16 +80,19 @@ public class EarsSupport implements ModSupport, EarsInhibitor {
             if (playerFeatures != null && playerFeatures.capeEnabled) {
                 ResourceLocation cape = getPlayerCape(capeRenderInfo, playerFeatures);
                 if (cape != null) {
-                    //#if MC >= 12109
+                    //? if >= 1.21.9 {
+
                     return ItemRenderer.getFoilBuffer(multiBufferSource, RenderType.armorCutoutNoCull(cape), false,
                             false);
-                    //#elseif MC >= 12100
-                    //$$return ItemRenderer.getArmorFoilBuffer(multiBufferSource,
-                    //$$        RenderType.armorCutoutNoCull(cape), false);
-                    //#else
-                    //$$return ItemRenderer.getArmorFoilBuffer(multiBufferSource,
-                    //$$          RenderType.armorCutoutNoCull(cape), false, false);
-                    //#endif
+                    //? } else if >= 1.21.0 {
+                    /*
+                     return ItemRenderer.getArmorFoilBuffer(multiBufferSource,
+                            RenderType.armorCutoutNoCull(cape), false);
+                    *///? } else {
+                    /*
+                     return ItemRenderer.getArmorFoilBuffer(multiBufferSource,
+                              RenderType.armorCutoutNoCull(cape), false, false);
+                    *///? }
                 }
             }
             return null; // should not happen

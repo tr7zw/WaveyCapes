@@ -6,13 +6,15 @@ import net.minecraft.client.player.AbstractClientPlayer;
 
 public interface ModSupport {
 
-    //#if MC >= 12102
+    //? if >= 1.21.2 {
+
     public boolean shouldBeUsed(PlayerWrapper capeRenderInfo);
-    //#else
-    //$$default boolean shouldBeUsed(PlayerWrapper capeRenderInfo) {
-    //$$    return shouldBeUsed((AbstractClientPlayer) capeRenderInfo.getEntity());
-    //$$}
-    //#endif
+    //? } else {
+    /*
+     default boolean shouldBeUsed(PlayerWrapper capeRenderInfo) {
+        return shouldBeUsed((AbstractClientPlayer) capeRenderInfo.getEntity());
+     }
+    *///? }
 
     @Deprecated
     default boolean shouldBeUsed(AbstractClientPlayer player) {

@@ -12,14 +12,17 @@ public class PlayerDelegate implements MinecraftPlayer {
 
     @Getter
     @Delegate(types = MinecraftPlayer.class)
-    //#if MC >= 12109
+    //? if >= 1.21.9 {
+
     private net.minecraft.world.entity.Avatar player;
-    //#else
-    //$$private AbstractClientPlayer player;
-    //#endif
+    //? } else {
+    /*
+     private AbstractClientPlayer player;
+    *///? }
 
     public double getXCloak() {
-        //#if MC >= 12109
+        //? if >= 1.21.9 {
+
         float delta = Minecraft.getInstance().getDeltaTracker().getGameTimeDeltaPartialTick(false);
         if (player instanceof AbstractClientPlayer acp) {
             return acp.avatarState().getInterpolatedCloakX(delta);
@@ -28,13 +31,15 @@ public class PlayerDelegate implements MinecraftPlayer {
         } else {
             return 0;
         }
-        //#else
-        //$$return player.xCloak;
-        //#endif
+        //? } else {
+        /*
+         return player.xCloak;
+        *///? }
     }
 
     public double getZCloak() {
-        //#if MC >= 12109
+        //? if >= 1.21.9 {
+
         float delta = Minecraft.getInstance().getDeltaTracker().getGameTimeDeltaPartialTick(false);
         if (player instanceof AbstractClientPlayer acp) {
             return acp.avatarState().getInterpolatedCloakZ(delta);
@@ -43,9 +48,10 @@ public class PlayerDelegate implements MinecraftPlayer {
         } else {
             return 0;
         }
-        //#else
-        //$$return player.zCloak;
-        //#endif
+        //? } else {
+        /*
+         return player.zCloak;
+        *///? }
     }
 
     public float getYBodyRotO() {
@@ -68,14 +74,15 @@ public class PlayerDelegate implements MinecraftPlayer {
         return player.zo;
     }
 
-    //#if MC <= 11605
-    //$$  public float getXRot() {
-    //$$      return player.xRot;
-    //$$  }
-    //$$  
-    //$$  public float getYRot() {
-    //$$      return player.yRot;
-    //$$  }
-    //#endif
+    //? if <= 1.16.5 {
+    /*
+      public float getXRot() {
+          return player.xRot;
+      }
+      
+      public float getYRot() {
+          return player.yRot;
+      }
+    *///? }
 
 }

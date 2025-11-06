@@ -4,7 +4,8 @@ import dev.tr7zw.transition.loader.ModLoaderUtil;
 import dev.tr7zw.waveycapes.support.EarsSupport;
 import dev.tr7zw.waveycapes.support.MinecraftCapesSupport;
 import dev.tr7zw.waveycapes.support.SupportManager;
-//#if FABRIC
+//? if fabric {
+
 import net.fabricmc.api.ClientModInitializer;
 
 public class WaveyCapesMod extends WaveyCapesBase implements ClientModInitializer {
@@ -12,9 +13,10 @@ public class WaveyCapesMod extends WaveyCapesBase implements ClientModInitialize
     public void onInitializeClient() {
         init();
     }
-    //#else
-    //$$public class WaveyCapesMod extends WaveyCapesBase{  
-    //#endif
+    //? } else {
+    /*
+     public class WaveyCapesMod extends WaveyCapesBase{  
+    *///? }
 
     @Override
     public void initSupportHooks() {

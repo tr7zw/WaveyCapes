@@ -1,46 +1,50 @@
-//#if FORGE
-//$$package dev.tr7zw.waveycapes;
-//$$
-//$$import net.minecraftforge.api.distmarker.Dist;
-//$$import net.minecraftforge.fml.DistExecutor;
-//$$import net.minecraftforge.fml.common.Mod;
-//$$import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-//$$import dev.tr7zw.transition.loader.ModLoaderUtil;
-//$$
-//$$@Mod("waveycapes")
-//$$public class WaveyCapesBootstrap {
-//$$
-//$$	public WaveyCapesBootstrap(FMLJavaModLoadingContext context) {
-//$$        ModLoaderUtil.setModLoadingContext(context);
-//$$		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> { 
-//$$         new WaveyCapesMod().init();
-//$$        });
-//$$	}
-//$$    public WaveyCapesBootstrap() {
-//$$        this(FMLJavaModLoadingContext.get());
-//$$    }
-//$$	
-//$$}
-//#elseif NEOFORGE
-//$$package dev.tr7zw.waveycapes;
-//$$
-//$$import net.neoforged.api.distmarker.Dist;
-//$$import net.neoforged.fml.loading.FMLEnvironment;
-//$$import net.neoforged.fml.common.Mod;
-//$$import dev.tr7zw.transition.loader.ModLoaderEventUtil;
-//$$
-//$$@Mod("waveycapes")
-//$$public class WaveyCapesBootstrap {
-//$$
-//$$    public WaveyCapesBootstrap() {
-//#if MC < 12109
-//$$        if(FMLEnvironment.dist == Dist.CLIENT) {
-//#else
-//$$        if(FMLEnvironment.getDist() == Dist.CLIENT) {
-//#endif
-//$$                    ModLoaderEventUtil.registerClientSetupListener(() -> new WaveyCapesMod().init());
-//$$            }
-//$$    }
-//$$
-//$$}
-//#endif
+//? if forge {
+/*
+ package dev.tr7zw.waveycapes;
+
+ import net.minecraftforge.api.distmarker.Dist;
+ import net.minecraftforge.fml.DistExecutor;
+ import net.minecraftforge.fml.common.Mod;
+ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+ import dev.tr7zw.transition.loader.ModLoaderUtil;
+
+ @Mod("waveycapes")
+ public class WaveyCapesBootstrap {
+
+ public WaveyCapesBootstrap(FMLJavaModLoadingContext context) {
+        ModLoaderUtil.setModLoadingContext(context);
+ 	DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> { 
+         new WaveyCapesMod().init();
+        });
+ }
+    public WaveyCapesBootstrap() {
+        this(FMLJavaModLoadingContext.get());
+    }
+
+ }
+*///? } else if neoforge {
+/*
+ package dev.tr7zw.waveycapes;
+
+ import net.neoforged.api.distmarker.Dist;
+ import net.neoforged.fml.loading.FMLEnvironment;
+ import net.neoforged.fml.common.Mod;
+ import dev.tr7zw.transition.loader.ModLoaderEventUtil;
+
+ @Mod("waveycapes")
+ public class WaveyCapesBootstrap {
+
+    public WaveyCapesBootstrap() {
+ //? if < 1.21.9 {
+/^
+         if(FMLEnvironment.dist == Dist.CLIENT) {
+ ^///? } else {
+
+         if(FMLEnvironment.getDist() == Dist.CLIENT) {
+ //? }
+                    ModLoaderEventUtil.registerClientSetupListener(() -> new WaveyCapesMod().init());
+            }
+    }
+
+ }
+*///? }

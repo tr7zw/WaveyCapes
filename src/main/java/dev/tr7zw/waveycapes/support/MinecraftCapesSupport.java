@@ -20,11 +20,13 @@ public class MinecraftCapesSupport implements ModSupport {
 
     private void init(PlayerWrapper test) {
         try {
-            //#if MC >= 12109
+            //? if >= 1.21.9 {
+
             var entity = test.getAvatar();
-            //#else
-            //$$var entity = test.getEntity();
-            //#endif
+            //? } else {
+            /*
+             var entity = test.getEntity();
+            *///? }
             PlayerHandler.get(entity.getUUID()).getCapeLocation();
             getCape = player -> PlayerHandler.get(entity.getUUID());
             ModBase.LOGGER.info("Using 'get(UUID)' method for MinecraftCapes.");
@@ -33,28 +35,29 @@ public class MinecraftCapesSupport implements ModSupport {
             // ignore
         }
 
-        //#if MC < 12102
-        //$$for (java.lang.reflect.Method m : PlayerHandler.class.getMethods()) {
-        //$$    try {
-        //$$        if (m.getReturnType() != PlayerHandler.class && m.getParameterCount() == 1
-        //$$                && m.getParameterTypes()[0] != java.util.UUID.class) {
-        //$$            continue;
-        //$$        }
-        //$$        m.invoke(null, test);
-        //$$        getCape = player -> {
-        //$$            try {
-        //$$                return (PlayerHandler) m.invoke(null, player);
-        //$$            } catch (IllegalAccessException | java.lang.reflect.InvocationTargetException e) {
-        //$$                return null;
-        //$$            }
-        //$$        };
-        //$$        ModBase.LOGGER.info("Using '" + m.getName() + "' method for MinecraftCapes.");
-        //$$        return;
-        //$$    } catch (Throwable ex) {
-        //$$        // ignore, MinecraftCapes wont work
-        //$$    }
-        //$$}
-        //#endif
+        //? if < 1.21.2 {
+        /*
+         for (java.lang.reflect.Method m : PlayerHandler.class.getMethods()) {
+            try {
+                if (m.getReturnType() != PlayerHandler.class && m.getParameterCount() == 1
+                        && m.getParameterTypes()[0] != java.util.UUID.class) {
+                    continue;
+                }
+                m.invoke(null, test);
+                getCape = player -> {
+                    try {
+                        return (PlayerHandler) m.invoke(null, player);
+                    } catch (IllegalAccessException | java.lang.reflect.InvocationTargetException e) {
+                        return null;
+                    }
+                };
+                ModBase.LOGGER.info("Using '" + m.getName() + "' method for MinecraftCapes.");
+                return;
+            } catch (Throwable ex) {
+                // ignore, MinecraftCapes wont work
+            }
+         }
+        *///? }
         getCape = player -> null;
         ModBase.LOGGER.info("Unable to find a method for MinecraftCapes.");
     }
@@ -80,29 +83,35 @@ public class MinecraftCapesSupport implements ModSupport {
         public VertexConsumer getVertexConsumer(MultiBufferSource multiBufferSource, PlayerWrapper capeRenderInfo) {
             PlayerHandler playerHandler = getCape.apply(capeRenderInfo);
             if (MinecraftCapesConfig.isCapeVisible() && playerHandler.getCapeLocation() != null) {
-                //#if MC >= 12109
+                //? if >= 1.21.9 {
+
                 return ItemRenderer.getFoilBuffer(multiBufferSource,
                         RenderType.entityTranslucent(playerHandler.getCapeLocation()), false,
                         playerHandler.getHasCapeGlint());
-                //#elseif MC >= 12100
-                //$$return ItemRenderer.getArmorFoilBuffer(multiBufferSource,
-                //$$        RenderType.entityTranslucent(playerHandler.getCapeLocation()), playerHandler.getHasCapeGlint());
-                //#else
-                //$$  return ItemRenderer.getArmorFoilBuffer(multiBufferSource,
-                //$$          RenderType.entityTranslucent(playerHandler.getCapeLocation()), false,
-                //$$          playerHandler.getHasCapeGlint());
-                //#endif
+                //? } else if >= 1.21.0 {
+                /*
+                 return ItemRenderer.getArmorFoilBuffer(multiBufferSource,
+                        RenderType.entityTranslucent(playerHandler.getCapeLocation()), playerHandler.getHasCapeGlint());
+                *///? } else {
+                /*
+                  return ItemRenderer.getArmorFoilBuffer(multiBufferSource,
+                          RenderType.entityTranslucent(playerHandler.getCapeLocation()), false,
+                          playerHandler.getHasCapeGlint());
+                *///? }
             } else {
-                //#if MC >= 12109
+                //? if >= 1.21.9 {
+
                 return ItemRenderer.getFoilBuffer(multiBufferSource,
                         RenderType.entityTranslucent(capeRenderInfo.getCapeTexture()), false, false);
-                //#elseif MC >= 12100
-                //$$return ItemRenderer.getArmorFoilBuffer(multiBufferSource,
-                //$$        RenderType.entityTranslucent(capeRenderInfo.getCapeTexture()), false);
-                //#else
-                //$$  return ItemRenderer.getArmorFoilBuffer(multiBufferSource,
-                //$$          RenderType.entityTranslucent(capeRenderInfo.getCapeTexture()), false, false);
-                //#endif
+                //? } else if >= 1.21.0 {
+                /*
+                 return ItemRenderer.getArmorFoilBuffer(multiBufferSource,
+                        RenderType.entityTranslucent(capeRenderInfo.getCapeTexture()), false);
+                *///? } else {
+                /*
+                  return ItemRenderer.getArmorFoilBuffer(multiBufferSource,
+                          RenderType.entityTranslucent(capeRenderInfo.getCapeTexture()), false, false);
+                *///? }
             }
         }
 

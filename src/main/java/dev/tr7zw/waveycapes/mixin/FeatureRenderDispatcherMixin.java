@@ -3,7 +3,8 @@ package dev.tr7zw.waveycapes.mixin;
 import com.mojang.blaze3d.vertex.PoseStack;
 import org.spongepowered.asm.mixin.Mixin;
 
-//#if MC >= 12109
+//? if >= 1.21.9 {
+
 import dev.tr7zw.transition.mc.entitywrapper.PlayerWrapper;
 import dev.tr7zw.waveycapes.CapeNodeCollector;
 import dev.tr7zw.waveycapes.WaveyCapesBase;
@@ -39,11 +40,12 @@ public class FeatureRenderDispatcherMixin {
     }
 }
 
-//#else
-//$$import net.minecraft.client.Minecraft;
-//$$
-//$$@Mixin(Minecraft.class)
-//$$public class FeatureRenderDispatcherMixin {
-//$$}
-//$$
-//#endif
+//? } else {
+/*
+ import net.minecraft.client.Minecraft;
+
+ @Mixin(Minecraft.class)
+ public class FeatureRenderDispatcherMixin {
+ }
+
+*///? }

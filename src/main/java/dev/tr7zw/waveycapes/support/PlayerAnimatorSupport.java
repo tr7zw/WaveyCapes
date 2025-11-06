@@ -11,13 +11,15 @@ import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 
-//#if MC >= 11903
+//? if >= 1.19.3 {
+
 import org.joml.Matrix4f;
 import org.joml.Vector4f;
-//#else
-//$$ import com.mojang.math.Matrix4f;
-//$$ import com.mojang.math.Vector4f;
-//#endif
+//? } else {
+/*
+ import com.mojang.math.Matrix4f;
+ import com.mojang.math.Vector4f;
+*///? }
 
 public class PlayerAnimatorSupport implements AnimationSupport {
 

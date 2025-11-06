@@ -1,6 +1,7 @@
 package dev.tr7zw.waveycapes;
 
-//#if MC >= 12109
+//? if >= 1.21.9 {
+
 import com.mojang.blaze3d.vertex.PoseStack;
 import lombok.Getter;
 import net.minecraft.client.renderer.entity.state.AvatarRenderState;
@@ -24,4 +25,4 @@ public class CapeNodeCollector {
     public record CapeNode(AvatarRenderState state, PoseStack.Pose pose, int packedLight) {
     }
 }
-//#endif
+//? }

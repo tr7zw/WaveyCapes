@@ -21,11 +21,13 @@ import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.client.player.AbstractClientPlayer;
 
-//#if MC >= 12109
+//? if >= 1.21.9 {
+
 @Mixin(value = LivingEntity.class)
-//#else
-//$$@Mixin(net.minecraft.world.entity.player.Player.class)
-//#endif
+//? } else {
+/*
+ @Mixin(net.minecraft.world.entity.player.Player.class)
+*///? }
 public abstract class PlayerMixin extends Entity implements CapeHolder {
 
     public PlayerMixin(EntityType<?> entityType, Level level) {
@@ -52,17 +54,19 @@ public abstract class PlayerMixin extends Entity implements CapeHolder {
 
     @Inject(method = "tick", at = @At("TAIL"))
     private void moveCloakUpdate(CallbackInfo info) {
-        //#if MC >= 12109
+        //? if >= 1.21.9 {
+
         if (!((Object) this instanceof net.minecraft.world.entity.Avatar)) {
             return;
         }
         var entity = (net.minecraft.world.entity.Avatar) (Object) this;
-        //#else
-        //$$if (!((Object) this instanceof AbstractClientPlayer)) {
-        //$$    return;
-        //$$}
-        //$$var entity = (AbstractClientPlayer) (Object) this;
-        //#endif
+        //? } else {
+        /*
+         if (!((Object) this instanceof AbstractClientPlayer)) {
+            return;
+         }
+         var entity = (AbstractClientPlayer) (Object) this;
+        *///? }
         updateSimulation(16);
         PlayerDelegate playerDelegate = new PlayerDelegate(entity);
         if (dirty) {

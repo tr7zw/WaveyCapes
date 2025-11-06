@@ -15,10 +15,11 @@ public abstract class WaveyCapesBase extends ModBase {
     @Getter
     public static WaveyCapesBase INSTANCE;
 
-    //#if MC >= 12109
+    //? if >= 1.21.9 {
+
     @Getter
     private final CapeNodeCollector capeNodeCollector = new CapeNodeCollector();
-    //#endif
+    //? }
     @Getter
     private final CustomCapeRenderer renderer = new CustomCapeRenderer();
 
@@ -38,12 +39,13 @@ public abstract class WaveyCapesBase extends ModBase {
 
     @Override
     public void initSupportHooks() {
-        //#if MC >= 18000
+        //? if >= 1.80.0 {
+        /*
         if (doesClassExist("dev.kosmx.playerAnim.core.impl.AnimationProcessor")) {
             SupportManager.animationSupport.add(new PlayerAnimatorSupport());
             LOGGER.info("Wavey Capes loaded PlayerAnimator support!");
         }
-        //#endif
+        *///? }
         if (doesClassExist("com.github.exopandora.shouldersurfing.api.client.ICameraEntityRenderer")) {
             ShoulderSurfingSupport.init();
             LOGGER.info("Wavey Capes loaded Shoulder Surfing support!");

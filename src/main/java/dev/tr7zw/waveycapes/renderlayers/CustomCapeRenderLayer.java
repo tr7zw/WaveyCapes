@@ -8,62 +8,75 @@ import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 
-//#if MC >= 12109
+//? if >= 1.21.9 {
+
 import net.minecraft.client.renderer.entity.state.AvatarRenderState;
 import net.minecraft.client.renderer.SubmitNodeCollector;
-//#else
-//$$import net.minecraft.client.renderer.MultiBufferSource;
-//#endif
-//#if MC < 12103
-//$$import net.minecraft.world.entity.player.PlayerModelPart;
-//#endif
+//? } else {
+/*
+ import net.minecraft.client.renderer.MultiBufferSource;
+*///? }
+   //? if < 1.21.3 {
+   /*
+    import net.minecraft.world.entity.player.PlayerModelPart;
+   *///? }
 
-//#if MC < 12102
-//$$import net.minecraft.util.Mth;
-//$$import net.minecraft.client.player.AbstractClientPlayer;
-//#endif
+//? if < 1.21.2 {
+/*
+ import net.minecraft.util.Mth;
+ import net.minecraft.client.player.AbstractClientPlayer;
+*///? }
 
-//#if MC >= 12109
+//? if >= 1.21.9 {
+
 public class CustomCapeRenderLayer
         extends RenderLayer<net.minecraft.client.renderer.entity.state.AvatarRenderState, PlayerModel> {
-    //#elseif MC >= 12102
-    //$$public class CustomCapeRenderLayer extends RenderLayer<net.minecraft.client.renderer.entity.state.PlayerRenderState, PlayerModel> {
-    //#else
-    //$$public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, PlayerModel<AbstractClientPlayer>> {
-    //#endif
+    //? } else if >= 1.21.2 {
+    /*
+     public class CustomCapeRenderLayer extends RenderLayer<net.minecraft.client.renderer.entity.state.PlayerRenderState, PlayerModel> {
+    *///? } else {
+    /*
+     public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, PlayerModel<AbstractClientPlayer>> {
+    *///? }
 
-    //#if MC >= 12109
+    //? if >= 1.21.9 {
+
     public CustomCapeRenderLayer(
             RenderLayerParent<net.minecraft.client.renderer.entity.state.AvatarRenderState, PlayerModel> renderLayerParent) {
         super(renderLayerParent);
     }
-    //#elseif MC >= 12102
-    //$$public CustomCapeRenderLayer(RenderLayerParent<net.minecraft.client.renderer.entity.state.PlayerRenderState, PlayerModel> renderLayerParent) {
-    //$$    super(renderLayerParent);
-    //$$}
-    //#else
-    //$$public CustomCapeRenderLayer(
-    //$$        RenderLayerParent<AbstractClientPlayer, PlayerModel<AbstractClientPlayer>> renderLayerParent) {
-    //$$    super(renderLayerParent);
-    //$$}
-    //#endif
+    //? } else if >= 1.21.2 {
+    /*
+     public CustomCapeRenderLayer(RenderLayerParent<net.minecraft.client.renderer.entity.state.PlayerRenderState, PlayerModel> renderLayerParent) {
+        super(renderLayerParent);
+     }
+    *///? } else {
+    /*
+     public CustomCapeRenderLayer(
+            RenderLayerParent<AbstractClientPlayer, PlayerModel<AbstractClientPlayer>> renderLayerParent) {
+        super(renderLayerParent);
+     }
+    *///? }
 
-    //#if MC >= 12109
+    //? if >= 1.21.9 {
+
     @Override
     public void submit(PoseStack poseStack, SubmitNodeCollector submitNodeCollector, int packedLight,
             AvatarRenderState renderState, float f, float g) {
         PlayerWrapper capeRenderInfo = new PlayerWrapper(renderState);
         float delta = Minecraft.getInstance().getDeltaTracker().getGameTimeDeltaPartialTick(false);
-        //#elseif MC >= 12102
-        //$$public void render(PoseStack poseStack, MultiBufferSource multiBufferSource, int packedLight,
-        //$$        net.minecraft.client.renderer.entity.state.PlayerRenderState renderState, float yRot, float xRot) {
-        //$$    PlayerWrapper capeRenderInfo = new PlayerWrapper(renderState);
-        //$$         float delta = Minecraft.getInstance().getDeltaTracker().getGameTimeDeltaPartialTick(false);
-        //#else
-        //$$public void render(PoseStack poseStack, MultiBufferSource multiBufferSource, int packedLight,
-        //$$        AbstractClientPlayer abstractClientPlayer, float f, float g, float delta, float j, float k, float l) {
-        //$$    PlayerWrapper capeRenderInfo = new PlayerWrapper(abstractClientPlayer);
-        //#endif
+        //? } else if >= 1.21.2 {
+        /*
+         public void render(PoseStack poseStack, MultiBufferSource multiBufferSource, int packedLight,
+                net.minecraft.client.renderer.entity.state.PlayerRenderState renderState, float yRot, float xRot) {
+            PlayerWrapper capeRenderInfo = new PlayerWrapper(renderState);
+                 float delta = Minecraft.getInstance().getDeltaTracker().getGameTimeDeltaPartialTick(false);
+        *///? } else {
+        /*
+         public void render(PoseStack poseStack, MultiBufferSource multiBufferSource, int packedLight,
+                AbstractClientPlayer abstractClientPlayer, float f, float g, float delta, float j, float k, float l) {
+            PlayerWrapper capeRenderInfo = new PlayerWrapper(abstractClientPlayer);
+        *///? }
         if (capeRenderInfo.isPlayerInvisible())
             return;
         if (capeRenderInfo.hasElytraEquipped())
@@ -80,13 +93,15 @@ public class CustomCapeRenderLayer
             poseStack.translate(0.0F, -0.053125F, 0.06875F);
         }
 
-        //#if MC >= 12109
+        //? if >= 1.21.9 {
+
         PoseStack stack = new PoseStack();
         stack.last().set(poseStack.last());
         WaveyCapesBase.INSTANCE.getCapeNodeCollector().submitCape(renderState, stack, packedLight);
-        //#else
-        //$$WaveyCapesBase.INSTANCE.getRenderer().render(capeRenderInfo, poseStack, multiBufferSource, packedLight, delta);
-        //#endif
+        //? } else {
+        /*
+         WaveyCapesBase.INSTANCE.getRenderer().render(capeRenderInfo, poseStack, multiBufferSource, packedLight, delta);
+        *///? }
         poseStack.popPose();
     }
 
