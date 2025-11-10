@@ -20,15 +20,18 @@ public class MinecraftCapesSupport implements ModSupport {
 
     private void init(PlayerWrapper test) {
         try {
-            //? if >= 1.21.9 {
+            getCape = player -> {
+                //? if >= 1.21.9 {
 
-            var entity = test.getAvatar();
-            //? } else {
+                var entity = player.getAvatar();
+                //? } else {
             /*
-             var entity = test.getEntity();
+             var entity = player.getEntity();
             *///? }
-            PlayerHandler.get(entity.getUUID()).getCapeLocation();
-            getCape = player -> PlayerHandler.get(entity.getUUID());
+                PlayerHandler.get(entity.getUUID()).getCapeLocation();
+                return PlayerHandler.get(entity.getUUID());
+            };
+            getCape.apply(test);
             ModBase.LOGGER.info("Using 'get(UUID)' method for MinecraftCapes.");
             return;
         } catch (Throwable ex) {
