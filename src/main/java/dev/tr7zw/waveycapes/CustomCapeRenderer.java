@@ -107,24 +107,17 @@ public class CustomCapeRenderer {
         for (int part = 0; part < PART_COUNT; part++) {
             modifyPoseStack(poseStack, capeRenderInfo, delta, part);
             positionMatrices[part] = new Matrix4f(poseStack.last().pose());
-            frontNormalVecs[part] = getNormalVec(
-                    positionMatrices[Math.max(part - 1, 0)],
-                    positionMatrices[Math.max(part - 1, 0)],
-                    positionMatrices[part],
+            frontNormalVecs[part] = getNormalVec(positionMatrices[Math.max(part - 1, 0)],
+                    positionMatrices[Math.max(part - 1, 0)], positionMatrices[part],
                     new Vector3(CAPE_WIDTH / 2F, part * (CAPE_HEIGHT / PART_COUNT), -CAPE_DEPTH),
                     new Vector3(-CAPE_WIDTH / 2F, part * (CAPE_HEIGHT / PART_COUNT), -CAPE_DEPTH),
                     new Vector3(CAPE_WIDTH / 2F, (part + 1) * (CAPE_HEIGHT / PART_COUNT), -CAPE_DEPTH),
-                    light == 15728880
-            );
-            backNormalVecs[part] = getNormalVec(
-                    positionMatrices[Math.max(part - 1, 0)],
-                    positionMatrices[Math.max(part - 1, 0)],
-                    positionMatrices[part],
+                    light == 15728880);
+            backNormalVecs[part] = getNormalVec(positionMatrices[Math.max(part - 1, 0)],
+                    positionMatrices[Math.max(part - 1, 0)], positionMatrices[part],
                     new Vector3(CAPE_WIDTH / 2F, (part + 1) * (CAPE_HEIGHT / PART_COUNT), 0),
                     new Vector3(-CAPE_WIDTH / 2F, (part + 1) * (CAPE_HEIGHT / PART_COUNT), 0),
-                    new Vector3(CAPE_WIDTH / 2F, part * (CAPE_HEIGHT / PART_COUNT), 0),
-                    light == 15728880
-            );
+                    new Vector3(CAPE_WIDTH / 2F, part * (CAPE_HEIGHT / PART_COUNT), 0), light == 15728880);
 
             poseStack.popPose();
         }
@@ -137,17 +130,18 @@ public class CustomCapeRenderer {
                 float minV = 0;
                 float maxV = 1 / 32F;
 
-                Vector3 normalVec = getNormalVec(positionMatrices[0], positionMatrices[0], positionMatrices[0], new Vector3(CAPE_WIDTH / 2, 0, 0), new Vector3(-CAPE_WIDTH / 2, 0, 0),
+                Vector3 normalVec = getNormalVec(positionMatrices[0], positionMatrices[0], positionMatrices[0],
+                        new Vector3(CAPE_WIDTH / 2, 0, 0), new Vector3(-CAPE_WIDTH / 2, 0, 0),
                         new Vector3(CAPE_WIDTH / 2, 0, CAPE_DEPTH), light == 15728880);
 
-                VertexConsumerUtil.addVertex(bufferBuilder, positionMatrices[0], CAPE_WIDTH / 2, 0, 0, maxU, maxV, OverlayTexture.NO_OVERLAY, light,
-                        normalVec.x, normalVec.y, normalVec.z, alpha);
-                VertexConsumerUtil.addVertex(bufferBuilder, positionMatrices[0], -CAPE_WIDTH / 2, 0, 0, minU, maxV, OverlayTexture.NO_OVERLAY, light,
-                        normalVec.x, normalVec.y, normalVec.z, alpha);
-                VertexConsumerUtil.addVertex(bufferBuilder, positionMatrices[0], -CAPE_WIDTH / 2, 0, -CAPE_DEPTH, minU, minV, OverlayTexture.NO_OVERLAY, light,
-                        normalVec.x, normalVec.y, normalVec.z, alpha);
-                VertexConsumerUtil.addVertex(bufferBuilder, positionMatrices[0], CAPE_WIDTH / 2, 0, -CAPE_DEPTH, maxU, minV, OverlayTexture.NO_OVERLAY, light,
-                        normalVec.x, normalVec.y, normalVec.z, alpha);
+                VertexConsumerUtil.addVertex(bufferBuilder, positionMatrices[0], CAPE_WIDTH / 2, 0, 0, maxU, maxV,
+                        OverlayTexture.NO_OVERLAY, light, normalVec.x, normalVec.y, normalVec.z, alpha);
+                VertexConsumerUtil.addVertex(bufferBuilder, positionMatrices[0], -CAPE_WIDTH / 2, 0, 0, minU, maxV,
+                        OverlayTexture.NO_OVERLAY, light, normalVec.x, normalVec.y, normalVec.z, alpha);
+                VertexConsumerUtil.addVertex(bufferBuilder, positionMatrices[0], -CAPE_WIDTH / 2, 0, -CAPE_DEPTH, minU,
+                        minV, OverlayTexture.NO_OVERLAY, light, normalVec.x, normalVec.y, normalVec.z, alpha);
+                VertexConsumerUtil.addVertex(bufferBuilder, positionMatrices[0], CAPE_WIDTH / 2, 0, -CAPE_DEPTH, maxU,
+                        minV, OverlayTexture.NO_OVERLAY, light, normalVec.x, normalVec.y, normalVec.z, alpha);
             }
 
             if (part == PART_COUNT - 1) {
@@ -158,17 +152,20 @@ public class CustomCapeRenderer {
                 float maxV = 1 / 32F;
 
                 Vector3 normalVec = getNormalVec(positionMatrices[part], positionMatrices[part], positionMatrices[part],
-                        new Vector3(CAPE_WIDTH / 2F, CAPE_HEIGHT, -CAPE_DEPTH), new Vector3(-CAPE_WIDTH / 2F, CAPE_HEIGHT, -CAPE_DEPTH),
+                        new Vector3(CAPE_WIDTH / 2F, CAPE_HEIGHT, -CAPE_DEPTH),
+                        new Vector3(-CAPE_WIDTH / 2F, CAPE_HEIGHT, -CAPE_DEPTH),
                         new Vector3(CAPE_WIDTH / 2F, CAPE_HEIGHT, 0), light == 15728880);
 
-                VertexConsumerUtil.addVertex(bufferBuilder, positionMatrices[part], CAPE_WIDTH / 2F, CAPE_HEIGHT, -CAPE_DEPTH, maxU, minV, OverlayTexture.NO_OVERLAY, light,
-                        normalVec.x, normalVec.y, normalVec.z, alpha);
-                VertexConsumerUtil.addVertex(bufferBuilder, positionMatrices[part], -CAPE_WIDTH / 2F, CAPE_HEIGHT, -CAPE_DEPTH, minU, minV, OverlayTexture.NO_OVERLAY, light,
-                        normalVec.x, normalVec.y, normalVec.z, alpha);
-                VertexConsumerUtil.addVertex(bufferBuilder, positionMatrices[part], -CAPE_WIDTH / 2F, CAPE_HEIGHT, 0, minU, maxV, OverlayTexture.NO_OVERLAY, light,
-                        normalVec.x, normalVec.y, normalVec.z, alpha);
-                VertexConsumerUtil.addVertex(bufferBuilder, positionMatrices[part], CAPE_WIDTH / 2F, CAPE_HEIGHT, 0, maxU, maxV, OverlayTexture.NO_OVERLAY, light,
-                        normalVec.x, normalVec.y, normalVec.z, alpha);
+                VertexConsumerUtil.addVertex(bufferBuilder, positionMatrices[part], CAPE_WIDTH / 2F, CAPE_HEIGHT,
+                        -CAPE_DEPTH, maxU, minV, OverlayTexture.NO_OVERLAY, light, normalVec.x, normalVec.y,
+                        normalVec.z, alpha);
+                VertexConsumerUtil.addVertex(bufferBuilder, positionMatrices[part], -CAPE_WIDTH / 2F, CAPE_HEIGHT,
+                        -CAPE_DEPTH, minU, minV, OverlayTexture.NO_OVERLAY, light, normalVec.x, normalVec.y,
+                        normalVec.z, alpha);
+                VertexConsumerUtil.addVertex(bufferBuilder, positionMatrices[part], -CAPE_WIDTH / 2F, CAPE_HEIGHT, 0,
+                        minU, maxV, OverlayTexture.NO_OVERLAY, light, normalVec.x, normalVec.y, normalVec.z, alpha);
+                VertexConsumerUtil.addVertex(bufferBuilder, positionMatrices[part], CAPE_WIDTH / 2F, CAPE_HEIGHT, 0,
+                        maxU, maxV, OverlayTexture.NO_OVERLAY, light, normalVec.x, normalVec.y, normalVec.z, alpha);
             }
 
             float minU = 0;
@@ -177,65 +174,85 @@ public class CustomCapeRenderer {
             float minV = (1 / 32F) * (part + 1);
             float maxV = minV + (1 / 32F);
 
-            Vector3 normalVec = getNormalVec(positionMatrices[part], positionMatrices[part], positionMatrices[Math.max(part - 1, 0)],
+            Vector3 normalVec = getNormalVec(positionMatrices[part], positionMatrices[part],
+                    positionMatrices[Math.max(part - 1, 0)],
                     new Vector3(-CAPE_WIDTH / 2F, (part + 1) * (CAPE_HEIGHT / PART_COUNT), 0),
                     new Vector3(-CAPE_WIDTH / 2F, (part + 1) * (CAPE_HEIGHT / PART_COUNT), -CAPE_DEPTH),
                     new Vector3(-CAPE_WIDTH / 2F, part * (CAPE_HEIGHT / PART_COUNT), 0), light == 15728880);
 
-            VertexConsumerUtil.addVertex(bufferBuilder, positionMatrices[part], -CAPE_WIDTH / 2F, (part + 1) * (CAPE_HEIGHT / PART_COUNT), 0, minU, maxV, OverlayTexture.NO_OVERLAY, light,
+            VertexConsumerUtil.addVertex(bufferBuilder, positionMatrices[part], -CAPE_WIDTH / 2F,
+                    (part + 1) * (CAPE_HEIGHT / PART_COUNT), 0, minU, maxV, OverlayTexture.NO_OVERLAY, light,
                     normalVec.x, normalVec.y, normalVec.z, alpha);
-            VertexConsumerUtil.addVertex(bufferBuilder, positionMatrices[part], -CAPE_WIDTH / 2F, (part + 1) * (CAPE_HEIGHT / PART_COUNT), -CAPE_DEPTH, maxU, maxV, OverlayTexture.NO_OVERLAY, light,
+            VertexConsumerUtil.addVertex(bufferBuilder, positionMatrices[part], -CAPE_WIDTH / 2F,
+                    (part + 1) * (CAPE_HEIGHT / PART_COUNT), -CAPE_DEPTH, maxU, maxV, OverlayTexture.NO_OVERLAY, light,
                     normalVec.x, normalVec.y, normalVec.z, alpha);
-            VertexConsumerUtil.addVertex(bufferBuilder, positionMatrices[Math.max(part - 1, 0)], -CAPE_WIDTH / 2F, part * (CAPE_HEIGHT / PART_COUNT), -CAPE_DEPTH, maxU, minV, OverlayTexture.NO_OVERLAY, light,
+            VertexConsumerUtil.addVertex(bufferBuilder, positionMatrices[Math.max(part - 1, 0)], -CAPE_WIDTH / 2F,
+                    part * (CAPE_HEIGHT / PART_COUNT), -CAPE_DEPTH, maxU, minV, OverlayTexture.NO_OVERLAY, light,
                     normalVec.x, normalVec.y, normalVec.z, alpha);
-            VertexConsumerUtil.addVertex(bufferBuilder, positionMatrices[Math.max(part - 1, 0)], -CAPE_WIDTH / 2F, part * (CAPE_HEIGHT / PART_COUNT), 0, minU, minV, OverlayTexture.NO_OVERLAY, light,
-                    normalVec.x, normalVec.y, normalVec.z, alpha);
+            VertexConsumerUtil.addVertex(bufferBuilder, positionMatrices[Math.max(part - 1, 0)], -CAPE_WIDTH / 2F,
+                    part * (CAPE_HEIGHT / PART_COUNT), 0, minU, minV, OverlayTexture.NO_OVERLAY, light, normalVec.x,
+                    normalVec.y, normalVec.z, alpha);
 
             minU = 11 / 64F;
             maxU = 12 / 64F;
 
-            normalVec = getNormalVec(positionMatrices[part], positionMatrices[part], positionMatrices[Math.max(part - 1, 0)],
+            normalVec = getNormalVec(positionMatrices[part], positionMatrices[part],
+                    positionMatrices[Math.max(part - 1, 0)],
                     new Vector3(CAPE_WIDTH / 2F, (part + 1) * (CAPE_HEIGHT / PART_COUNT), -CAPE_DEPTH),
                     new Vector3(CAPE_WIDTH / 2F, (part + 1) * (CAPE_HEIGHT / PART_COUNT), 0),
                     new Vector3(CAPE_WIDTH / 2F, part * (CAPE_HEIGHT / PART_COUNT), -CAPE_DEPTH), light == 15728880);
 
-            VertexConsumerUtil.addVertex(bufferBuilder, positionMatrices[part], CAPE_WIDTH / 2F, (part + 1) * (CAPE_HEIGHT / PART_COUNT), -CAPE_DEPTH, minU, maxV, OverlayTexture.NO_OVERLAY, light,
+            VertexConsumerUtil.addVertex(bufferBuilder, positionMatrices[part], CAPE_WIDTH / 2F,
+                    (part + 1) * (CAPE_HEIGHT / PART_COUNT), -CAPE_DEPTH, minU, maxV, OverlayTexture.NO_OVERLAY, light,
                     normalVec.x, normalVec.y, normalVec.z, alpha);
-            VertexConsumerUtil.addVertex(bufferBuilder, positionMatrices[part], CAPE_WIDTH / 2F, (part + 1) * (CAPE_HEIGHT / PART_COUNT), 0, maxU, maxV, OverlayTexture.NO_OVERLAY, light,
+            VertexConsumerUtil.addVertex(bufferBuilder, positionMatrices[part], CAPE_WIDTH / 2F,
+                    (part + 1) * (CAPE_HEIGHT / PART_COUNT), 0, maxU, maxV, OverlayTexture.NO_OVERLAY, light,
                     normalVec.x, normalVec.y, normalVec.z, alpha);
-            VertexConsumerUtil.addVertex(bufferBuilder, positionMatrices[Math.max(part - 1, 0)], CAPE_WIDTH / 2F, part * (CAPE_HEIGHT / PART_COUNT), 0, maxU, minV, OverlayTexture.NO_OVERLAY, light,
-                    normalVec.x, normalVec.y, normalVec.z, alpha);
-            VertexConsumerUtil.addVertex(bufferBuilder, positionMatrices[Math.max(part - 1, 0)], CAPE_WIDTH / 2F, part * (CAPE_HEIGHT / PART_COUNT), -CAPE_DEPTH, minU, minV, OverlayTexture.NO_OVERLAY, light,
+            VertexConsumerUtil.addVertex(bufferBuilder, positionMatrices[Math.max(part - 1, 0)], CAPE_WIDTH / 2F,
+                    part * (CAPE_HEIGHT / PART_COUNT), 0, maxU, minV, OverlayTexture.NO_OVERLAY, light, normalVec.x,
+                    normalVec.y, normalVec.z, alpha);
+            VertexConsumerUtil.addVertex(bufferBuilder, positionMatrices[Math.max(part - 1, 0)], CAPE_WIDTH / 2F,
+                    part * (CAPE_HEIGHT / PART_COUNT), -CAPE_DEPTH, minU, minV, OverlayTexture.NO_OVERLAY, light,
                     normalVec.x, normalVec.y, normalVec.z, alpha);
 
             minU = 1 / 64F;
             maxU = 11 / 64F;
 
             Vector3 normalVecTop = frontNormalVecs[part].clone().add(frontNormalVecs[Math.max(part - 1, 0)]).div(2);
-            Vector3 normalVecBottom = frontNormalVecs[part].clone().add(frontNormalVecs[Math.min(part + 1, PART_COUNT - 1)]).div(2);
+            Vector3 normalVecBottom = frontNormalVecs[part].clone()
+                    .add(frontNormalVecs[Math.min(part + 1, PART_COUNT - 1)]).div(2);
 
-            VertexConsumerUtil.addVertex(bufferBuilder, positionMatrices[Math.max(part - 1, 0)], CAPE_WIDTH / 2, part * (CAPE_HEIGHT / PART_COUNT), -CAPE_DEPTH, maxU, minV, OverlayTexture.NO_OVERLAY, light,
+            VertexConsumerUtil.addVertex(bufferBuilder, positionMatrices[Math.max(part - 1, 0)], CAPE_WIDTH / 2,
+                    part * (CAPE_HEIGHT / PART_COUNT), -CAPE_DEPTH, maxU, minV, OverlayTexture.NO_OVERLAY, light,
                     normalVecTop.x, normalVecTop.y, normalVecTop.z, alpha);
-            VertexConsumerUtil.addVertex(bufferBuilder, positionMatrices[Math.max(part - 1, 0)], -CAPE_WIDTH / 2, part * (CAPE_HEIGHT / PART_COUNT), -CAPE_DEPTH, minU, minV, OverlayTexture.NO_OVERLAY, light,
+            VertexConsumerUtil.addVertex(bufferBuilder, positionMatrices[Math.max(part - 1, 0)], -CAPE_WIDTH / 2,
+                    part * (CAPE_HEIGHT / PART_COUNT), -CAPE_DEPTH, minU, minV, OverlayTexture.NO_OVERLAY, light,
                     normalVecTop.x, normalVecTop.y, normalVecTop.z, alpha);
-            VertexConsumerUtil.addVertex(bufferBuilder, positionMatrices[part], -CAPE_WIDTH / 2, (part + 1) * (CAPE_HEIGHT / PART_COUNT), -CAPE_DEPTH, minU, maxV, OverlayTexture.NO_OVERLAY, light,
+            VertexConsumerUtil.addVertex(bufferBuilder, positionMatrices[part], -CAPE_WIDTH / 2,
+                    (part + 1) * (CAPE_HEIGHT / PART_COUNT), -CAPE_DEPTH, minU, maxV, OverlayTexture.NO_OVERLAY, light,
                     normalVecBottom.x, normalVecBottom.y, normalVecBottom.z, alpha);
-            VertexConsumerUtil.addVertex(bufferBuilder, positionMatrices[part], CAPE_WIDTH / 2, (part + 1) * (CAPE_HEIGHT / PART_COUNT), -CAPE_DEPTH, maxU, maxV, OverlayTexture.NO_OVERLAY, light,
+            VertexConsumerUtil.addVertex(bufferBuilder, positionMatrices[part], CAPE_WIDTH / 2,
+                    (part + 1) * (CAPE_HEIGHT / PART_COUNT), -CAPE_DEPTH, maxU, maxV, OverlayTexture.NO_OVERLAY, light,
                     normalVecBottom.x, normalVecBottom.y, normalVecBottom.z, alpha);
 
             minU = 12 / 64F;
             maxU = 22 / 64F;
 
             normalVecTop = backNormalVecs[part].clone().add(backNormalVecs[Math.max(part - 1, 0)]).div(2);
-            normalVecBottom = backNormalVecs[part].clone().add(backNormalVecs[Math.min(part + 1, PART_COUNT - 1)]).div(2);
+            normalVecBottom = backNormalVecs[part].clone().add(backNormalVecs[Math.min(part + 1, PART_COUNT - 1)])
+                    .div(2);
 
-            VertexConsumerUtil.addVertex(bufferBuilder, positionMatrices[Math.max(part - 1, 0)], CAPE_WIDTH / 2, part * (CAPE_HEIGHT / PART_COUNT), 0, minU, maxV, OverlayTexture.NO_OVERLAY, light,
-                    normalVecTop.x, normalVecTop.y, normalVecTop.z, alpha);
-            VertexConsumerUtil.addVertex(bufferBuilder, positionMatrices[Math.max(part - 1, 0)], -CAPE_WIDTH / 2, part * (CAPE_HEIGHT / PART_COUNT), 0, maxU, maxV, OverlayTexture.NO_OVERLAY, light,
-                    normalVecTop.x, normalVecTop.y, normalVecTop.z, alpha);
-            VertexConsumerUtil.addVertex(bufferBuilder, positionMatrices[part], -CAPE_WIDTH / 2, (part + 1) * (CAPE_HEIGHT / PART_COUNT), 0, maxU, minV, OverlayTexture.NO_OVERLAY, light,
+            VertexConsumerUtil.addVertex(bufferBuilder, positionMatrices[Math.max(part - 1, 0)], CAPE_WIDTH / 2,
+                    part * (CAPE_HEIGHT / PART_COUNT), 0, minU, maxV, OverlayTexture.NO_OVERLAY, light, normalVecTop.x,
+                    normalVecTop.y, normalVecTop.z, alpha);
+            VertexConsumerUtil.addVertex(bufferBuilder, positionMatrices[Math.max(part - 1, 0)], -CAPE_WIDTH / 2,
+                    part * (CAPE_HEIGHT / PART_COUNT), 0, maxU, maxV, OverlayTexture.NO_OVERLAY, light, normalVecTop.x,
+                    normalVecTop.y, normalVecTop.z, alpha);
+            VertexConsumerUtil.addVertex(bufferBuilder, positionMatrices[part], -CAPE_WIDTH / 2,
+                    (part + 1) * (CAPE_HEIGHT / PART_COUNT), 0, maxU, minV, OverlayTexture.NO_OVERLAY, light,
                     normalVecBottom.x, normalVecBottom.y, normalVecBottom.z, alpha);
-            VertexConsumerUtil.addVertex(bufferBuilder, positionMatrices[part], CAPE_WIDTH / 2, (part + 1) * (CAPE_HEIGHT / PART_COUNT), 0, minU, minV, OverlayTexture.NO_OVERLAY, light,
+            VertexConsumerUtil.addVertex(bufferBuilder, positionMatrices[part], CAPE_WIDTH / 2,
+                    (part + 1) * (CAPE_HEIGHT / PART_COUNT), 0, minU, minV, OverlayTexture.NO_OVERLAY, light,
                     normalVecBottom.x, normalVecBottom.y, normalVecBottom.z, alpha);
         }
     }
@@ -356,14 +373,14 @@ public class CustomCapeRenderer {
            //            height += 25.0F;
            //            poseStack.translate(0, 0.15F, 0);
            //        }
-
+    
            float naturalWindSwing = getNatrualWindSwing(part, abstractClientPlayer.isUnderWater());
-
+    
            poseStack.mulPose(MathUtil.XP.rotationDegrees(6.0F + swing / 2.0F + height + naturalWindSwing));
            poseStack.mulPose(MathUtil.ZP.rotationDegrees(sidewaysRotationOffset / 2.0F));
            poseStack.mulPose(MathUtil.YP.rotationDegrees(180.0F - sidewaysRotationOffset / 2.0F));
        }
-
+    
      private static float easeOutSine(float x) {
         return Mth.sin((float) ((x * Math.PI) / 2f));
      }

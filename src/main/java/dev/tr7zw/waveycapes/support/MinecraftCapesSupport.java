@@ -25,9 +25,9 @@ public class MinecraftCapesSupport implements ModSupport {
 
                 var entity = player.getAvatar();
                 //? } else {
-            /*
-             var entity = player.getEntity();
-            *///? }
+                /*
+                 var entity = player.getEntity();
+                *///? }
                 PlayerHandler.get(entity.getUUID()).getCapeLocation();
                 return PlayerHandler.get(entity.getUUID());
             };
