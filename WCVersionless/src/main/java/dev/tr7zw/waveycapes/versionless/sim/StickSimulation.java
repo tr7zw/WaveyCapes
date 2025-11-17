@@ -22,7 +22,7 @@ public class StickSimulation implements BasicSimulation {
     public List<Stick> sticks = new ArrayList<>();
     public Vector2 gravityDirection = new Vector2(0, -1);
     public float gravity = 0;
-    public int numIterations = 30;
+    public int numIterations = 3;
     private float maxBend = 5;
     public boolean sneaking = false;
 
