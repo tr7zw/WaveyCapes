@@ -8,7 +8,11 @@ import dev.tr7zw.transition.mc.entitywrapper.PlayerWrapper;
 import dev.tr7zw.waveycapes.CapeRenderer;
 import dev.tr7zw.waveycapes.versionless.ModBase;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
+//? if >=1.21.11 {
+import net.minecraft.client.renderer.rendertype.*;
+//?} else {
+/*import net.minecraft.client.renderer.*;*/
+//?}
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraftcapes.config.MinecraftCapesConfig;
 import net.minecraftcapes.player.PlayerHandler;
@@ -88,9 +92,10 @@ public class MinecraftCapesSupport implements ModSupport {
             if (MinecraftCapesConfig.isCapeVisible() && playerHandler.getCapeLocation() != null) {
                 //? if >= 1.21.9 {
 
-                return ItemRenderer.getFoilBuffer(multiBufferSource,
-                        RenderType.entityTranslucent(playerHandler.getCapeLocation()), false,
-                        playerHandler.getHasCapeGlint());
+                return ItemRenderer.getFoilBuffer(
+                        multiBufferSource, /*? if >= 1.21.11 {*/RenderTypes
+                                /*?} else {*//*RenderType*//*?}*/.entityTranslucent(playerHandler.getCapeLocation()),
+                        false, playerHandler.getHasCapeGlint());
                 //? } else if >= 1.21.0 {
                 /*
                  return ItemRenderer.getArmorFoilBuffer(multiBufferSource,
@@ -104,8 +109,10 @@ public class MinecraftCapesSupport implements ModSupport {
             } else {
                 //? if >= 1.21.9 {
 
-                return ItemRenderer.getFoilBuffer(multiBufferSource,
-                        RenderType.entityTranslucent(capeRenderInfo.getCapeTexture()), false, false);
+                return ItemRenderer.getFoilBuffer(
+                        multiBufferSource, /*? if >= 1.21.11 {*/RenderTypes
+                                /*?} else {*//*RenderType*//*?}*/.entityTranslucent(capeRenderInfo.getCapeTexture()),
+                        false, false);
                 //? } else if >= 1.21.0 {
                 /*
                  return ItemRenderer.getArmorFoilBuffer(multiBufferSource,
