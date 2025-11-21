@@ -17,10 +17,14 @@ import dev.tr7zw.waveycapes.CapeRenderer;
 import dev.tr7zw.waveycapes.NMSUtil;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
+//? if >=1.21.11 {
+import net.minecraft.client.renderer.rendertype.*;
+//?} else {
+/*import net.minecraft.client.renderer.*;*/
+//?}
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.*;
 
 public class EarsSupport implements ModSupport, EarsInhibitor {
 
@@ -52,8 +56,9 @@ public class EarsSupport implements ModSupport, EarsInhibitor {
         return render;
     }
 
-    private ResourceLocation getPlayerCape(PlayerWrapper capeRenderInfo, EarsFeatures playerFeatures) {
-        ResourceLocation skin = capeRenderInfo.getCapeTexture();
+    private /*? >= 1.21.11 {*/ Identifier /*?} else {*//* ResourceLocation *//*?}*/ getPlayerCape(
+            PlayerWrapper capeRenderInfo, EarsFeatures playerFeatures) {
+        /*? >= 1.21.11 {*/ Identifier /*?} else {*//* ResourceLocation *//*?}*/ skin = capeRenderInfo.getCapeTexture();
         if (skin != null) {
             return GeneralUtil.getResourceLocation(skin.getNamespace(), TexSource.CAPE.addSuffix(skin.getPath()));
         }
@@ -78,12 +83,14 @@ public class EarsSupport implements ModSupport, EarsInhibitor {
             EarsFeatures playerFeatures = EarsFeatures.getById(capeRenderInfo.getEntity().getUUID());
 
             if (playerFeatures != null && playerFeatures.capeEnabled) {
-                ResourceLocation cape = getPlayerCape(capeRenderInfo, playerFeatures);
+                /*? >= 1.21.11 {*/ Identifier /*?} else {*//* ResourceLocation *//*?}*/ cape = getPlayerCape(
+                        capeRenderInfo, playerFeatures);
                 if (cape != null) {
                     //? if >= 1.21.9 {
 
-                    return ItemRenderer.getFoilBuffer(multiBufferSource, RenderType.armorCutoutNoCull(cape), false,
-                            false);
+                    return ItemRenderer.getFoilBuffer(multiBufferSource,
+                            /*? if >= 1.21.11 {*/RenderTypes/*?} else {*//*RenderType*//*?}*/.armorCutoutNoCull(cape),
+                            false, false);
                     //? } else if >= 1.21.0 {
                     /*
                      return ItemRenderer.getArmorFoilBuffer(multiBufferSource,

@@ -4,16 +4,21 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 
 import dev.tr7zw.transition.mc.entitywrapper.PlayerWrapper;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.resources.ResourceLocation;
+//? if >=1.21.11 {
+import net.minecraft.client.renderer.rendertype.*;
+//?} else {
+/*import net.minecraft.client.renderer.*;*/
+//?}
+import net.minecraft.resources.*;
 
 public class VanillaCapeRenderer implements CapeRenderer {
 
     @Override
     public VertexConsumer getVertexConsumer(MultiBufferSource multiBufferSource, PlayerWrapper capeRenderInfo) {
-        ResourceLocation cape = capeRenderInfo.getCapeTexture();
+        /*? >= 1.21.11 {*/ Identifier /*?} else {*//* ResourceLocation *//*?}*/ cape = capeRenderInfo.getCapeTexture();
         if (cape != null) {
-            return multiBufferSource.getBuffer(RenderType.entityTranslucent(cape));
+            return multiBufferSource.getBuffer(
+                    /*? if >= 1.21.11 {*/RenderTypes/*?} else {*//*RenderType*//*?}*/.entityTranslucent(cape));
         }
         return null;
     }
