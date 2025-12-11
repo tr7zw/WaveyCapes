@@ -24,27 +24,27 @@
  }
 *///? } else if neoforge {
 /*
- package dev.tr7zw.waveycapes;
+package dev.tr7zw.waveycapes;
 
- import net.neoforged.api.distmarker.Dist;
- import net.neoforged.fml.loading.FMLEnvironment;
- import net.neoforged.fml.common.Mod;
- import dev.tr7zw.transition.loader.ModLoaderEventUtil;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.fml.loading.FMLEnvironment;
+import net.neoforged.fml.common.Mod;
+import dev.tr7zw.transition.loader.ModLoaderEventUtil;
 
- @Mod("waveycapes")
- public class WaveyCapesBootstrap {
+@Mod("waveycapes")
+public class WaveyCapesBootstrap {
 
     public WaveyCapesBootstrap() {
- //? if < 1.21.9 {
-/^
+        //? if < 1.21.9 {
+        /^
          if(FMLEnvironment.dist == Dist.CLIENT) {
- ^///? } else {
+         ^///? } else {
 
-         if(FMLEnvironment.getDist() == Dist.CLIENT) {
- //? }
-                    ModLoaderEventUtil.registerClientSetupListener(() -> new WaveyCapesMod().init());
-            }
+        if (FMLEnvironment.getDist() == Dist.CLIENT) {
+            //? }
+            ModLoaderEventUtil.registerClientSetupListener(() -> new WaveyCapesMod().init());
+        }
     }
 
- }
+}
 *///? }

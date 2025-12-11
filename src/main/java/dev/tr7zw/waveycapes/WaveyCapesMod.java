@@ -14,8 +14,8 @@ public class WaveyCapesMod extends WaveyCapesBase implements ClientModInitialize
         init();
     }
     //? } else {
-    /*
-     public class WaveyCapesMod extends WaveyCapesBase{  
+/*
+public class WaveyCapesMod extends WaveyCapesBase {
     *///? }
 
     @Override

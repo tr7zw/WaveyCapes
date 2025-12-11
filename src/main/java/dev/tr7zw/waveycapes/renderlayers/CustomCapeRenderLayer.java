@@ -4,7 +4,13 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import dev.tr7zw.transition.mc.entitywrapper.PlayerWrapper;
 import dev.tr7zw.waveycapes.WaveyCapesBase;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.model.PlayerModel;
+//? if >= 1.21.11 {
+
+import net.minecraft.client.model.player.*;
+//? } else {
+/*
+import net.minecraft.client.model.*;
+*///? }
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 
