@@ -27,9 +27,8 @@ public interface CapeHolder {
 
     public default boolean incorrectSimulation(BasicSimulation sim) {
         CapeMovement style = WaveyCapesBase.config.capeMovement;
-        if (style == CapeMovement.BASIC_SIMULATION && sim.getClass() != StickSimulation.class) {
-            return true;
-        } else if (style == CapeMovement.BASIC_SIMULATION_3D && sim.getClass() != StickSimulation3d.class) {
+        if ((style == CapeMovement.BASIC_SIMULATION && sim.getClass() != StickSimulation.class)
+                || (style == CapeMovement.BASIC_SIMULATION_3D && sim.getClass() != StickSimulation3d.class)) {
             return true;
         }
         return false;
