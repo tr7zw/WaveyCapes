@@ -155,4 +155,16 @@ sourceSets {
     }
 }
 
+// Copy shared sim classes from WCShared before compiling to avoid code duplication
+task copySharedSim(type: Copy) {
+    from "${project.rootDir}/WCShared/src/main/java/dev/tr7zw/waveycapes/sim"
+    into "${buildDir}/generated/sources/sharedSim/dev/tr7zw/waveycapes/sim"
+    include '*.java'
+    // Exclude Vector4 as it's WCForge-only
+    exclude 'Vector4.java'
+}
+
+sourceSets.main.java.srcDirs += "${buildDir}/generated/sources/sharedSim"
+compileJava.dependsOn copySharedSim
+
 tasks.reobfJar.dependsOn(shadowJar)

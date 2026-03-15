@@ -22,25 +22,7 @@ public class Vector4 {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Vector4 vector4 = (Vector4) o;
-        return Float.compare(vector4.x, x) == 0 && Float.compare(vector4.y, y) == 0
-                && Float.compare(vector4.z, z) == 0 && Float.compare(vector4.w, w) == 0;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = Float.floatToIntBits(x);
-        result = 31 * result + Float.floatToIntBits(y);
-        result = 31 * result + Float.floatToIntBits(z);
-        result = 31 * result + Float.floatToIntBits(w);
-        return result;
-    }
-
-    @Override
     public String toString() {
-        return "Vector4[x=" + x + ", y=" + y + ", z=" + z + ", w=" + w + "]";
+        return "[" + x + ", " + y + ", " + z + ", " + w + "]";
     }
 }

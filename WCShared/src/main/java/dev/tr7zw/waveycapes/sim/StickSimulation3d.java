@@ -3,8 +3,6 @@ package dev.tr7zw.waveycapes.sim;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.util.Mth;
-
 /**
  * Java port of https://www.youtube.com/watch?v=PGk0rnyTa1U by Sebastian Lague
  * Has some changes like maximizing bends, only designed to simulate a single
@@ -168,7 +166,7 @@ public class StickSimulation3d implements BasicSimulation {
         float dot = (abx * cbx + aby * cby);
         float cross = (abx * cby - aby * cbx);
 
-        double alpha = Mth.atan2(cross, dot);
+        double alpha = Math.atan2(cross, dot);
 
         return alpha * 180 / Math.PI;
     }
@@ -222,17 +220,17 @@ public class StickSimulation3d implements BasicSimulation {
 
         @Override
         public float getLerpX(float delta) {
-            return Mth.lerp(delta, prevPosition.x, position.x);
+            return prevPosition.x + delta * (position.x - prevPosition.x);
         }
 
         @Override
         public float getLerpY(float delta) {
-            return Mth.lerp(delta, prevPosition.y, position.y);
+            return prevPosition.y + delta * (position.y - prevPosition.y);
         }
 
         @Override
         public float getLerpZ(float delta) {
-            return Mth.lerp(delta, prevPosition.z, position.z);
+            return prevPosition.z + delta * (position.z - prevPosition.z);
         }
     }
 

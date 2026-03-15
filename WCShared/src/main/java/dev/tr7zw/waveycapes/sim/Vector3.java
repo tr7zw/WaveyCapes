@@ -1,7 +1,5 @@
 package dev.tr7zw.waveycapes.sim;
 
-import net.minecraft.util.Mth;
-
 public class Vector3 {
     public float x, y, z;
 
@@ -73,7 +71,7 @@ public class Vector3 {
     }
 
     public Vector3 normalize() {
-        float f = Mth.sqrt(this.x * this.x + this.y * this.y + this.z * this.z);
+        float f = (float) Math.sqrt(this.x * this.x + this.y * this.y + this.z * this.z);
         if (f < 1.0E-4F) {
             this.x = 0;
             this.y = 0;
@@ -90,8 +88,8 @@ public class Vector3 {
         float ox = x;
         float oy = y;
         deg = (float) Math.toRadians(deg);
-        x = Mth.cos(deg) * ox - Mth.sin(deg) * oy;
-        y = Mth.sin(deg) * ox + Mth.cos(deg) * oy;
+        x = (float) (Math.cos(deg) * ox - Math.sin(deg) * oy);
+        y = (float) (Math.sin(deg) * ox + Math.cos(deg) * oy);
         return this;
     }
 
@@ -100,24 +98,8 @@ public class Vector3 {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Vector3 vector3 = (Vector3) o;
-        return Float.compare(vector3.x, x) == 0 && Float.compare(vector3.y, y) == 0 && Float.compare(vector3.z, z) == 0;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = Float.floatToIntBits(x);
-        result = 31 * result + Float.floatToIntBits(y);
-        result = 31 * result + Float.floatToIntBits(z);
-        return result;
-    }
-
-    @Override
     public String toString() {
-        return "Vector3[x=" + x + ", y=" + y + ", z=" + z + "]";
+        return "[" + x + ", " + y + ", " + z + "]";
     }
 
 }

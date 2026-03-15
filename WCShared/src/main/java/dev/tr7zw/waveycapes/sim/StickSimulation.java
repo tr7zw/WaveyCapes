@@ -3,8 +3,6 @@ package dev.tr7zw.waveycapes.sim;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.util.Mth;
-
 /**
  * Java port of https://www.youtube.com/watch?v=PGk0rnyTa1U by Sebastian Lague
  * Has some changes like maximizing bends, only designed to simulate a single
@@ -177,12 +175,12 @@ public class StickSimulation implements BasicSimulation {
 
         @Override
         public float getLerpX(float delta) {
-            return Mth.lerp(delta, prevPosition.x, position.x);
+            return prevPosition.x + delta * (position.x - prevPosition.x);
         }
 
         @Override
         public float getLerpY(float delta) {
-            return Mth.lerp(delta, prevPosition.y, position.y);
+            return prevPosition.y + delta * (position.y - prevPosition.y);
         }
 
         @Override
@@ -245,7 +243,7 @@ public class StickSimulation implements BasicSimulation {
         }
 
         public Vector2 normalize() {
-            float f = Mth.sqrt(this.x * this.x + this.y * this.y);
+            float f = (float) Math.sqrt(this.x * this.x + this.y * this.y);
             if (f < 1.0E-4F) {
                 this.x = 0;
                 this.y = 0;
@@ -260,8 +258,8 @@ public class StickSimulation implements BasicSimulation {
             float ox = x;
             float oy = y;
             deg = (float) Math.toRadians(deg);
-            x = Mth.cos(deg) * ox - Mth.sin(deg) * oy;
-            y = Mth.sin(deg) * ox + Mth.cos(deg) * oy;
+            x = (float) (Math.cos(deg) * ox - Math.sin(deg) * oy);
+            y = (float) (Math.sin(deg) * ox + Math.cos(deg) * oy);
             return this;
         }
 
