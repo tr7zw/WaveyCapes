@@ -3,7 +3,10 @@ package dev.tr7zw.waveycapes.renderlayers;
 import dev.tr7zw.waveycapes.CapeHolder;
 import dev.tr7zw.waveycapes.CapeMovement;
 import dev.tr7zw.waveycapes.WaveyCapesBase;
-import dev.tr7zw.waveycapes.sim.StickSimulation;
+import dev.tr7zw.waveycapes.sim.BasicSimulation;
+import dev.tr7zw.waveycapes.sim.CapePoint;
+import dev.tr7zw.waveycapes.sim.Vector3;
+import dev.tr7zw.waveycapes.sim.Vector4;
 import dev.tr7zw.waveycapes.util.Matrix4f;
 import dev.tr7zw.waveycapes.util.Mth;
 import dev.tr7zw.waveycapes.util.PoseStack;
@@ -23,17 +26,51 @@ public class SmoothCapeRenderer {
         worldrenderer.begin(7, DefaultVertexFormats.POSITION_TEX_NORMAL);
         PoseStack poseStack = new PoseStack();
         poseStack.pushPose();
-        
-        Matrix4f oldPositionMatrix = null;
+
+        // Pass 1: Collect all matrices and compute normals
+        Matrix4f[] matrices = new Matrix4f[CustomCapeRenderLayer.partCount];
+        Vector3[] frontNormalVecs = new Vector3[CustomCapeRenderLayer.partCount];
+        Vector3[] backNormalVecs = new Vector3[CustomCapeRenderLayer.partCount];
+
         for (int part = 0; part < CustomCapeRenderLayer.partCount; part++) {
             modifyPoseStack(layer, poseStack, abstractClientPlayer, delta, part);
+            matrices[part] = poseStack.last().pose();
+            poseStack.popPose();
+        }
+
+        // Compute normals for front and back faces
+        for (int part = 0; part < CustomCapeRenderLayer.partCount; part++) {
+            frontNormalVecs[part] = getNormalVec(matrices[part],
+                    0.3F, (part + 1) * (0.96F / CustomCapeRenderLayer.partCount), 0F,
+                    -0.3F, (part + 1) * (0.96F / CustomCapeRenderLayer.partCount), 0F,
+                    0.3F, part * (0.96F / CustomCapeRenderLayer.partCount), 0F);
+            backNormalVecs[part] = getNormalVec(matrices[part],
+                    -0.3F, (part + 1) * (0.96F / CustomCapeRenderLayer.partCount), -0.06F,
+                    0.3F, (part + 1) * (0.96F / CustomCapeRenderLayer.partCount), -0.06F,
+                    -0.3F, part * (0.96F / CustomCapeRenderLayer.partCount), -0.06F);
+        }
+
+        // Pass 2: Render geometry using stored matrices and computed normals
+        Matrix4f oldPositionMatrix = null;
+        for (int part = 0; part < CustomCapeRenderLayer.partCount; part++) {
+            Matrix4f matrix = matrices[part];
 
             if (oldPositionMatrix == null) {
-                oldPositionMatrix = poseStack.last().pose();
+                oldPositionMatrix = matrix;
             }
 
+            // Average normals between adjacent parts for smooth shading
+            Vector3 frontNormal = frontNormalVecs[part];
+            Vector3 backNormal = backNormalVecs[part];
+            Vector3 prevFrontNormal = part > 0 ? frontNormalVecs[part - 1] : frontNormal;
+            Vector3 prevBackNormal = part > 0 ? backNormalVecs[part - 1] : backNormal;
+
+            // Averaged normals for top edge of this part (shared with bottom edge of previous part)
+            Vector3 avgFrontTop = average(prevFrontNormal, frontNormal);
+            Vector3 avgBackTop = average(prevBackNormal, backNormal);
+
             if (part == 0) {
-                addTopVertex(worldrenderer, poseStack.last().pose(), oldPositionMatrix,
+                addTopVertex(worldrenderer, matrix, oldPositionMatrix,
                         0.3F,
                         0,
                         0F,
@@ -43,7 +80,7 @@ public class SmoothCapeRenderer {
             }
 
             if (part == CustomCapeRenderLayer.partCount - 1) {
-                addBottomVertex(worldrenderer, poseStack.last().pose(), poseStack.last().pose(),
+                addBottomVertex(worldrenderer, matrix, matrix,
                         0.3F,
                         (part + 1) * (0.96F / CustomCapeRenderLayer.partCount),
                         0F,
@@ -52,7 +89,7 @@ public class SmoothCapeRenderer {
                         -0.06F, part);
             }
 
-            addLeftVertex(worldrenderer, poseStack.last().pose(), oldPositionMatrix,
+            addLeftVertex(worldrenderer, matrix, oldPositionMatrix,
                     -0.3F,
                     (part + 1) * (0.96F / CustomCapeRenderLayer.partCount),
                     0F,
@@ -60,7 +97,7 @@ public class SmoothCapeRenderer {
                     part * (0.96F / CustomCapeRenderLayer.partCount),
                     -0.06F, part);
 
-            addRightVertex(worldrenderer, poseStack.last().pose(), oldPositionMatrix,
+            addRightVertex(worldrenderer, matrix, oldPositionMatrix,
                     0.3F,
                     (part + 1) * (0.96F / CustomCapeRenderLayer.partCount),
                     0F,
@@ -68,55 +105,78 @@ public class SmoothCapeRenderer {
                     part * (0.96F / CustomCapeRenderLayer.partCount),
                     -0.06F, part);
 
-            addBackVertex(worldrenderer, poseStack.last().pose(), oldPositionMatrix,
+            addBackVertex(worldrenderer, matrix, oldPositionMatrix,
                     0.3F,
                     (part + 1) * (0.96F / CustomCapeRenderLayer.partCount),
                     -0.06F,
                     -0.3F,
                     part * (0.96F / CustomCapeRenderLayer.partCount),
-                    -0.06F, part);
+                    -0.06F, part, backNormal, avgBackTop);
 
-            addFrontVertex(worldrenderer, oldPositionMatrix, poseStack.last().pose(),
+            addFrontVertex(worldrenderer, oldPositionMatrix, matrix,
                     0.3F,
                     (part + 1) * (0.96F / CustomCapeRenderLayer.partCount),
                     0F,
                     -0.3F,
                     part * (0.96F / CustomCapeRenderLayer.partCount),
-                    0F, part);
+                    0F, part, frontNormal, avgFrontTop);
 
-            oldPositionMatrix = poseStack.last().pose();
-            poseStack.popPose();
+            oldPositionMatrix = matrix;
         }
         Tessellator.getInstance().draw();
     }
-    
+
+    private Vector3 average(Vector3 a, Vector3 b) {
+        return new Vector3((a.x + b.x) / 2f, (a.y + b.y) / 2f, (a.z + b.z) / 2f).normalize();
+    }
+
+    private Vector3 getNormalVec(Matrix4f matrix,
+            float x1, float y1, float z1,
+            float x2, float y2, float z2,
+            float x3, float y3, float z3) {
+        Vector4 p1 = transform(matrix, new Vector4(x1, y1, z1, 1.0F));
+        Vector4 p2 = transform(matrix, new Vector4(x2, y2, z2, 1.0F));
+        Vector4 p3 = transform(matrix, new Vector4(x3, y3, z3, 1.0F));
+
+        Vector3 v1 = p2.toVec3().subtract(p1.toVec3());
+        Vector3 v2 = p3.toVec3().subtract(p1.toVec3());
+        return v1.cross(v2).normalize();
+    }
+
+    private Vector4 transform(Matrix4f matrix, Vector4 vec) {
+        Vector4f v4f = new Vector4f(vec.x, vec.y, vec.z, vec.w);
+        v4f.transform(matrix);
+        return new Vector4(v4f.x(), v4f.y(), v4f.z(), v4f.w());
+    }
+
     void modifyPoseStack(CustomCapeRenderLayer layer, PoseStack poseStack, AbstractClientPlayer abstractClientPlayer, float h, int part) {
-        if(WaveyCapesBase.config.capeMovement == CapeMovement.BASIC_SIMULATION) {
+        if(WaveyCapesBase.config.capeMovement != CapeMovement.VANILLA) {
             modifyPoseStackSimulation(layer, poseStack, abstractClientPlayer, h, part);
             return;
         }
         modifyPoseStackVanilla(layer, poseStack, abstractClientPlayer, h, part);
     }
-    
+
     private void modifyPoseStackSimulation(CustomCapeRenderLayer layer, PoseStack poseStack, AbstractClientPlayer abstractClientPlayer, float delta, int part) {
-        StickSimulation simulation = ((CapeHolder)abstractClientPlayer).getSimulation();
+        BasicSimulation simulation = ((CapeHolder)abstractClientPlayer).getSimulation();
+        if (simulation == null || simulation.empty()) {
+            modifyPoseStackVanilla(layer, poseStack, abstractClientPlayer, delta, part);
+            return;
+        }
+        java.util.List<CapePoint> points = simulation.getPoints();
         poseStack.pushPose();
         poseStack.translate(0.0D, 0.0D, 0.125D);
-        
-        float z = simulation.points.get(part).getLerpX(delta) - simulation.points.get(0).getLerpX(delta);
-        if(z > 0) {
-            z = 0;
+
+        float x = points.get(part).getLerpX(delta) - points.get(0).getLerpX(delta);
+        if(x > 0) {
+            x = 0;
         }
-        float y = simulation.points.get(0).getLerpY(delta) - part - simulation.points.get(part).getLerpY(delta);
-        
+        float y = points.get(0).getLerpY(delta) - part - points.get(part).getLerpY(delta);
+        float z = points.get(0).getLerpZ(delta) - points.get(part).getLerpZ(delta);
+
         float sidewaysRotationOffset = 0;
-        float partRotation = (float) -Math.atan2(y, z);
-        partRotation = Math.max(partRotation, 0);
-        if(partRotation != 0)
-            partRotation = (float) (Math.PI-partRotation);
-        partRotation *= 57.2958;
-        partRotation *= 2;
-        
+        float partRotation = getRotation(points, part, delta);
+
         float height = 0;
         if (abstractClientPlayer.isSneaking()) {
             height += 25.0F;
@@ -125,23 +185,35 @@ public class SmoothCapeRenderer {
 
         float naturalWindSwing = layer.getNatrualWindSwing(part);
 
-        
+
         // vanilla rotating and wind
         poseStack.mulPose(Vector3f.XP.rotationDegrees(6.0F + height + naturalWindSwing));
         poseStack.mulPose(Vector3f.ZP.rotationDegrees(sidewaysRotationOffset / 2.0F));
         poseStack.mulPose(Vector3f.YP.rotationDegrees(180.0F - sidewaysRotationOffset / 2.0F));
-        poseStack.translate(0, y/CustomCapeRenderLayer.partCount, z/CustomCapeRenderLayer.partCount); // movement from the simulation
+        poseStack.translate(-z/CustomCapeRenderLayer.partCount, y/CustomCapeRenderLayer.partCount, x/CustomCapeRenderLayer.partCount); // movement from the simulation
         //offsetting so the rotation is on the cape part
-        //float offset = (float) (part * (16 / CustomCapeRenderLayer.partCount))/16; // to fold the entire cape into one position for debugging
-        poseStack.translate(0, /*-offset*/ + (0.48/16) , - (0.48/16)); // (0.48/16)
+        poseStack.translate(0, (0.48/16) , - (0.48/16)); // (0.48/16)
         poseStack.translate(0, part * 1f/CustomCapeRenderLayer.partCount, part * (0)/CustomCapeRenderLayer.partCount);
         poseStack.mulPose(Vector3f.XP.rotationDegrees(-partRotation)); // apply actual rotation
         // undoing the rotation
         poseStack.translate(0, -part * 1f/CustomCapeRenderLayer.partCount, -part * (0)/CustomCapeRenderLayer.partCount);
         poseStack.translate(0, -(0.48/16), (0.48/16));
-        
+
     }
-    
+
+    private float getRotation(java.util.List<CapePoint> points, int part, float delta) {
+        if (part == CustomCapeRenderLayer.partCount - 1) {
+            return getRotation(points, part - 1, delta);
+        }
+        return (float) getAngle(points.get(part).getLerpedPos(delta),
+                points.get(part + 1).getLerpedPos(delta));
+    }
+
+    private double getAngle(Vector3 a, Vector3 b) {
+        Vector3 angle = b.subtract(a);
+        return Math.toDegrees(Math.atan2(angle.x, angle.y)) + 180;
+    }
+
     private void modifyPoseStackVanilla(CustomCapeRenderLayer layer, PoseStack poseStack, AbstractClientPlayer abstractClientPlayer, float h, int part) {
         poseStack.pushPose();
         poseStack.translate(0.0D, 0.0D, 0.125D);
@@ -168,13 +240,13 @@ public class SmoothCapeRenderer {
         }
 
         float naturalWindSwing = layer.getNatrualWindSwing(part);
-        
+
         poseStack.mulPose(Vector3f.XP.rotationDegrees(6.0F + swing / 2.0F + height + naturalWindSwing));
         poseStack.mulPose(Vector3f.ZP.rotationDegrees(sidewaysRotationOffset / 2.0F));
         poseStack.mulPose(Vector3f.YP.rotationDegrees(180.0F - sidewaysRotationOffset / 2.0F));
     }
-    
-    private static void addBackVertex(WorldRenderer worldrenderer, Matrix4f matrix, Matrix4f oldMatrix, float x1, float y1, float z1, float x2, float y2, float z2, int part) {
+
+    private static void addBackVertex(WorldRenderer worldrenderer, Matrix4f matrix, Matrix4f oldMatrix, float x1, float y1, float z1, float x2, float y2, float z2, int part, Vector3 normal, Vector3 topNormal) {
         float i;
         Matrix4f k;
         if (x1 < x2) {
@@ -204,16 +276,16 @@ public class SmoothCapeRenderer {
         maxV = minV + (vPerPart * (part + 1));
         minV = minV + (vPerPart * part);
 
-        //oldMatrix
-        vertex(worldrenderer, oldMatrix, x1, y2, z1).tex(maxU, minV).normal(1, 0, 0).endVertex();
-        vertex(worldrenderer, oldMatrix, x2, y2, z1).tex(minU, minV).normal(1, 0, 0).endVertex();
-        //matrix
-        vertex(worldrenderer, matrix, x2, y1, z2).tex(minU, maxV).normal(1, 0, 0).endVertex();
-        vertex(worldrenderer, matrix, x1, y1, z2).tex(maxU, maxV).normal(1, 0, 0).endVertex();
-        
+        //oldMatrix - top edge uses averaged normal
+        vertex(worldrenderer, oldMatrix, x1, y2, z1).tex(maxU, minV).normal(topNormal.x, topNormal.y, topNormal.z).endVertex();
+        vertex(worldrenderer, oldMatrix, x2, y2, z1).tex(minU, minV).normal(topNormal.x, topNormal.y, topNormal.z).endVertex();
+        //matrix - bottom edge uses current part normal
+        vertex(worldrenderer, matrix, x2, y1, z2).tex(minU, maxV).normal(normal.x, normal.y, normal.z).endVertex();
+        vertex(worldrenderer, matrix, x1, y1, z2).tex(maxU, maxV).normal(normal.x, normal.y, normal.z).endVertex();
+
    }
 
-    private static void addFrontVertex(WorldRenderer worldrenderer, Matrix4f matrix, Matrix4f oldMatrix, float x1, float y1, float z1, float x2, float y2, float z2, int part) {
+    private static void addFrontVertex(WorldRenderer worldrenderer, Matrix4f matrix, Matrix4f oldMatrix, float x1, float y1, float z1, float x2, float y2, float z2, int part, Vector3 normal, Vector3 topNormal) {
         float i;
         Matrix4f k;
         if (x1 < x2) {
@@ -243,13 +315,13 @@ public class SmoothCapeRenderer {
         maxV = minV + (vPerPart * (part + 1));
         minV = minV + (vPerPart * part);
 
-        //oldMatrix
-        vertex(worldrenderer, oldMatrix, x1, y1, z1).tex(maxU, maxV).normal(1, 0, 0).endVertex();
-        vertex(worldrenderer, oldMatrix, x2, y1, z1).tex(minU, maxV).normal(1, 0, 0).endVertex();
-        //matrix
-        vertex(worldrenderer, matrix, x2, y2, z2).tex(minU, minV).normal(1, 0, 0).endVertex();
-        vertex(worldrenderer, matrix, x1, y2, z2).tex(maxU, minV).normal(1, 0, 0).endVertex();
-        
+        //oldMatrix - bottom edge uses current part normal
+        vertex(worldrenderer, oldMatrix, x1, y1, z1).tex(maxU, maxV).normal(normal.x, normal.y, normal.z).endVertex();
+        vertex(worldrenderer, oldMatrix, x2, y1, z1).tex(minU, maxV).normal(normal.x, normal.y, normal.z).endVertex();
+        //matrix - top edge uses averaged normal
+        vertex(worldrenderer, matrix, x2, y2, z2).tex(minU, minV).normal(topNormal.x, topNormal.y, topNormal.z).endVertex();
+        vertex(worldrenderer, matrix, x1, y2, z2).tex(maxU, minV).normal(topNormal.x, topNormal.y, topNormal.z).endVertex();
+
    }
 
     private static void addLeftVertex(WorldRenderer worldrenderer, Matrix4f matrix, Matrix4f oldMatrix, float x1, float y1, float z1, float x2, float y2, float z2, int part) {
@@ -278,12 +350,12 @@ public class SmoothCapeRenderer {
         minV = minV + (vPerPart * part);
 
         //matrix
-        vertex(worldrenderer, matrix, x2, y1, z1).tex(maxU, maxV).normal(1, 0, 0).endVertex();
-        vertex(worldrenderer, matrix, x2, y1, z2).tex(minU, maxV).normal(1, 0, 0).endVertex();
+        vertex(worldrenderer, matrix, x2, y1, z1).tex(maxU, maxV).normal(-1, 0, 0).endVertex();
+        vertex(worldrenderer, matrix, x2, y1, z2).tex(minU, maxV).normal(-1, 0, 0).endVertex();
         //oldMatrix
-        vertex(worldrenderer, oldMatrix, x2, y2, z2).tex(minU, minV).normal(1, 0, 0).endVertex();
-        vertex(worldrenderer, oldMatrix, x2, y2, z1).tex(maxU, minV).normal(1, 0, 0).endVertex();
-        
+        vertex(worldrenderer, oldMatrix, x2, y2, z2).tex(minU, minV).normal(-1, 0, 0).endVertex();
+        vertex(worldrenderer, oldMatrix, x2, y2, z1).tex(maxU, minV).normal(-1, 0, 0).endVertex();
+
     }
 
     private static void addRightVertex(WorldRenderer worldrenderer, Matrix4f matrix, Matrix4f oldMatrix, float x1, float y1, float z1, float x2, float y2, float z2, int part) {
@@ -317,7 +389,7 @@ public class SmoothCapeRenderer {
         //oldMatrix
         vertex(worldrenderer, oldMatrix, x2, y2, z1).tex(maxU, minV).normal(1, 0, 0).endVertex();
         vertex(worldrenderer, oldMatrix, x2, y2, z2).tex(minU, minV).normal(1, 0, 0).endVertex();
-        
+
     }
 
     private static void addBottomVertex(WorldRenderer worldrenderer, Matrix4f matrix, Matrix4f oldMatrix, float x1, float y1, float z1, float x2, float y2, float z2, int part) {
@@ -346,11 +418,11 @@ public class SmoothCapeRenderer {
         minV = minV + (vPerPart * part);
 
         //oldMatrix
-        vertex(worldrenderer, oldMatrix, x1, y2, z2).tex(maxU, minV).normal(1, 0, 0).endVertex();
-        vertex(worldrenderer, oldMatrix, x2, y2, z2).tex(minU, minV).normal(1, 0, 0).endVertex();
+        vertex(worldrenderer, oldMatrix, x1, y2, z2).tex(maxU, minV).normal(0, -1, 0).endVertex();
+        vertex(worldrenderer, oldMatrix, x2, y2, z2).tex(minU, minV).normal(0, -1, 0).endVertex();
         //newMatrix
-        vertex(worldrenderer, matrix, x2, y1, z1).tex(minU, maxV).normal(1, 0, 0).endVertex();
-        vertex(worldrenderer, matrix, x1, y1, z1).tex(maxU, maxV).normal(1, 0, 0).endVertex();
+        vertex(worldrenderer, matrix, x2, y1, z1).tex(minU, maxV).normal(0, -1, 0).endVertex();
+        vertex(worldrenderer, matrix, x1, y1, z1).tex(maxU, maxV).normal(0, -1, 0).endVertex();
 
     }
 
@@ -360,7 +432,7 @@ public class SmoothCapeRenderer {
         worldrenderer.pos(vector4f.x(), vector4f.y(), vector4f.z());
         return worldrenderer;
     }
-    
+
     private static void addTopVertex(WorldRenderer worldrenderer, Matrix4f matrix, Matrix4f oldMatrix, float x1, float y1, float z1, float x2, float y2, float z2, int part) {
         float i;
         if (x1 < x2) {
@@ -396,12 +468,12 @@ public class SmoothCapeRenderer {
 
     /**
      * https://easings.net/#easeOutSine
-     * 
+     *
      * @param x
      * @return
      */
     private static float easeOutSine(float x) {
         return (float) Math.sin((x * Math.PI) / 2f);
       }
-    
+
 }

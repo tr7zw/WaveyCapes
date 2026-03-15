@@ -1,5 +1,7 @@
 package dev.tr7zw.waveycapes.config;
 
+import dev.tr7zw.waveycapes.CapeMovement;
+
 public class ConfigUpgrader {
 
     public static boolean upgradeConfig(Config config) {
@@ -11,8 +13,13 @@ public class ConfigUpgrader {
             if(config.gravity < 0)
                 config.gravity *= -1;//fixed gravity
         }
-        
+        if(config.configVersion == 2) {
+            config.configVersion = 3;
+            config.capeMovement = CapeMovement.BASIC_SIMULATION_3D;
+            changed = true;
+        }
+
         return changed;
     }
-    
+
 }

@@ -6,18 +6,23 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import dev.tr7zw.waveycapes.CapeHolder;
-import dev.tr7zw.waveycapes.sim.StickSimulation;
+import dev.tr7zw.waveycapes.sim.BasicSimulation;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.world.entity.player.Player;
 
 @Mixin(Player.class)
 public class PlayerMixin implements CapeHolder {
 
-    private StickSimulation stickSimulation = new StickSimulation();
-    
+    private BasicSimulation simulation = null;
+
     @Override
-    public StickSimulation getSimulation() {
-        return stickSimulation;
+    public BasicSimulation getSimulation() {
+        return simulation;
+    }
+
+    @Override
+    public void setSimulation(BasicSimulation sim) {
+        this.simulation = sim;
     }
 
     @Inject(method = "moveCloak", at = @At("HEAD"))
@@ -26,5 +31,5 @@ public class PlayerMixin implements CapeHolder {
             simulate((AbstractClientPlayer)(Object)this);
         }
     }
-    
+
 }

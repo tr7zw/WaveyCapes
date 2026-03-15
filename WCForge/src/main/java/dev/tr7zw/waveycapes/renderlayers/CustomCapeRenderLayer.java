@@ -5,7 +5,9 @@ import dev.tr7zw.waveycapes.CapeMovement;
 import dev.tr7zw.waveycapes.CapeStyle;
 import dev.tr7zw.waveycapes.WaveyCapesBase;
 import dev.tr7zw.waveycapes.WindMode;
-import dev.tr7zw.waveycapes.sim.StickSimulation;
+import dev.tr7zw.waveycapes.sim.BasicSimulation;
+import dev.tr7zw.waveycapes.sim.CapePoint;
+import dev.tr7zw.waveycapes.sim.Vector3;
 import dev.tr7zw.waveycapes.util.Mth;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.model.ModelBase;
@@ -17,21 +19,22 @@ import net.minecraft.entity.player.EnumPlayerModelParts;
 import net.minecraft.util.MathHelper;
 
 public class CustomCapeRenderLayer implements LayerRenderer<AbstractClientPlayer> {
-    
+
     static final int partCount = 16;
     private ModelRenderer[] customCape = new ModelRenderer[partCount];
     private final RenderPlayer playerRenderer;
     private SmoothCapeRenderer smoothCapeRenderer = new SmoothCapeRenderer();
-    
-    public CustomCapeRenderLayer(RenderPlayer playerRenderer, ModelBase model) {
+
+    public CustomCapeRenderLayer(RenderPlayer playerRenderer) {
         this.playerRenderer = playerRenderer;
-        buildMesh(model);
+        buildMesh();
     }
-    
-    private void buildMesh(ModelBase model) {
+
+    private void buildMesh() {
+        ModelBase dummyModel = new ModelBase() {};
         customCape = new ModelRenderer[partCount];
         for (int i = 0; i < partCount; i++) {
-            ModelRenderer base = new ModelRenderer(model, 0, i);
+            ModelRenderer base = new ModelRenderer(dummyModel, 0, i);
             base.setTextureSize(64, 32);
             this.customCape[i] = base.addBox(-5.0F, (float)i, -1.0F, 10, 1, 1);
         }
@@ -41,14 +44,14 @@ public class CustomCapeRenderLayer implements LayerRenderer<AbstractClientPlayer
     public void doRenderLayer(AbstractClientPlayer abstractClientPlayer, float paramFloat1, float paramFloat2, float deltaTick,
             float animationTick, float paramFloat5, float paramFloat6, float paramFloat7) {
         if(abstractClientPlayer.isInvisible())return;
-        
+
         if (!abstractClientPlayer.hasPlayerInfo() || abstractClientPlayer.isInvisible()
                 || !abstractClientPlayer.isWearing(EnumPlayerModelParts.CAPE)
                 || abstractClientPlayer.getLocationCape() == null) {
             return;
         }
-        
-        if(WaveyCapesBase.config.capeMovement == CapeMovement.BASIC_SIMULATION) {
+
+        if(WaveyCapesBase.config.capeMovement != CapeMovement.VANILLA) {
             CapeHolder holder = (CapeHolder) abstractClientPlayer;
             holder.updateSimulation(abstractClientPlayer, partCount);
         }
@@ -67,33 +70,31 @@ public class CustomCapeRenderLayer implements LayerRenderer<AbstractClientPlayer
             }
         }
     }
-    
+
     private void modifyPoseStack(AbstractClientPlayer abstractClientPlayer, float h, int part) {
-        if(WaveyCapesBase.config.capeMovement == CapeMovement.BASIC_SIMULATION) {
+        if(WaveyCapesBase.config.capeMovement != CapeMovement.VANILLA) {
             modifyPoseStackSimulation(abstractClientPlayer, h, part);
             return;
         }
         modifyPoseStackVanilla(abstractClientPlayer, h, part);
     }
-    
+
     private void modifyPoseStackSimulation(AbstractClientPlayer abstractClientPlayer, float delta, int part) {
-        StickSimulation simulation = ((CapeHolder)abstractClientPlayer).getSimulation();
+        BasicSimulation simulation = ((CapeHolder)abstractClientPlayer).getSimulation();
+        if (simulation == null || simulation.empty()) return;
+        java.util.List<CapePoint> points = simulation.getPoints();
         GlStateManager.translate(0.0D, 0.0D, 0.125D);
-        
-        float z = simulation.points.get(part).getLerpX(delta) - simulation.points.get(0).getLerpX(delta);
-        if(z > 0) {
-            z = 0;
+
+        float x = points.get(part).getLerpX(delta) - points.get(0).getLerpX(delta);
+        if(x > 0) {
+            x = 0;
         }
-        float y = simulation.points.get(0).getLerpY(delta) - part - simulation.points.get(part).getLerpY(delta);
-        
+        float y = points.get(0).getLerpY(delta) - part - points.get(part).getLerpY(delta);
+        float z = points.get(0).getLerpZ(delta) - points.get(part).getLerpZ(delta);
+
         float sidewaysRotationOffset = 0;
-        float partRotation = (float) -Math.atan2(y, z);
-        partRotation = Math.max(partRotation, 0);
-        if(partRotation != 0)
-            partRotation = (float) (Math.PI-partRotation);
-        partRotation *= 57.2958;
-        partRotation *= 2;
-        
+        float partRotation = getRotation(points, part, delta);
+
         float height = 0;
         if (abstractClientPlayer.isSneaking()) {
             height += 25.0F;
@@ -102,24 +103,35 @@ public class CustomCapeRenderLayer implements LayerRenderer<AbstractClientPlayer
 
         float naturalWindSwing = getNatrualWindSwing(part);
 
-        
+
         // vanilla rotating and wind
         GlStateManager.rotate(6.0F + height + naturalWindSwing, 1.0F, 0.0F, 0.0F);
         GlStateManager.rotate(sidewaysRotationOffset / 2.0F, 0.0F, 0.0F, 1.0F);
-        GlStateManager.rotate(-sidewaysRotationOffset / 2.0F, 0.0F, 1.0F, 0.0F);
-        GlStateManager.rotate(180.0F, 0.0F, 1.0F, 0.0F);
-        GlStateManager.translate(0, y/partCount, z/partCount); // movement from the simulation
+        GlStateManager.rotate(180.0F - sidewaysRotationOffset / 2.0F, 0.0F, 1.0F, 0.0F);
+        GlStateManager.translate(-z/partCount, y/partCount, x/partCount); // movement from the simulation
         //offsetting so the rotation is on the cape part
-        //float offset = (float) (part * (16 / partCount))/16; // to fold the entire cape into one position for debugging
-        GlStateManager.translate(0, /*-offset*/ + (0.48/16) , - (0.48/16)); // (0.48/16)
+        GlStateManager.translate(0, (0.48/16) , - (0.48/16)); // (0.48/16)
         GlStateManager.translate(0, part * 1f/partCount, part * (0)/partCount);
-        //GlStateManager.rotate(-partRotation, 1.0F, 0.0F, 0.0F);
+        GlStateManager.rotate(-partRotation, 1.0F, 0.0F, 0.0F);
         // undoing the rotation
         GlStateManager.translate(0, -part * 1f/partCount, -part * (0)/partCount);
         GlStateManager.translate(0, -(0.48/16), (0.48/16));
-        
+
     }
-    
+
+    private float getRotation(java.util.List<CapePoint> points, int part, float delta) {
+        if (part == partCount - 1) {
+            return getRotation(points, part - 1, delta);
+        }
+        return (float) getAngle(points.get(part).getLerpedPos(delta),
+                points.get(part + 1).getLerpedPos(delta));
+    }
+
+    private double getAngle(Vector3 a, Vector3 b) {
+        Vector3 angle = b.subtract(a);
+        return Math.toDegrees(Math.atan2(angle.x, angle.y)) + 180;
+    }
+
     void modifyPoseStackVanilla(AbstractClientPlayer abstractClientPlayer, float h, int part) {
         GlStateManager.translate(0.0D, 0.0D, 0.125D);
         double d = Mth.lerp(h, abstractClientPlayer.prevChasingPosX, abstractClientPlayer.chasingPosX)
@@ -145,29 +157,26 @@ public class CustomCapeRenderLayer implements LayerRenderer<AbstractClientPlayer
         }
 
         float naturalWindSwing = getNatrualWindSwing(part);
-        
+
         GlStateManager.rotate(6.0F + swing / 2.0F + height + naturalWindSwing, 1.0F, 0.0F, 0.0F);
         GlStateManager.rotate(sidewaysRotationOffset / 2.0F, 0.0F, 0.0F, 1.0F);
         GlStateManager.rotate(-sidewaysRotationOffset / 2.0F, 0.0F, 1.0F, 0.0F);
         GlStateManager.rotate(180.0F, 0.0F, 1.0F, 0.0F);
     }
-    
+
     float getNatrualWindSwing(int part) {
         if (WaveyCapesBase.config.windMode == WindMode.WAVES) {
             long highlightedPart = (System.currentTimeMillis() / 3) % 360;
             float relativePart = (float) (part + 1) / partCount;
             return (float) (Math.sin(Math.toRadians((relativePart) * 360 - (highlightedPart))) * 3);
         }
-//        if (WaveyCapesBase.config.windMode == WindMode.SLIGHT) {
-//            return getWind(60);
-//        }
         return 0;
     }
 
-    
+
     /**
      * https://easings.net/#easeOutSine
-     * 
+     *
      * @param x
      * @return
      */
@@ -179,5 +188,5 @@ public class CustomCapeRenderLayer implements LayerRenderer<AbstractClientPlayer
     public boolean shouldCombineTextures() {
         return false;
     }
-    
+
 }

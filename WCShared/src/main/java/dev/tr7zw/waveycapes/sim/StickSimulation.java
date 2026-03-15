@@ -3,35 +3,53 @@ package dev.tr7zw.waveycapes.sim;
 import java.util.ArrayList;
 import java.util.List;
 
-import dev.tr7zw.waveycapes.WaveyCapesBase;
-import net.minecraft.util.Mth;
-
 /**
  * Java port of https://www.youtube.com/watch?v=PGk0rnyTa1U by Sebastian Lague
  * Has some changes like maximizing bends, only designed to simulate a single
  * "rope"(cape). Point 0 is the part fixed to the player
  *
  */
-public class StickSimulation {
+public class StickSimulation implements BasicSimulation {
 
     public List<Point> points = new ArrayList<>();
     public List<Stick> sticks = new ArrayList<>();
-    public float gravity = 20f;
+    public Vector2 gravityDirection = new Vector2(0, -1);
+    public float gravity = 0;
     public int numIterations = 30;
     private float maxBend = 5;
+    public boolean sneaking = false;
 
+    @Override
+    public boolean init(int partCount) {
+        if (points.size() != partCount) {
+            points.clear();
+            sticks.clear();
+            for (int i = 0; i < partCount; i++) {
+                Point point = new Point();
+                point.position.y = -i;
+                point.locked = i == 0;
+                points.add(point);
+                if (i > 0) {
+                    sticks.add(new Stick(points.get(i - 1), point, 1f));
+                }
+            }
+            return true;
+        }
+        return false;
+    }
+
+    @Override
     public void simulate() {
-        gravity = WaveyCapesBase.config.gravity;
         //maxBend = WaveyCapesBase.config.maxBend;
 
         float deltaTime = 50f/1000f; // fixed timescale
-        Vector2 down = new Vector2(0, gravity * deltaTime);
+        Vector2 down = gravityDirection.clone().mul(gravity * deltaTime);
         Vector2 tmp = new Vector2(0, 0);
         for (Point p : points) {
             if (!p.locked) {
                 tmp.copy(p.position);
                 // p.position.add(p.position).subtract(p.prevPosition);
-                p.position.subtract(down);
+                p.position.add(down);
                 p.prevPosition.copy(tmp);
             }
         }
@@ -107,17 +125,67 @@ public class StickSimulation {
         return Math.atan2(next.y - middle.y, next.x - middle.x) - Math.atan2(prev.y - middle.y, prev.x - middle.x);
     }
 
-    public static class Point {
+    @Override
+    public void setGravityDirection(Vector3 gravityDirection) {
+        this.gravityDirection.x = gravityDirection.x;
+        this.gravityDirection.y = gravityDirection.y;
+    }
+
+    @Override
+    public float getGravity() {
+        return gravity;
+    }
+
+    @Override
+    public void setGravity(float gravity) {
+        this.gravity = gravity;
+    }
+
+    @Override
+    public boolean isSneaking() {
+        return sneaking;
+    }
+
+    @Override
+    public void setSneaking(boolean sneaking) {
+        this.sneaking = sneaking;
+    }
+
+    @Override
+    public void applyMovement(Vector3 movement) {
+        points.get(0).prevPosition.copy(points.get(0).position);
+        points.get(0).position.add(new Vector2(movement.x, movement.y));
+    }
+
+    @Override
+    public boolean empty() {
+        return sticks.isEmpty();
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<CapePoint> getPoints() {
+        return (List<CapePoint>) (Object) points;
+    }
+
+    public static class Point implements CapePoint {
         public Vector2 position = new Vector2(0, 0);
         public Vector2 prevPosition = new Vector2(0, 0);
         public boolean locked;
-        
+
+        @Override
         public float getLerpX(float delta) {
-            return Mth.lerp(delta, prevPosition.x, position.x);
+            return prevPosition.x + delta * (position.x - prevPosition.x);
         }
-        
+
+        @Override
         public float getLerpY(float delta) {
-            return Mth.lerp(delta, prevPosition.y, position.y);
+            return prevPosition.y + delta * (position.y - prevPosition.y);
+        }
+
+        @Override
+        public float getLerpZ(float delta) {
+            return 0;
         }
     }
 
@@ -175,7 +243,7 @@ public class StickSimulation {
         }
 
         public Vector2 normalize() {
-            float f = Mth.sqrt(this.x * this.x + this.y * this.y);
+            float f = (float) Math.sqrt(this.x * this.x + this.y * this.y);
             if (f < 1.0E-4F) {
                 this.x = 0;
                 this.y = 0;
@@ -183,6 +251,15 @@ public class StickSimulation {
                 this.x /= f;
                 this.y /= f;
             }
+            return this;
+        }
+
+        public Vector2 rotateDegrees(float deg) {
+            float ox = x;
+            float oy = y;
+            deg = (float) Math.toRadians(deg);
+            x = (float) (Math.cos(deg) * ox - Math.sin(deg) * oy);
+            y = (float) (Math.sin(deg) * ox + Math.cos(deg) * oy);
             return this;
         }
 

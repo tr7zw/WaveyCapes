@@ -13,7 +13,9 @@ import dev.tr7zw.waveycapes.CapeStyle;
 import dev.tr7zw.waveycapes.VanillaCapeRenderer;
 import dev.tr7zw.waveycapes.WaveyCapesBase;
 import dev.tr7zw.waveycapes.WindMode;
-import dev.tr7zw.waveycapes.sim.StickSimulation;
+import dev.tr7zw.waveycapes.sim.BasicSimulation;
+import dev.tr7zw.waveycapes.sim.CapePoint;
+import dev.tr7zw.waveycapes.sim.Vector3;
 import dev.tr7zw.waveycapes.support.ModSupport;
 import dev.tr7zw.waveycapes.support.SupportManager;
 import net.minecraft.client.model.PlayerModel;
@@ -31,17 +33,17 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
 public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, PlayerModel<AbstractClientPlayer>> {
-    
+
     private static int partCount;
     private ModelPart[] customCape = new ModelPart[partCount];
-    
+
     public CustomCapeRenderLayer(
             RenderLayerParent<AbstractClientPlayer, PlayerModel<AbstractClientPlayer>> renderLayerParent) {
         super(renderLayerParent);
         partCount = 16;
         buildMesh();
     }
-    
+
     private void buildMesh() {
         customCape = new ModelPart[partCount];
         for (int i = 0; i < partCount; i++) {
@@ -57,22 +59,12 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
         ItemStack itemStack = abstractClientPlayer.getItemBySlot(EquipmentSlot.CHEST);
         if (itemStack.getItem() == Items.ELYTRA)
             return;
-        // smooth doesn't need more than 16
-//        if(WaveyCapesBase.config.capeStyle == CapeStyle.SMOOTH) {
-//            if(partCount != 16) {
-//                partCount = 16;
-//                buildMesh();
-//            }
-//        } else if(partCount != WaveyCapesBase.config.capeParts) {
-//            partCount = WaveyCapesBase.config.capeParts;
-//            buildMesh();
-//        }
 
-        if(WaveyCapesBase.config.capeMovement == CapeMovement.BASIC_SIMULATION) {
+        if(WaveyCapesBase.config.capeMovement != CapeMovement.VANILLA) {
             CapeHolder holder = (CapeHolder) abstractClientPlayer;
             holder.updateSimulation(abstractClientPlayer, partCount);
         }
-        
+
         if (WaveyCapesBase.config.capeStyle == CapeStyle.SMOOTH && renderer.vanillaUvValues()) {
             renderSmoothCape(poseStack, multiBufferSource, renderer, abstractClientPlayer, delta, i);
         } else {
@@ -85,7 +77,7 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
             }
         }
     }
-    
+
     private void renderSmoothCape(PoseStack poseStack, MultiBufferSource multiBufferSource, CapeRenderer capeRenderer, AbstractClientPlayer abstractClientPlayer, float delta, int light) {
         VertexConsumer bufferBuilder = capeRenderer.getVertexConsumer(multiBufferSource, abstractClientPlayer);
         RenderSystem.enableBlend();
@@ -158,34 +150,33 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
     }
 
     private void modifyPoseStack(PoseStack poseStack, AbstractClientPlayer abstractClientPlayer, float h, int part) {
-        if(WaveyCapesBase.config.capeMovement == CapeMovement.BASIC_SIMULATION) {
+        if(WaveyCapesBase.config.capeMovement != CapeMovement.VANILLA) {
             modifyPoseStackSimulation(poseStack, abstractClientPlayer, h, part);
             return;
         }
         modifyPoseStackVanilla(poseStack, abstractClientPlayer, h, part);
     }
-    
+
     private void modifyPoseStackSimulation(PoseStack poseStack, AbstractClientPlayer abstractClientPlayer, float delta, int part) {
-        StickSimulation simulation = ((CapeHolder)abstractClientPlayer).getSimulation();
+        BasicSimulation simulation = ((CapeHolder)abstractClientPlayer).getSimulation();
+        if (simulation == null || simulation.empty()) {
+            modifyPoseStackVanilla(poseStack, abstractClientPlayer, delta, part);
+            return;
+        }
+        java.util.List<CapePoint> points = simulation.getPoints();
         poseStack.pushPose();
         poseStack.translate(0.0D, 0.0D, 0.125D);
-        
-        float z = simulation.points.get(part).getLerpX(delta) - simulation.points.get(0).getLerpX(delta);
-        if(z > 0) {
-            z = 0;
+
+        float x = points.get(part).getLerpX(delta) - points.get(0).getLerpX(delta);
+        if(x > 0) {
+            x = 0;
         }
-        float y = simulation.points.get(0).getLerpY(delta) - part - simulation.points.get(part).getLerpY(delta);
-        
-//        float sidewaysRotationOffset = (float) (d * p - m * o) * 100.0F;
-//        sidewaysRotationOffset = Mth.clamp(sidewaysRotationOffset, -20.0F, 20.0F);
+        float y = points.get(0).getLerpY(delta) - part - points.get(part).getLerpY(delta);
+        float z = points.get(0).getLerpZ(delta) - points.get(part).getLerpZ(delta);
+
         float sidewaysRotationOffset = 0;
-        float partRotation = (float) -Mth.atan2(y, z);
-        partRotation = Math.max(partRotation, 0);
-        if(partRotation != 0)
-            partRotation = (float) (Math.PI-partRotation);
-        partRotation *= 57.2958;
-        partRotation *= 2;
-        
+        float partRotation = getRotation(points, part, delta);
+
         float height = 0;
         if (abstractClientPlayer.isCrouching()) {
             height += 25.0F;
@@ -194,23 +185,35 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
 
         float naturalWindSwing = getNatrualWindSwing(part);
 
-        
+
         // vanilla rotating and wind
         poseStack.mulPose(Vector3f.XP.rotationDegrees(6.0F + height + naturalWindSwing));
         poseStack.mulPose(Vector3f.ZP.rotationDegrees(sidewaysRotationOffset / 2.0F));
         poseStack.mulPose(Vector3f.YP.rotationDegrees(180.0F - sidewaysRotationOffset / 2.0F));
-        poseStack.translate(0, y/partCount, z/partCount); // movement from the simulation
+        poseStack.translate(-z/partCount, y/partCount, x/partCount); // movement from the simulation
         //offsetting so the rotation is on the cape part
-        //float offset = (float) (part * (16 / partCount))/16; // to fold the entire cape into one position for debugging
-        poseStack.translate(0, /*-offset*/ + (0.48/16) , - (0.48/16)); // (0.48/16)
+        poseStack.translate(0, (0.48/16) , - (0.48/16)); // (0.48/16)
         poseStack.translate(0, part * 1f/partCount, part * (0)/partCount);
         poseStack.mulPose(Vector3f.XP.rotationDegrees(-partRotation)); // apply actual rotation
         // undoing the rotation
         poseStack.translate(0, -part * 1f/partCount, -part * (0)/partCount);
         poseStack.translate(0, -(0.48/16), (0.48/16));
-        
+
     }
-    
+
+    private float getRotation(java.util.List<CapePoint> points, int part, float delta) {
+        if (part == partCount - 1) {
+            return getRotation(points, part - 1, delta);
+        }
+        return (float) getAngle(points.get(part).getLerpedPos(delta),
+                points.get(part + 1).getLerpedPos(delta));
+    }
+
+    private double getAngle(Vector3 a, Vector3 b) {
+        Vector3 angle = b.subtract(a);
+        return Math.toDegrees(Math.atan2(angle.x, angle.y)) + 180;
+    }
+
     private void modifyPoseStackVanilla(PoseStack poseStack, AbstractClientPlayer abstractClientPlayer, float h, int part) {
         poseStack.pushPose();
         poseStack.translate(0.0D, 0.0D, 0.125D);
@@ -237,21 +240,18 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
         }
 
         float naturalWindSwing = getNatrualWindSwing(part);
-        
+
         poseStack.mulPose(Vector3f.XP.rotationDegrees(6.0F + swing / 2.0F + height + naturalWindSwing));
         poseStack.mulPose(Vector3f.ZP.rotationDegrees(sidewaysRotationOffset / 2.0F));
         poseStack.mulPose(Vector3f.YP.rotationDegrees(180.0F - sidewaysRotationOffset / 2.0F));
     }
-    
+
     private float getNatrualWindSwing(int part) {
         long highlightedPart = (System.currentTimeMillis() / 3) % 360;
         float relativePart = (float) (part + 1) / partCount;
         if (WaveyCapesBase.config.windMode == WindMode.WAVES) {
             return (float) (Math.sin(Math.toRadians((relativePart) * 360 - (highlightedPart))) * 3);
         }
-//        if (WaveyCapesBase.config.windMode == WindMode.SLIGHT) {
-//            return getWind(60);
-//        }
         return 0;
     }
 
@@ -352,10 +352,10 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
         maxV = minV + (vPerPart * (part + 1));
         minV = minV + (vPerPart * part);
 
-        bufferBuilder.vertex(matrix, x2, y1, z1).color(1f, 1f, 1f, 1f).uv(maxU, maxV).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(1, 0, 0).endVertex();
-        bufferBuilder.vertex(matrix, x2, y1, z2).color(1f, 1f, 1f, 1f).uv(minU, maxV).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(1, 0, 0).endVertex();
-        bufferBuilder.vertex(oldMatrix, x2, y2, z2).color(1f, 1f, 1f, 1f).uv(minU, minV).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(1, 0, 0).endVertex();
-        bufferBuilder.vertex(oldMatrix, x2, y2, z1).color(1f, 1f, 1f, 1f).uv(maxU, minV).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(1, 0, 0).endVertex();
+        bufferBuilder.vertex(matrix, x2, y1, z1).color(1f, 1f, 1f, 1f).uv(maxU, maxV).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(-1, 0, 0).endVertex();
+        bufferBuilder.vertex(matrix, x2, y1, z2).color(1f, 1f, 1f, 1f).uv(minU, maxV).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(-1, 0, 0).endVertex();
+        bufferBuilder.vertex(oldMatrix, x2, y2, z2).color(1f, 1f, 1f, 1f).uv(minU, minV).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(-1, 0, 0).endVertex();
+        bufferBuilder.vertex(oldMatrix, x2, y2, z1).color(1f, 1f, 1f, 1f).uv(maxU, minV).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(-1, 0, 0).endVertex();
     }
 
     private static void addRightVertex(VertexConsumer bufferBuilder, Matrix4f matrix, Matrix4f oldMatrix, float x1, float y1, float z1, float x2, float y2, float z2, int part, int light) {
@@ -414,10 +414,10 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
         maxV = minV + (vPerPart * (part + 1));
         minV = minV + (vPerPart * part);
 
-        bufferBuilder.vertex(oldMatrix, x1, y2, z2).color(1f, 1f, 1f, 1f).uv(maxU, minV).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(1, 0, 0).endVertex();
-        bufferBuilder.vertex(oldMatrix, x2, y2, z2).color(1f, 1f, 1f, 1f).uv(minU, minV).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(1, 0, 0).endVertex();
-        bufferBuilder.vertex(matrix, x2, y1, z1).color(1f, 1f, 1f, 1f).uv(minU, maxV).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(1, 0, 0).endVertex();
-        bufferBuilder.vertex(matrix, x1, y1, z1).color(1f, 1f, 1f, 1f).uv(maxU, maxV).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(1, 0, 0).endVertex();
+        bufferBuilder.vertex(oldMatrix, x1, y2, z2).color(1f, 1f, 1f, 1f).uv(maxU, minV).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(0, -1, 0).endVertex();
+        bufferBuilder.vertex(oldMatrix, x2, y2, z2).color(1f, 1f, 1f, 1f).uv(minU, minV).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(0, -1, 0).endVertex();
+        bufferBuilder.vertex(matrix, x2, y1, z1).color(1f, 1f, 1f, 1f).uv(minU, maxV).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(0, -1, 0).endVertex();
+        bufferBuilder.vertex(matrix, x1, y1, z1).color(1f, 1f, 1f, 1f).uv(maxU, maxV).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(0, -1, 0).endVertex();
     }
 
     private static void addTopVertex(VertexConsumer bufferBuilder, Matrix4f matrix, Matrix4f oldMatrix, float x1, float y1, float z1, float x2, float y2, float z2, int part, int light) {
@@ -452,7 +452,7 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
     }
 
     private static VanillaCapeRenderer vanillaCape = new VanillaCapeRenderer();
-    
+
     private CapeRenderer getCapeRenderer(AbstractClientPlayer abstractClientPlayer, MultiBufferSource multiBufferSource) {
         for(ModSupport support : SupportManager.getSupportedMods()) {
             if(support.shouldBeUsed(abstractClientPlayer)) {
@@ -469,12 +469,12 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
             return vanillaCape;
         }
     }
-    
+
     private static int scale = 1000*60*60;
-    
+
     /**
      * Returns between 0 and 2
-     * 
+     *
      * @param posY
      * @return
      */
@@ -483,11 +483,11 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
         float mod = Mth.clamp(1f/200f*(float)posY, 0f, 1f);
         return Mth.clamp((float) (Math.sin(2 * x) + Math.sin(Math.PI * x)) * mod, 0, 2);
     }
-    
-    
+
+
     /**
      * https://easings.net/#easeOutSine
-     * 
+     *
      * @param x
      * @return
      */
@@ -495,5 +495,5 @@ public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, Pla
         return (float) Math.sin((x * Math.PI) / 2f);
 
       }
-    
+
 }
