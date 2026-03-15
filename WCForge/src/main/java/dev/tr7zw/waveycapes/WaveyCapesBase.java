@@ -79,6 +79,7 @@ public abstract class WaveyCapesBase {
             //options.add(getIntOption("text.wc.setting.capeparts", 16, 64, () -> config.capeParts, (v) -> config.capeParts = v));
             options.add(getIntOption("text.wc.setting.gravity", 5, 32, () -> config.gravity, (v) -> config.gravity = v));
             options.add(getIntOption("text.wc.setting.heightMultiplier", 4, 16, () -> config.heightMultiplier, (v) -> config.heightMultiplier = v));
+            options.add(getIntOption("text.wc.setting.straveMultiplier", 0, 4, () -> config.straveMultiplier, (v) -> config.straveMultiplier = v));
             //options.add(getIntOption("text.wc.setting.maxBend", 1, 20, () -> config.maxBend, (v) -> config.maxBend = v));
 
             addOptionsList(options);

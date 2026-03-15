@@ -1,5 +1,6 @@
 package dev.tr7zw.waveycapes.config;
 
+import dev.tr7zw.waveycapes.CapeMovement;
 import dev.tr7zw.waveycapes.CapeStyle;
 
 public class ConfigUpgrader {
@@ -17,8 +18,13 @@ public class ConfigUpgrader {
             config.configVersion = 3;
             config.capeStyle = CapeStyle.SMOOTH;
         }
-        
+        if(config.configVersion == 3) {
+            config.configVersion = 4;
+            config.capeMovement = CapeMovement.BASIC_SIMULATION_3D;
+            changed = true;
+        }
+
         return changed;
     }
-    
+
 }
