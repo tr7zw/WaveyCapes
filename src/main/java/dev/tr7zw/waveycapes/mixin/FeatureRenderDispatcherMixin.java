@@ -25,7 +25,7 @@ public class FeatureRenderDispatcherMixin {
     private MultiBufferSource.BufferSource bufferSource;
 
     //? if >= 26.1 {
-    @Inject(method = "renderAllFeatures", at = @At(value = "TAIL"))
+    @Inject(method = "renderSolidFeatures", at = @At(value = "TAIL"))
     //? } else {
     /*
     @Inject(method = "renderAllFeatures", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/SubmitNodeStorage;clear()V"))
