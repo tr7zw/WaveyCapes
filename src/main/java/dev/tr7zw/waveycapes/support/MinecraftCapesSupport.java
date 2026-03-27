@@ -10,12 +10,13 @@ import dev.tr7zw.waveycapes.versionless.ModBase;
 import net.minecraft.client.renderer.MultiBufferSource;
 //? if >= 1.21.11 {
 
+import net.minecraft.client.renderer.feature.*;
 import net.minecraft.client.renderer.rendertype.*;
 //? } else {
 /*
 import net.minecraft.client.renderer.*;
 *///? }
-import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.client.renderer.entity.*;
 import net.minecraftcapes.config.MinecraftCapesConfig;
 import net.minecraftcapes.player.PlayerHandler;
 
@@ -92,12 +93,17 @@ public class MinecraftCapesSupport implements ModSupport {
         public VertexConsumer getVertexConsumer(MultiBufferSource multiBufferSource, PlayerWrapper capeRenderInfo) {
             PlayerHandler playerHandler = getCape.apply(capeRenderInfo);
             if (MinecraftCapesConfig.isCapeVisible() && playerHandler.getCapeLocation() != null) {
-                //? if >= 1.21.11 {
+                //? if >= 26.1 {
 
+                return ItemFeatureRenderer.getFoilBuffer(multiBufferSource,
+                        RenderTypes.entityTranslucent(playerHandler.getCapeLocation()), false,
+                        playerHandler.getHasCapeGlint());
+                //? } else if >= 1.21.11 {
+                /*
                 return ItemRenderer.getFoilBuffer(multiBufferSource,
                         RenderTypes.entityTranslucent(playerHandler.getCapeLocation()), false,
                         playerHandler.getHasCapeGlint());
-                //? } else if >= 1.21.9 {
+                *///? } else if >= 1.21.9 {
                 /*
                 return ItemRenderer.getFoilBuffer(multiBufferSource,
                         RenderType.entityTranslucent(playerHandler.getCapeLocation()), false,
@@ -113,11 +119,15 @@ public class MinecraftCapesSupport implements ModSupport {
                           playerHandler.getHasCapeGlint());
                 *///? }
             } else {
-                //? if >= 1.21.11 {
+                //? if >= 26.1 {
 
+                return ItemFeatureRenderer.getFoilBuffer(multiBufferSource,
+                        RenderTypes.entityTranslucent(capeRenderInfo.getCapeTexture()), false, false);
+                //? } else if >= 1.21.11 {
+                /*
                 return ItemRenderer.getFoilBuffer(multiBufferSource,
                         RenderTypes.entityTranslucent(capeRenderInfo.getCapeTexture()), false, false);
-                //? } else if >= 1.21.9 {
+                *///? } else if >= 1.21.9 {
                 /*
                 return ItemRenderer.getFoilBuffer(multiBufferSource,
                         RenderType.entityTranslucent(capeRenderInfo.getCapeTexture()), false, false);

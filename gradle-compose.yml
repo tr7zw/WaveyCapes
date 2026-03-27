@@ -1,9 +1,9 @@
 version: '0.0.2'
-source: "https://github.com/tr7zw/ProcessedModTemplate/tree/stonecutter"
+source: "https://github.com/tr7zw/ProcessedModTemplate/tree/stonecutter261"
 replacements:
   name: "WaveyCapes"
   id: "waveycapes"
-  version: "1.8.2"
+  version: "1.9.0"
   description: "The cape shouldn't be a static slab!"
   homepageUrl: "https://modrinth.com/mod/wavey-capes"
   sourcesUrl: "https://github.com/tr7zw/WaveyCapes"
@@ -15,11 +15,18 @@ replacements:
   curseforgeid: 521594
   versionlessname: "WCVersionless"
   fabric_dependencies: "
+      if (stonecutter.eval(\"${project.minecraft_version}\", '>= 26.1')) {\n
+      compileOnly 'curse.maven:morebanners-515000:4575797'\n
+      compileOnly 'maven.modrinth:ears:1.4.6+fabric-1.20.2'\n
+      compileOnly 'maven.modrinth:minecraftcapes:fabric-26.1-1.0.1'\n
+      compileOnly 'maven.modrinth:shoulder-surfing-reloaded:MCDpnF47'\n
+      } else {\n
       modCompileOnly 'curse.maven:morebanners-515000:4575797'\n
       modCompileOnly 'maven.modrinth:ears:1.4.6+fabric-1.20.2'\n
       modCompileOnly 'maven.modrinth:playeranimator:1.0.2-rc1+1.20.4-fabric'\n
       modCompileOnly 'curse.maven:minecraftcapes-mod-359836:4763650'\n
       modCompileOnly 'maven.modrinth:shoulder-surfing-reloaded:MCDpnF47'\n
+      }\n
       "
   forge_dependencies: "
       modCompileOnly 'curse.maven:minecraftcapes-mod-359836:4562670'\n

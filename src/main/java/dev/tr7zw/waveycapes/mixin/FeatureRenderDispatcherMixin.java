@@ -24,7 +24,12 @@ public class FeatureRenderDispatcherMixin {
     @Final
     private MultiBufferSource.BufferSource bufferSource;
 
+    //? if >= 26.1 {
+    @Inject(method = "renderAllFeatures", at = @At(value = "TAIL"))
+    //? } else {
+    /*
     @Inject(method = "renderAllFeatures", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/SubmitNodeStorage;clear()V"))
+     *///? }
     private void renderCapes(CallbackInfo ci) {
         CapeNodeCollector collector = WaveyCapesMod.INSTANCE.getCapeNodeCollector();
         PoseStack sharedStack = new PoseStack();

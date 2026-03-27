@@ -17,7 +17,7 @@ public class VanillaCapeRenderer implements CapeRenderer {
 
     @Override
     public VertexConsumer getVertexConsumer(MultiBufferSource multiBufferSource, PlayerWrapper capeRenderInfo) {
-        /*? >= 1.21.11 {*/ Identifier /*?} else {*//* ResourceLocation *//*?}*/ cape = capeRenderInfo.getCapeTexture();
+        /*? >= 1.21.11 {*/ Identifier /*?} else {*//* Identifier *//*?}*/ cape = capeRenderInfo.getCapeTexture();
         if (cape != null) {
             //? if >= 1.21.11 {
 

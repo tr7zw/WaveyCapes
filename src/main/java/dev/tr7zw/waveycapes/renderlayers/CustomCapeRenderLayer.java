@@ -39,7 +39,7 @@ public class CustomCapeRenderLayer
         extends RenderLayer<net.minecraft.client.renderer.entity.state.AvatarRenderState, PlayerModel> {
     //? } else if >= 1.21.2 {
     /*
-     public class CustomCapeRenderLayer extends RenderLayer<net.minecraft.client.renderer.entity.state.PlayerRenderState, PlayerModel> {
+     public class CustomCapeRenderLayer extends RenderLayer<net.minecraft.client.renderer.entity.state.AvatarRenderState, PlayerModel> {
     *///? } else {
     /*
      public class CustomCapeRenderLayer extends RenderLayer<AbstractClientPlayer, PlayerModel<AbstractClientPlayer>> {
@@ -53,7 +53,7 @@ public class CustomCapeRenderLayer
     }
     //? } else if >= 1.21.2 {
     /*
-     public CustomCapeRenderLayer(RenderLayerParent<net.minecraft.client.renderer.entity.state.PlayerRenderState, PlayerModel> renderLayerParent) {
+     public CustomCapeRenderLayer(RenderLayerParent<net.minecraft.client.renderer.entity.state.AvatarRenderState, PlayerModel> renderLayerParent) {
         super(renderLayerParent);
      }
     *///? } else {
@@ -74,7 +74,7 @@ public class CustomCapeRenderLayer
         //? } else if >= 1.21.2 {
         /*
          public void render(PoseStack poseStack, MultiBufferSource multiBufferSource, int packedLight,
-                net.minecraft.client.renderer.entity.state.PlayerRenderState renderState, float yRot, float xRot) {
+                net.minecraft.client.renderer.entity.state.AvatarRenderState renderState, float yRot, float xRot) {
             PlayerWrapper capeRenderInfo = new PlayerWrapper(renderState);
                  float delta = Minecraft.getInstance().getDeltaTracker().getGameTimeDeltaPartialTick(false);
         *///? } else {

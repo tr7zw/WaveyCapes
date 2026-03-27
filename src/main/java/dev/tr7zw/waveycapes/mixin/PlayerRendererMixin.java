@@ -47,7 +47,7 @@ public abstract class PlayerRendererMixin
         LivingEntityRenderer<AbstractClientPlayer, net.minecraft.client.renderer.entity.state.AvatarRenderState, PlayerModel> {
     //? } else {
     /*
-            extends LivingEntityRenderer<AbstractClientPlayer, net.minecraft.client.renderer.entity.state.PlayerRenderState, PlayerModel> {
+            extends LivingEntityRenderer<AbstractClientPlayer, net.minecraft.client.renderer.entity.state.AvatarRenderState, PlayerModel> {
     *///? }
        //? } else {
        /*

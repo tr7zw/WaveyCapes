@@ -19,12 +19,13 @@ import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.MultiBufferSource;
 //? if >= 1.21.11 {
 
+import net.minecraft.client.renderer.feature.*;
 import net.minecraft.client.renderer.rendertype.*;
 //? } else {
 /*
 import net.minecraft.client.renderer.*;
 *///? }
-import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.client.renderer.entity.*;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.*;
 
@@ -58,7 +59,7 @@ public class EarsSupport implements ModSupport, EarsInhibitor {
         return render;
     }
 
-    private /*? >= 1.21.11 {*/ Identifier /*?} else {*//* ResourceLocation *//*?}*/ getPlayerCape(
+    private /*? >= 1.21.11 {*/ Identifier /*?} else {*//* Identifier *//*?}*/ getPlayerCape(
             PlayerWrapper capeRenderInfo, EarsFeatures playerFeatures) {
         var skin = capeRenderInfo.getCapeTexture();
         if (skin != null) {
@@ -87,11 +88,15 @@ public class EarsSupport implements ModSupport, EarsInhibitor {
             if (playerFeatures != null && playerFeatures.capeEnabled) {
                 var cape = getPlayerCape(capeRenderInfo, playerFeatures);
                 if (cape != null) {
-                    //? if >= 1.21.11 {
+                    //? if >= 26.1 {
 
+                    return ItemFeatureRenderer.getFoilBuffer(multiBufferSource, RenderTypes.armorCutoutNoCull(cape),
+                            false, false);
+                    //? } else if >= 1.21.11 {
+                    /*
                     return ItemRenderer.getFoilBuffer(multiBufferSource, RenderTypes.armorCutoutNoCull(cape), false,
                             false);
-                    //? } else if >= 1.21.9 {
+                    *///? } else if >= 1.21.9 {
                     /*
                     return ItemRenderer.getFoilBuffer(multiBufferSource, RenderType.armorCutoutNoCull(cape), false,
                             false);

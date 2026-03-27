@@ -2,7 +2,6 @@ package dev.tr7zw.waveycapes;
 
 import dev.tr7zw.waveycapes.delegate.PlayerDelegate;
 import dev.tr7zw.waveycapes.support.AnimationSupport;
-import dev.tr7zw.waveycapes.support.PlayerAnimatorSupport;
 import dev.tr7zw.waveycapes.support.ShoulderSurfingSupport;
 import dev.tr7zw.waveycapes.support.SupportManager;
 import dev.tr7zw.waveycapes.versionless.ModBase;
@@ -39,13 +38,12 @@ public abstract class WaveyCapesBase extends ModBase {
 
     @Override
     public void initSupportHooks() {
-        //? if >= 1.80.0 {
         /*
         if (doesClassExist("dev.kosmx.playerAnim.core.impl.AnimationProcessor")) {
-            SupportManager.animationSupport.add(new PlayerAnimatorSupport());
+            SupportManager.animationSupport.add(new dev.tr7zw.waveycapes.support.PlayerAnimatorSupport());
             LOGGER.info("Wavey Capes loaded PlayerAnimator support!");
         }
-        *///? }
+        */
         if (doesClassExist("com.github.exopandora.shouldersurfing.api.client.ICameraEntityRenderer")) {
             ShoulderSurfingSupport.init();
             LOGGER.info("Wavey Capes loaded Shoulder Surfing support!");

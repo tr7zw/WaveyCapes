@@ -1,10 +1,12 @@
-package dev.tr7zw.waveycapes.support;
+//? if < 26.1 {
+/*package dev.tr7zw.waveycapes.support;
 
 import dev.kosmx.playerAnim.api.TransformType;
 import dev.kosmx.playerAnim.core.impl.AnimationProcessor;
 import dev.kosmx.playerAnim.core.util.Vec3f;
 import dev.kosmx.playerAnim.impl.IAnimatedPlayer;
 import dev.tr7zw.transition.mc.MathUtil;
+import dev.tr7zw.waveycapes.support.*;
 import dev.tr7zw.waveycapes.versionless.CapeHolder;
 import dev.tr7zw.waveycapes.versionless.util.Vector3;
 import net.minecraft.client.player.AbstractClientPlayer;
@@ -16,10 +18,10 @@ import net.minecraft.world.entity.LivingEntity;
 import org.joml.Matrix4f;
 import org.joml.Vector4f;
 //? } else {
-/*
+/^
  import com.mojang.math.Matrix4f;
  import com.mojang.math.Vector4f;
-*///? }
+^///? }
 
 public class PlayerAnimatorSupport implements AnimationSupport {
 
@@ -160,3 +162,4 @@ public class PlayerAnimatorSupport implements AnimationSupport {
     }
 
 }
+*///? }
