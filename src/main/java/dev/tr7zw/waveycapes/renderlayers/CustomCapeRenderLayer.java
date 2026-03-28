@@ -93,6 +93,10 @@ public class CustomCapeRenderLayer
         }
 
         poseStack.pushPose();
+        //? if >= 1.21.2 {
+
+        getParentModel().root().translateAndRotate(poseStack);
+        //? }
         getParentModel().body.translateAndRotate(poseStack);
 
         if (capeRenderInfo.hasChestplateEquipped()) {
