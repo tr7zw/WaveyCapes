@@ -1,0 +1,21 @@
+{
+    "text.wc.title": "sƃuᴉʇʇǝS sǝdɐƆʎǝʌɐM",
+    "text.wc.setting.capestyle": "ǝlʎʇS ǝdɐƆ",
+    "text.wc.setting.capestyle.tooltip": "˙ǝdɐɔ ʎʞɔolq puɐ ƃuᴉpuǝq ʎlɥʇooɯs ɐ uǝǝʍʇǝq ɥɔʇᴉʍS",
+    "text.wc.setting.capestyle.BLOCKY": "ʎʞɔolq",
+    "text.wc.setting.capestyle.SMOOTH": "ɥʇooɯS",
+    "text.wc.setting.windmode": "ǝpoW puᴉM",
+    "text.wc.setting.windmode.tooltip": "˙ǝdɐɔ ǝɥʇ oʇ ʇuǝɯǝʌoɯ ɐɹʇxǝ pp∀",
+    "text.wc.setting.windmode.NONE": "puᴉM oN",
+    "text.wc.setting.windmode.WAVES": "sǝʌɐM",
+    "text.wc.setting.capemovement": "ʇuǝɯǝʌoW ǝdɐƆ",
+    "text.wc.setting.capemovement.tooltip": "˙sǝʌɐɥǝq ǝdɐɔ ǝɥʇ ʎɐʍ ǝɥʇ ǝƃuɐɥƆ",
+    "text.wc.setting.capemovement.VANILLA": "ɔᴉssɐlƆ",
+    "text.wc.setting.capemovement.BASIC_SIMULATION": "uoᴉʇɐlnɯᴉS",
+    "text.wc.setting.capemovement.BASIC_SIMULATION_3D": "ᄅΛ uoᴉʇɐlnɯᴉS",
+    "text.wc.setting.capemovement.DUNGEONS": "suoǝƃunp",
+    "text.wc.setting.gravity": "ʎʇᴉʌɐɹפ",
+    "text.wc.setting.gravity.tooltip": "˙ǝdɐɔ ǝɥʇ oʇ pǝᴉlddɐ ʎʇᴉʌɐɹƃ ɟo ʇunoɯɐ ǝɥʇ ǝƃuɐɥƆ",
+    "text.wc.setting.heightMultiplier": "ɹǝᴉldᴉʇlnW ʇɥƃᴉǝH",
+    "text.wc.setting.heightMultiplier.tooltip": "˙ʇuǝɯǝʌoɯ ⅄ oʇ sʇɔɐǝɹ ǝdɐɔ ǝɥʇ ǝɯǝɹʇxǝ ʍoɥ ǝƃuɐɥƆ"
+}
