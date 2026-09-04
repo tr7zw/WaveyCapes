@@ -22,11 +22,13 @@ Since WaveyCapes is purely visual and fully client-side, it works seamlessly on 
 <br>![Features](https://tr7zw.github.io/uikit/headlines/large/Features.png)
 
 ### Simulation V2 (Default)
+
 - Capes sway left and right for a more dynamic feel
 - Improved bending physics to prevent clipping or harsh angles
 - Fully reworked underwater behavior and resistance
 
 ### Different Styles
+
 - Simulation V2 - Fully dynamic and simulated cape
 - Simulation - "2022 was *HOW* long ago?"
 - Classic - Just adds a nice bend into the cape
@@ -42,22 +44,24 @@ Since WaveyCapes is purely visual and fully client-side, it works seamlessly on 
 
 <br>![Compatibility & Dependancys](https://tr7zw.github.io/uikit/headlines/medium/Compatibility%20&%20Dependancys.png)
 
-| Minecraft    | Loader                 | Status          | Version  | Note                                                 |
-| ------------ | ---------------------- | --------------- | -------- | ---------------------------------------------------- |
+|  Minecraft   |         Loader         |     Status      | Version  |                         Note                         |
+|--------------|------------------------|-----------------|----------|------------------------------------------------------|
 | 1.16.5+      | Fabric/Forge*/NeoForge | ✅ Supported     | Latest   |                                                      |
-| *1.16.5      | Forge                  | ⚠️ Unsupported   | Outdated | Unsupported, until it gets support for JarInJar mods |
+| *1.16.5      | Forge                  | ⚠️ Unsupported  | Outdated | Unsupported, until it gets support for JarInJar mods |
 | 1.12.2/1.8.9 | Forge                  | ❌ Not supported | Outdated | Might get new updates at some point                  |
 
-| Mod                       | Status            | Note                                                          |
-| ------------------------- | ----------------- | ------------------------------------------------------------- |
-| Fabric Capes              | ✅ Supported       |                                                               |
-| MinecraftCapes            | ✅ Supported       |                                                               |
-| Essential                 | ✅ Supported       |                                                               |
-| Shoulder Surfing Reloaded | ✅ Supported       |                                                               |
-| Ears                      | ✅ Supported       |                                                               |
-| Player Animator           | ✅ Supported       | This means mods that use it like Better Combat and Emotecraft |
+|            Mod            |       Status       |                             Note                              |
+|---------------------------|--------------------|---------------------------------------------------------------|
+| Fabric Capes              | ✅ Supported        |                                                               |
+| MinecraftCapes            | ✅ Supported        |                                                               |
+| Essential                 | ✅ Supported        |                                                               |
+| Shoulder Surfing Reloaded | ✅ Supported        |                                                               |
+| Ears                      | ✅ Supported        |                                                               |
+| Player Animator           | ✅ Supported        | This means mods that use it like Better Combat and Emotecraft |
+| Wynntils                  | ✅ Supported        | Only Fabric/NeoForge  1.21.11                                 |
+| LabyMod                   | ✅ Supported        | Needs a setting change. See tn the FAQ                        |
 | More Banner Features      | ⚠️ Partial support | Only supports the old style                                   |
-| Lunar Client              | ❌ Not supported   | Will never get support!                                       |
+| Lunar Client              | ❌ Not supported    | Will never get support!                                       |
 
 And probably many more, just [try it and see](https://tryitands.ee/)!
 
@@ -68,6 +72,7 @@ And probably many more, just [try it and see](https://tryitands.ee/)!
 ![Cape Example](https://tr7zw.github.io/uikit/screens/waveycapes1.webp)
 
 ### Check out Essential to get some fun cosmetics for you and your friends, including animated capes!
+
 <a href="http://essential.gg"><img src="https://images.essential.gg/wardrobe/cape-b5be96ad5ca77158-640.webp" alt="drawing" width="200"/></a>
 
 <br>![Divider](https://tr7zw.github.io/uikit/divider_faded/Divider_03.png)
@@ -94,17 +99,17 @@ No. This is a fully client-side mod and does **not** need to be installed on the
 
 This mod will not give you a cape. Either you already have one from Mojang, or use one of the many supported mods listed above to get one for free.
 
-### I am making a modpack, how do I remove that Essential button in the main menu/pause screen?
+### How do I get it working in LabyMod?
 
-Open the poput by pressing the button, click on ``I don't want to see this`` and confirm. Make sure to include the ``config/essential-mod-partner/config.json`` in your modpack.
+Open the LabyMod settings, Cosmetics, change the ``Cloak Animation`` to ``Wavey Capes``.
 
 <br>![Divider](https://tr7zw.github.io/uikit/divider_faded/Divider_03.png)
 
 <br>![Credits & license](https://tr7zw.github.io/uikit/headlines/medium/Credits%20&%20License.png)
 
-👤 Thanks to the awesome translators and contributors on Github! 
+👤 Thanks to the awesome translators and contributors on Github!
 <a href="https://github.com/tr7zw/EntityCulling/graphs/contributors">
-  <img src="https://tr7zw.github.io/uikit/links/underlined/more_details.png" style="vertical-align: middle;" alt="Link">
+<img src="https://tr7zw.github.io/uikit/links/underlined/more_details.png" style="vertical-align: middle;" alt="Link">
 </a> <br><br>
 📄 License: tr7zw Protective License <br>
 Feel free to use this mod in your Modrinth/Curseforge hosted modpacks without asking for permission. Do not redistribute the jar files anywhere else!
