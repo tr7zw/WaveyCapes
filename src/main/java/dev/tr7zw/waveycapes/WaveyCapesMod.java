@@ -2,6 +2,7 @@ package dev.tr7zw.waveycapes;
 
 import dev.tr7zw.transition.loader.ModLoaderUtil;
 import dev.tr7zw.waveycapes.support.*;
+import dev.tr7zw.waveycapes.support.laby.LabyCloak;
 //? if fabric {
 
 import net.fabricmc.api.ClientModInitializer;
@@ -23,6 +24,10 @@ public class WaveyCapesMod extends WaveyCapesBase implements ClientModInitialize
         if (doesClassExist("net.minecraftcapes.MinecraftCapes")) {
             SupportManager.mods.add(new MinecraftCapesSupport());
             LOGGER.info("Wavey Capes loaded MinecraftCapes support!");
+        }
+
+        if (doesClassExist("net.labymod.api.user.shop.cloak.CloakCosmeticService")) {
+            LabyCloak.init();
         }
 
         if (doesClassExist("com.unascribed.ears.common.EarsVersion")) {

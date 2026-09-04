@@ -20,4 +20,12 @@ public interface CapeRenderer {
         return true;
     }
 
+    default int uvSheetWidth() {
+        return 64;
+    }
+
+    default int uvSheetHeight() {
+        return 32;
+    }
+
 }

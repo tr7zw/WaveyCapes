@@ -46,7 +46,7 @@ public class CustomCapeRenderer {
             PoseStack poseStack, int packedLight, float delta) {
 
         if (ModBase.config.capeStyle == CapeStyle.SMOOTH && renderer.vanillaUvValues()) {
-            renderSmoothCape(poseStack, vertexConsumer, capeRenderInfo, delta, packedLight);
+            renderSmoothCape(poseStack, vertexConsumer, capeRenderInfo, renderer, delta, packedLight);
         } else {
             ModelPart[] parts = customCape;
             for (int part = 0; part < PART_COUNT; part++) {
@@ -60,7 +60,10 @@ public class CustomCapeRenderer {
     }
 
     private void renderSmoothCape(PoseStack poseStack, VertexConsumer bufferBuilder, PlayerWrapper capeRenderInfo,
-            float delta, int light) {
+            CapeRenderer renderer, float delta, int light) {
+        // uv layout is vanilla, but the sheet isn't always 64x32, so count in texels of the real size
+        float texelU = 1F / renderer.uvSheetWidth();
+        float texelV = 1F / renderer.uvSheetHeight();
         //? if < 1.21.5 {
 
         /*RenderSystem.enableBlend();
@@ -96,11 +99,11 @@ public class CustomCapeRenderer {
 
         for (int part = 0; part < PART_COUNT; part++) {
             if (part == 0) {
-                float minU = 1 / 64F;
-                float maxU = 11 / 64F;
+                float minU = 1 * texelU;
+                float maxU = 11 * texelU;
 
                 float minV = 0;
-                float maxV = 1 / 32F;
+                float maxV = texelV;
 
                 Vector3 normalVec = getNormalVec(positionMatrices[0], positionMatrices[0], positionMatrices[0],
                         new Vector3(CAPE_WIDTH / 2, 0, 0), new Vector3(-CAPE_WIDTH / 2, 0, 0),
@@ -117,11 +120,11 @@ public class CustomCapeRenderer {
             }
 
             if (part == PART_COUNT - 1) {
-                float minU = 11 / 64F;
-                float maxU = 21 / 64F;
+                float minU = 11 * texelU;
+                float maxU = 21 * texelU;
 
                 float minV = 0;
-                float maxV = 1 / 32F;
+                float maxV = texelV;
 
                 Vector3 normalVec = getNormalVec(positionMatrices[part], positionMatrices[part], positionMatrices[part],
                         new Vector3(CAPE_WIDTH / 2F, CAPE_HEIGHT, -CAPE_DEPTH),
@@ -141,10 +144,10 @@ public class CustomCapeRenderer {
             }
 
             float minU = 0;
-            float maxU = 1 / 64F;
+            float maxU = 1 * texelU;
 
-            float minV = (1 / 32F) * (part + 1);
-            float maxV = minV + (1 / 32F);
+            float minV = texelV * (part + 1);
+            float maxV = minV + texelV;
 
             Vector3 normalVec = getNormalVec(positionMatrices[part], positionMatrices[part],
                     positionMatrices[Math.max(part - 1, 0)],
@@ -165,8 +168,8 @@ public class CustomCapeRenderer {
                     part * (CAPE_HEIGHT / PART_COUNT), 0, minU, minV, OverlayTexture.NO_OVERLAY, light, normalVec.x,
                     normalVec.y, normalVec.z, alpha);
 
-            minU = 11 / 64F;
-            maxU = 12 / 64F;
+            minU = 11 * texelU;
+            maxU = 12 * texelU;
 
             normalVec = getNormalVec(positionMatrices[part], positionMatrices[part],
                     positionMatrices[Math.max(part - 1, 0)],
@@ -187,8 +190,8 @@ public class CustomCapeRenderer {
                     part * (CAPE_HEIGHT / PART_COUNT), -CAPE_DEPTH, minU, minV, OverlayTexture.NO_OVERLAY, light,
                     normalVec.x, normalVec.y, normalVec.z, alpha);
 
-            minU = 1 / 64F;
-            maxU = 11 / 64F;
+            minU = 1 * texelU;
+            maxU = 11 * texelU;
 
             Vector3 normalVecTop = frontNormalVecs[part].clone().add(frontNormalVecs[Math.max(part - 1, 0)]).div(2);
             Vector3 normalVecBottom = frontNormalVecs[part].clone()
@@ -207,8 +210,8 @@ public class CustomCapeRenderer {
                     (part + 1) * (CAPE_HEIGHT / PART_COUNT), -CAPE_DEPTH, maxU, maxV, OverlayTexture.NO_OVERLAY, light,
                     normalVecBottom.x, normalVecBottom.y, normalVecBottom.z, alpha);
 
-            minU = 12 / 64F;
-            maxU = 22 / 64F;
+            minU = 12 * texelU;
+            maxU = 22 * texelU;
 
             normalVecTop = backNormalVecs[part].clone().add(backNormalVecs[Math.max(part - 1, 0)]).div(2);
             normalVecBottom = backNormalVecs[part].clone().add(backNormalVecs[Math.min(part + 1, PART_COUNT - 1)])

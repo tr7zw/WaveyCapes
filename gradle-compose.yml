@@ -16,35 +16,43 @@ replacements:
   versionlessname: "WCVersionless"
   fabric_dependencies: "
       if (stonecutter.eval(\"${project.minecraft_version}\", '>= 26.1')) {\n
-      compileOnly 'curse.maven:morebanners-515000:4575797'\n
+      compileOnly 'maven.modrinth:more-banner-features:Bct0rkCH'\n
       compileOnly 'maven.modrinth:ears:1.4.6+fabric-1.20.2'\n
       compileOnly 'maven.modrinth:minecraftcapes:fabric-26.1-1.0.1'\n
       compileOnly 'maven.modrinth:shoulder-surfing-reloaded:MCDpnF47'\n
+      compileOnly 'net.labymod.labymod4:api:4.6.16-internal-571918b5'\n
+
       } else {\n
       modCompileOnly 'maven.modrinth:dU5Gb9Ab:bdIOz8t1'\n
-      modCompileOnly 'curse.maven:morebanners-515000:4575797'\n
+      modCompileOnly 'maven.modrinth:more-banner-features:Bct0rkCH'\n
       modCompileOnly 'maven.modrinth:ears:1.4.6+fabric-1.20.2'\n
       modCompileOnly 'maven.modrinth:playeranimator:1.0.2-rc1+1.20.4-fabric'\n
-      modCompileOnly 'curse.maven:minecraftcapes-mod-359836:4763650'\n
+      modCompileOnly 'maven.modrinth:minecraftcapes:fabric-1.21.11-1.0.1'\n
       modCompileOnly 'maven.modrinth:shoulder-surfing-reloaded:MCDpnF47'\n
+      compileOnly 'net.labymod.labymod4:api:4.6.16-internal-571918b5'\n
+
       }\n
       "
   forge_dependencies: "
-      modCompileOnly 'curse.maven:minecraftcapes-mod-359836:4562670'\n
+      modCompileOnly 'maven.modrinth:minecraftcapes:forge-1.20.1-1.0.0'\n
       modCompileOnly 'maven.modrinth:playeranimator:1.0.2-rc1+1.20.4-forge'\n
       modCompileOnly 'maven.modrinth:ears:1.4.6+fabric-1.20.2'\n
       modCompileOnly 'maven.modrinth:shoulder-surfing-reloaded:ZAtuVliv'\n
+      compileOnly 'net.labymod.labymod4:api:4.6.16-internal-571918b5'\n
+
       "
   neoforge_dependencies: "
       if (stonecutter.eval(\"${project.minecraft_version}\", \"<= 1.21.10\")) {\n
-      modCompileOnly 'curse.maven:minecraftcapes-mod-359836:4562670'\n
+      modCompileOnly 'maven.modrinth:minecraftcapes:neoforge-1.21.9-1.0.1'\n
       } else {\n
-      modCompileOnly 'curse.maven:minecraftcapes-mod-359836:7318376'\n
+      modCompileOnly 'maven.modrinth:minecraftcapes:neoforge-26.1-1.0.1'\n
       }\n
       modCompileOnly 'maven.modrinth:dU5Gb9Ab:Wgefxzv7'\n
       modCompileOnly 'maven.modrinth:playeranimator:1.0.2-rc1+1.20.4-forge'\n
       modCompileOnly 'maven.modrinth:ears:1.4.6+fabric-1.20.2'\n
       modCompileOnly 'maven.modrinth:shoulder-surfing-reloaded:DKEyLO9H'\n
+      compileOnly 'net.labymod.labymod4:api:4.6.16-internal-571918b5'\n
+
       "
 enabledFlags:
   - autopublish
