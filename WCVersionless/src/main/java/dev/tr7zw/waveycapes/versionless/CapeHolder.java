@@ -12,19 +12,23 @@ import dev.tr7zw.waveycapes.versionless.util.Vector3;
 import java.util.UUID;
 
 public interface CapeHolder {
-    public BasicSimulation getSimulation();
+    BasicSimulation getSimulation();
 
-    public Vector3 getLastPlayerAnimatorPosition();
+    Vector3 getLastPlayerAnimatorPosition();
 
-    public void setLastPlayerAnimatorPosition(Vector3 pos);
+    void setLastPlayerAnimatorPosition(Vector3 pos);
 
-    public void setSimulation(BasicSimulation sim);
+    void setSimulation(BasicSimulation sim);
 
     UUID getWCUUID();
 
     void setDirty();
 
-    public default void updateSimulation(int partCount) {
+    void setGravityVectorRequest(boolean canUpdate);
+
+    boolean canUpdateGravityVector();
+
+    default void updateSimulation(int partCount) {
         BasicSimulation simulation = getSimulation();
         if (simulation == null || incorrectSimulation(simulation)) {
             simulation = createSimulation();
@@ -38,7 +42,7 @@ public interface CapeHolder {
 
     }
 
-    public default boolean incorrectSimulation(BasicSimulation sim) {
+    default boolean incorrectSimulation(BasicSimulation sim) {
         CapeMovement style = ModBase.config.capeMovement;
         if (style == CapeMovement.BASIC_SIMULATION && sim.getClass() != StickSimulation.class) {
             return true;
@@ -50,7 +54,7 @@ public interface CapeHolder {
         return false;
     }
 
-    public default BasicSimulation createSimulation() {
+    default BasicSimulation createSimulation() {
         CapeMovement style = ModBase.config.capeMovement;
         if (style == CapeMovement.BASIC_SIMULATION) {
             return new StickSimulation();
@@ -64,7 +68,7 @@ public interface CapeHolder {
         return null;
     }
 
-    public default void simulate(MinecraftPlayer abstractClientPlayer) {
+    default void simulate(MinecraftPlayer abstractClientPlayer) {
         BasicSimulation simulation = getSimulation();
         if (simulation == null || simulation.empty()) {
             return; // no cape, nothing to update
@@ -100,19 +104,21 @@ public interface CapeHolder {
         double changeZ = -strave.x * straveMul;
         simulation.setSneaking(abstractClientPlayer.isCrouching());
         Vector3 change = new Vector3((float) changeX, (float) changeY, (float) changeZ);
-        /*       if (abstractClientPlayer.isVisuallySwimming()) {
-            float rotation = abstractClientPlayer.getXRot(); // -90 = swimming up, 0 = straight, 90 = down
-            // the simulation has the body as reference, so if the player is swimming
-            // straight down, gravity needs to point up(the cape should move into the
-            // direction of the head, not the feet)
-            // offset the rotation to swimming up doesn't rotate the vector at all
-            rotation += 90;
-            // apply rotation
-            gravity.rotateDegrees(rotation);
-        
-            change.rotateDegrees(rotation);
+        if (!ModBase.config.computeGravityVector) {
+            if (abstractClientPlayer.isVisuallySwimming()) {
+                float rotation = abstractClientPlayer.getXRot(); // -90 = swimming up, 0 = straight, 90 = down
+                // the simulation has the body as reference, so if the player is swimming
+                // straight down, gravity needs to point up(the cape should move into the
+                // direction of the head, not the feet)
+                // offset the rotation to swimming up doesn't rotate the vector at all
+                rotation += 90;
+                // apply rotation
+                gravity.rotateDegrees(rotation);
+
+                change.rotateDegrees(rotation);
+            }
+            simulation.setGravityDirection(gravity);
         }
-        simulation.setGravityDirection(gravity);*/
 
         change = ModBase.getINSTANCE().applyModAnimations(abstractClientPlayer, change);
         simulation.applyMovement(change);

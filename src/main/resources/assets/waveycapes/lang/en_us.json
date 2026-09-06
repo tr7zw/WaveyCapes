@@ -17,5 +17,7 @@
     "text.wc.setting.gravity": "Gravity",
     "text.wc.setting.gravity.tooltip": "Change the amount of gravity applied to the cape.",
     "text.wc.setting.heightMultiplier": "Height Multiplier",
-    "text.wc.setting.heightMultiplier.tooltip": "Change how extreme the cape reacts to Y movement."
+    "text.wc.setting.heightMultiplier.tooltip": "Change how extreme the cape reacts to Y movement.",
+    "text.wc.setting.computeGravityVector": "Compute Gravity Vector",
+    "text.wc.setting.computeGravityVector.tooltip": "Try to compute the correct gravity direction for the cape simulation. Potentially has issues with some mods like Iris shaders or PaperDoll."
 }

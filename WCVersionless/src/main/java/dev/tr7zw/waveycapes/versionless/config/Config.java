@@ -14,5 +14,6 @@ public class Config {
     public int gravity = 25;
     public int heightMultiplier = 6;
     public int straveMultiplier = 2;
+    public boolean computeGravityVector = false;
     // public int maxBend = 5;
 }

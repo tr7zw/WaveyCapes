@@ -112,42 +112,44 @@ public class CustomCapeRenderLayer
             poseStack.translate(0.0F, -0.053125F, 0.06875F);
         }
 
-        var bodyPos = MathUtil.getWorldSpacePosition(poseStack.last().pose());
+        if (ModBase.config.computeGravityVector) {
+            //? if >= 1.21.9 {
 
-        poseStack.pushPose();
-        poseStack.translate(0.0F, 1.0F, 0);
-        var upPos = MathUtil.getWorldSpacePosition(poseStack.last().pose());
-        poseStack.popPose();
+            if (capeRenderInfo.getAvatar() instanceof CapeHolder capeHolder && capeHolder.canUpdateGravityVector()) {
+                //? } else {
+                /*        if (capeRenderInfo.getEntity() instanceof CapeHolder capeHolder) {
+                 *///? }
+                var simulation = capeHolder.getSimulation();
+                if (simulation != null) {
+                    var bodyPos = MathUtil.getWorldSpacePosition(poseStack.last().pose());
 
-        //net.minecraft.gizmos.Gizmos.line(bodyPos.add(1, 1, 1), upPos.add(1, 1, 1), 0xFF00FF00, 10.0F);
-        var orientation = upPos.subtract(bodyPos).normalize();
-        // remove the players yaw from the orientation vector, so the cape is not affected by the players yaw
-        //? if >= 1.21.9 {
+                    poseStack.pushPose();
+                    poseStack.translate(0.0F, 1.0F, 0);
+                    var upPos = MathUtil.getWorldSpacePosition(poseStack.last().pose());
+                    poseStack.popPose();
 
-        float bodyYRot = capeRenderInfo.getAvatar().yBodyRot - 90;
-        //? } else {
-        /*float bodyYRot = capeRenderInfo.getEntity().yBodyRot - 90;
-         *///? }
-        var relativeOrientation = new Vector3(
-                (float) (orientation.x() * Mth.cos(-bodyYRot * MathUtil.DEG_TO_RAD)
-                        - orientation.z() * Mth.sin(-bodyYRot * MathUtil.DEG_TO_RAD)),
-                (float) orientation.y(), (float) (orientation.x() * Mth.sin(-bodyYRot * MathUtil.DEG_TO_RAD)
-                        + orientation.z() * Mth.cos(-bodyYRot * MathUtil.DEG_TO_RAD)));
-        /*
-        net.minecraft.gizmos.Gizmos.line(bodyPos.add(-1, 1, -1),
-                bodyPos.add(-1 + relativeOrientation.x, 1 + relativeOrientation.y, -1 + relativeOrientation.z),
-                0xFFFFFF00, 10.0F);
-         */
+                    //net.minecraft.gizmos.Gizmos.line(bodyPos.add(1, 1, 1), upPos.add(1, 1, 1), 0xFF00FF00, 10.0F);
+                    var orientation = upPos.subtract(bodyPos).normalize();
+                    // remove the players yaw from the orientation vector, so the cape is not affected by the players yaw
+                    //? if >= 1.21.9 {
 
-        //? if >= 1.21.9 {
-
-        if (capeRenderInfo.getAvatar() instanceof CapeHolder capeHolder) {
-            //? } else {
-            /*        if (capeRenderInfo.getEntity() instanceof CapeHolder capeHolder) {
-             *///? }
-            var simulation = capeHolder.getSimulation();
-            if (simulation != null) {
-                simulation.setGravityDirection(relativeOrientation);
+                    float bodyYRot = capeRenderInfo.getAvatar().yBodyRot - 90;
+                    //? } else {
+                    /*float bodyYRot = capeRenderInfo.getEntity().yBodyRot - 90;
+                     *///? }
+                    var relativeOrientation = new Vector3(
+                            (float) (orientation.x() * Mth.cos(-bodyYRot * MathUtil.DEG_TO_RAD)
+                                    - orientation.z() * Mth.sin(-bodyYRot * MathUtil.DEG_TO_RAD)),
+                            (float) orientation.y(), (float) (orientation.x() * Mth.sin(-bodyYRot * MathUtil.DEG_TO_RAD)
+                                    + orientation.z() * Mth.cos(-bodyYRot * MathUtil.DEG_TO_RAD)));
+                    /*
+                    net.minecraft.gizmos.Gizmos.line(bodyPos.add(-1, 1, -1),
+                        bodyPos.add(-1 + relativeOrientation.x, 1 + relativeOrientation.y, -1 + relativeOrientation.z),
+                        0xFFFFFF00, 10.0F);
+                     */
+                    simulation.setGravityDirection(relativeOrientation);
+                    capeHolder.setGravityVectorRequest(false);
+                }
             }
         }
 

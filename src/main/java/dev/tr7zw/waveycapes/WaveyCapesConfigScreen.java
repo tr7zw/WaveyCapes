@@ -48,6 +48,8 @@ public class WaveyCapesConfigScreen {
                     (v) -> ModBase.config.gravity = v));
             options.add(getIntOption("text.wc.setting.heightMultiplier", 4, 16, () -> ModBase.config.heightMultiplier,
                     (v) -> ModBase.config.heightMultiplier = v));
+            options.add(getBooleanOption("text.wc.setting.computeGravityVector",
+                    () -> ModBase.config.computeGravityVector, (v) -> ModBase.config.computeGravityVector = v));
             // options.add(getIntOption("text.wc.setting.maxBend", 1, 20, () ->
             // config.maxBend, (v) -> config.maxBend = v));
 
@@ -68,7 +70,7 @@ public class WaveyCapesConfigScreen {
             playerPreview.setRotationX(164);
             playerPreview.setRotationY(5);
             playerPreview.setShowBackground(true);
-            root.add(playerPreview, 10, 14);
+            root.add(playerPreview, 10, 15);
 
             WButton resetButton = new WButton(ComponentProvider.translatable("controls.reset"));
             resetButton.setOnClick(() -> {

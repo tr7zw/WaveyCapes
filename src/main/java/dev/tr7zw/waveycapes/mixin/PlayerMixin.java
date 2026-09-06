@@ -47,6 +47,9 @@ public abstract class PlayerMixin extends Entity implements CapeHolder {
     @Unique
     private boolean dirty = false;
 
+    @Unique
+    private boolean canUpdateGravityVector = false;
+
     @Override
     public void setDirty() {
         this.dirty = true;
@@ -68,6 +71,7 @@ public abstract class PlayerMixin extends Entity implements CapeHolder {
         var entity = (AbstractClientPlayer) (Object) this;
         *///? }
         updateSimulation(16);
+        setGravityVectorRequest(true);
         PlayerDelegate playerDelegate = new PlayerDelegate(entity);
         if (dirty) {
             dirty = false;
@@ -85,4 +89,13 @@ public abstract class PlayerMixin extends Entity implements CapeHolder {
         return getUUID();
     }
 
+    @Override
+    public void setGravityVectorRequest(boolean canUpdate) {
+        this.canUpdateGravityVector = canUpdate;
+    }
+
+    @Override
+    public boolean canUpdateGravityVector() {
+        return canUpdateGravityVector;
+    }
 }
