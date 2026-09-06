@@ -1,12 +1,8 @@
 package dev.tr7zw.waveycapes.renderlayers;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import dev.tr7zw.transition.mc.*;
 import dev.tr7zw.transition.mc.entitywrapper.PlayerWrapper;
 import dev.tr7zw.waveycapes.WaveyCapesBase;
-
-import dev.tr7zw.waveycapes.versionless.*;
-import dev.tr7zw.waveycapes.versionless.util.*;
 import net.minecraft.client.Minecraft;
 //? if >= 1.21.11 {
 
@@ -15,7 +11,6 @@ import net.minecraft.client.model.player.*;
 
 /*import net.minecraft.client.model.*;
 *///? }
-import net.minecraft.client.renderer.debug.*;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 
@@ -23,10 +18,6 @@ import net.minecraft.client.renderer.entity.layers.RenderLayer;
 
 import net.minecraft.client.renderer.entity.state.AvatarRenderState;
 import net.minecraft.client.renderer.SubmitNodeCollector;
-import net.minecraft.world.phys.*;
-import org.joml.*;
-
-import java.lang.Math;
 //? } else {
 
 /*import net.minecraft.client.renderer.MultiBufferSource;
@@ -112,45 +103,7 @@ public class CustomCapeRenderLayer
             poseStack.translate(0.0F, -0.053125F, 0.06875F);
         }
 
-        var bodyPos = MathUtil.getWorldSpacePosition(poseStack.last().pose());
-
-        poseStack.pushPose();
-        poseStack.translate(0.0F, 1.0F, 0);
-        var upPos = MathUtil.getWorldSpacePosition(poseStack.last().pose());
-        poseStack.popPose();
-
-        //net.minecraft.gizmos.Gizmos.line(bodyPos.add(1, 1, 1), upPos.add(1, 1, 1), 0xFF00FF00, 10.0F);
-        var orientation = upPos.subtract(bodyPos).normalize();
-        // remove the players yaw from the orientation vector, so the cape is not affected by the players yaw
-        //? if >= 1.21.9 {
-
-        float bodyYRot = capeRenderInfo.getAvatar().yBodyRot - 90;
-        //? } else {
-        /*float bodyYRot = capeRenderInfo.getEntity().yBodyRot - 90;
-         *///? }
-        var relativeOrientation = new Vector3(
-                (float) (orientation.x() * Mth.cos(-bodyYRot * MathUtil.DEG_TO_RAD)
-                        - orientation.z() * Mth.sin(-bodyYRot * MathUtil.DEG_TO_RAD)),
-                (float) orientation.y(), (float) (orientation.x() * Mth.sin(-bodyYRot * MathUtil.DEG_TO_RAD)
-                        + orientation.z() * Mth.cos(-bodyYRot * MathUtil.DEG_TO_RAD)));
-        /*
-        net.minecraft.gizmos.Gizmos.line(bodyPos.add(-1, 1, -1),
-                bodyPos.add(-1 + relativeOrientation.x, 1 + relativeOrientation.y, -1 + relativeOrientation.z),
-                0xFFFFFF00, 10.0F);
-         */
-
-        //? if >= 1.21.9 {
-
-        if (capeRenderInfo.getAvatar() instanceof CapeHolder capeHolder) {
-            //? } else {
-            /*        if (capeRenderInfo.getEntity() instanceof CapeHolder capeHolder) {
-             *///? }
-            var simulation = capeHolder.getSimulation();
-            if (simulation != null) {
-                simulation.setGravityDirection(relativeOrientation);
-            }
-        }
-
+        // gravity direction is fixed body-relative down, no need to derive it from the pose each frame
         //? if >= 1.21.9 {
 
         WaveyCapesBase.INSTANCE.getCapeNodeCollector().submitCape(submitNodeCollector, capeRenderInfo, poseStack,
