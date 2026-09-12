@@ -7,6 +7,7 @@ import dev.tr7zw.transition.mc.entitywrapper.*;
 import dev.tr7zw.waveycapes.render.*;
 import net.minecraft.client.player.*;
 import net.minecraft.client.renderer.rendertype.*;
+import net.minecraft.world.entity.player.*;
 import net.minecraftcapes.config.*;
 import net.minecraftcapes.player.*;
 
@@ -16,7 +17,7 @@ public class WynntilsSupport implements ModSupport {
 
     @Override
     public boolean shouldBeUsed(PlayerWrapper capeRenderInfo) {
-        if (capeRenderInfo.getEntity() == null) return false;
+        if (capeRenderInfo.getAvatar() == null || !(capeRenderInfo.getAvatar() instanceof Player)) return false;
         return Services.Cosmetics.shouldRenderCape(capeRenderInfo.getEntity(), false);
     }
 
