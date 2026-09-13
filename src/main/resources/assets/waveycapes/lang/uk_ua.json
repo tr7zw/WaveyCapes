@@ -1,0 +1,34 @@
+{
+  "weaponmaster.screen": "Майстер зброї YDM",
+  "key.weaponmaster.category": "Майстер зброї YDM",
+  "key.weaponmaster.opengui": "Відкрити налаштування",
+  "weaponmaster.screen2": "Більше налаштувань",
+  "weaponmaster.screen.reset_to_previous": "Скинути",
+  "weaponmaster.screen.reset_to_null": "Скинути все до 0",
+  
+  "gui.weaponmaster.slot.posx": "Позиція X: ",
+  "gui.weaponmaster.slot.posy": "Позиція Y: ",
+  "gui.weaponmaster.slot.posz": "Позиція Z: ",
+  
+  "gui.weaponmaster.slot.rotx": "Обертання X: ",
+  "gui.weaponmaster.slot.roty": "Обертання Y: ",
+  "gui.weaponmaster.slot.rotz": "Обертання Z: ",
+  
+  "weaponmaster.screen.other_settings": "Більше",
+  "weaponmaster.screen.shield": "Щит",
+  "weaponmaster.screen.banner": "Стяг",
+  
+  "gui.weaponmaster.attach.head": "Голова",
+  "gui.weaponmaster.attach.body": "Тіло",
+  "gui.weaponmaster.attach.larm": "Ліва рука",
+  "gui.weaponmaster.attach.rarm": "Права рука",
+  "gui.weaponmaster.attach.lleg": "Ліва нога",
+  "gui.weaponmaster.attach.rleg": "Права нога",
+  "gui.weaponmaster.rotate": "Перетягніть, щоб повернути",
+  "gui.weaponmaster.slot.shield": "Щит",
+  "gui.weaponmaster.slot.banner": "Стяг",
+  "gui.weaponmaster.mover": "Змінити положення з:",
+  "gui.weaponmaster.arrowright": "->",
+  "gui.weaponmaster.attach": "Прикріпити до частини тіла:"
+  
+}
