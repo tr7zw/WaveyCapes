@@ -3,3 +3,9 @@ stonecutter {
         replace("RenderType.", "RenderTypes.")
     }
 }
+
+configurations.all {
+    resolutionStrategy {
+        force 'com.google.code.gson:gson:2.13.2'
+    }
+}

@@ -20,7 +20,7 @@ replacements:
       compileOnly 'maven.modrinth:ears:1.4.6+fabric-1.20.2'\n
       compileOnly 'maven.modrinth:minecraftcapes:fabric-26.1-1.0.1'\n
       compileOnly 'maven.modrinth:shoulder-surfing-reloaded:MCDpnF47'\n
-      compileOnly 'net.labymod.labymod4:api:4.6.16-internal-571918b5'\n
+      compileOnly 'net.labymod.labymod4:api:4.6.16+'\n
 
       } else {\n
       modCompileOnly 'maven.modrinth:dU5Gb9Ab:bdIOz8t1'\n
@@ -29,7 +29,7 @@ replacements:
       modCompileOnly 'maven.modrinth:playeranimator:1.0.2-rc1+1.20.4-fabric'\n
       modCompileOnly 'maven.modrinth:minecraftcapes:fabric-1.21.11-1.0.1'\n
       modCompileOnly 'maven.modrinth:shoulder-surfing-reloaded:MCDpnF47'\n
-      compileOnly 'net.labymod.labymod4:api:4.6.16-internal-571918b5'\n
+      compileOnly 'net.labymod.labymod4:api:4.6.16+'\n
 
       }\n
       "
@@ -38,7 +38,7 @@ replacements:
       modCompileOnly 'maven.modrinth:playeranimator:1.0.2-rc1+1.20.4-forge'\n
       modCompileOnly 'maven.modrinth:ears:1.4.6+fabric-1.20.2'\n
       modCompileOnly 'maven.modrinth:shoulder-surfing-reloaded:ZAtuVliv'\n
-      compileOnly 'net.labymod.labymod4:api:4.6.16-internal-571918b5'\n
+      compileOnly 'net.labymod.labymod4:api:4.6.16+'\n
 
       "
   neoforge_dependencies: "
@@ -51,7 +51,7 @@ replacements:
       modCompileOnly 'maven.modrinth:playeranimator:1.0.2-rc1+1.20.4-forge'\n
       modCompileOnly 'maven.modrinth:ears:1.4.6+fabric-1.20.2'\n
       modCompileOnly 'maven.modrinth:shoulder-surfing-reloaded:DKEyLO9H'\n
-      compileOnly 'net.labymod.labymod4:api:4.6.16-internal-571918b5'\n
+      compileOnly 'net.labymod.labymod4:api:4.6.16+'\n
 
       "
 enabledFlags:

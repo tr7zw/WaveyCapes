@@ -237,26 +237,39 @@ public class CustomCapeRenderer {
             modifyPoseStackSimulation(poseStack, capeRenderInfo, h, part);
             return;
         }
-        //? if < 1.21.2 {
 
-        /*modifyPoseStackVanilla(poseStack, (AbstractClientPlayer) capeRenderInfo.getEntity(), h, part);
-        *///? } else {
-
+        //? if >= 1.21.2 {
         var renderState = capeRenderInfo.getRenderState();
         poseStack.pushPose();
         poseStack.translate(0.0D, 0.0D, 0.125D);
+        //? }
+
         //? if >= 1.21.9 {
 
         var entity = capeRenderInfo.getAvatar();
-        //? } else {
+        //? } else if >= 1.21.2 {
+        /*
+        var entity = capeRenderInfo.getEntity();
+         */
+        //? }
 
-        /*var entity = capeRenderInfo.getEntity();
-        *///? }
+        //? if >= 26.3 {
+
+        poseStack.rotate(MathUtil.XP.rotationDegrees(6.0F + renderState.capeLean / 2.0F + renderState.capeFlap
+                + getNatrualWindSwing(part, entity.isUnderWater())));
+        poseStack.rotate(MathUtil.ZP.rotationDegrees(renderState.capeLean2 / 2.0F));
+        poseStack.rotate(MathUtil.YP.rotationDegrees(180.0F - renderState.capeLean2 / 2.0F));
+        //? } else if >= 1.21.2 {
+        /*
         poseStack.mulPose(MathUtil.XP.rotationDegrees(6.0F + renderState.capeLean / 2.0F + renderState.capeFlap
                 + getNatrualWindSwing(part, entity.isUnderWater())));
         poseStack.mulPose(MathUtil.ZP.rotationDegrees(renderState.capeLean2 / 2.0F));
         poseStack.mulPose(MathUtil.YP.rotationDegrees(180.0F - renderState.capeLean2 / 2.0F));
-        //? }
+         */
+        //? } else {
+
+        /*modifyPoseStackVanilla(poseStack, (AbstractClientPlayer) capeRenderInfo.getEntity(), h, part);
+        *///? }
     }
 
     private void modifyPoseStackSimulation(PoseStack poseStack, PlayerWrapper capeRenderInfo, float delta, int part) {
@@ -296,16 +309,32 @@ public class CustomCapeRenderer {
         float naturalWindSwing = getNatrualWindSwing(part, entity.isUnderWater());
 
         // vanilla rotating and wind
-        poseStack.mulPose(MathUtil.XP.rotationDegrees(6.0F + height + naturalWindSwing));
+        //? if >= 26.3 {
+
+        poseStack.rotate(MathUtil.XP.rotationDegrees(6.0F + height + naturalWindSwing));
+        poseStack.rotate(MathUtil.ZP.rotationDegrees(sidewaysRotationOffset / 2.0F));
+        poseStack.rotate(MathUtil.YP.rotationDegrees(180.0F - sidewaysRotationOffset / 2.0F));
+        //? } else {
+        /*
+                poseStack.mulPose(MathUtil.XP.rotationDegrees(6.0F + height + naturalWindSwing));
         poseStack.mulPose(MathUtil.ZP.rotationDegrees(sidewaysRotationOffset / 2.0F));
         poseStack.mulPose(MathUtil.YP.rotationDegrees(180.0F - sidewaysRotationOffset / 2.0F));
+         */
+        //? }
+
         poseStack.translate(-z / PART_COUNT, y / PART_COUNT, x / PART_COUNT); // movement from the simulation
         // offsetting so the rotation is on the cape part
         // float offset = (float) (part * (16 / partCount))/16; // to fold the entire
         // cape into one position for debugging
         poseStack.translate(0, /*-offset*/ +(0.48 / 16), -(0.48 / 16)); // (0.48/16)
         poseStack.translate(0, part * 1f / PART_COUNT, part * (0) / PART_COUNT);
+        //? if >= 26.3 {
+        poseStack.rotate(MathUtil.XP.rotationDegrees(-partRotation)); // apply actual rotation
+        //? } else {
+        /*
         poseStack.mulPose(MathUtil.XP.rotationDegrees(-partRotation)); // apply actual rotation
+         */
+        //? }
         // undoing the rotation
         poseStack.translate(0, -part * 1f / PART_COUNT, -part * (0) / PART_COUNT);
         poseStack.translate(0, -(0.48 / 16), (0.48 / 16));

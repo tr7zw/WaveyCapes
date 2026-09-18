@@ -40,9 +40,10 @@ public class CapeNodeCollector {
         if (capeInfo == null) {
             return;
         }
-        //? if >= 1.21.9 {
+        //? if >= 26.3 {
+
         if (capeInfo.isGlint()) {
-            submitNodeCollector.submitCustomGeometry(stack, RenderTypes.entityGlint(), (pose, vertexConsumer) -> {
+            submitNodeCollector.submitCustomGeometry(stack, RenderTypes.trimmedArmorGlint(), (pose, vertexConsumer) -> {
                 PoseStack sharedStack = new PoseStack();
                 sharedStack.last().set(pose);
                 customCapeRenderer.render(playerWrapper, renderer, vertexConsumer, sharedStack, packedLight, delta);
@@ -54,6 +55,22 @@ public class CapeNodeCollector {
             sharedStack.last().set(pose);
             customCapeRenderer.render(playerWrapper, renderer, vertexConsumer, sharedStack, packedLight, delta);
         });
+        //? } else if >= 1.21.9 {
+        /*
+        if (capeInfo.isGlint()) {
+            submitNodeCollector.submitCustomGeometry(stack, RenderTypes.entityGlint(), (pose, vertexConsumer) -> {
+                PoseStack sharedStack = new PoseStack();
+                sharedStack.last().set(pose);
+                customCapeRenderer.render(playerWrapper, renderer, vertexConsumer, sharedStack, packedLight, delta);
+            });
+        }
+        
+        submitNodeCollector.submitCustomGeometry(stack, capeInfo.renderType(), (pose, vertexConsumer) -> {
+            PoseStack sharedStack = new PoseStack();
+            sharedStack.last().set(pose);
+            customCapeRenderer.render(playerWrapper, renderer, vertexConsumer, sharedStack, packedLight, delta);
+        });
+         */
         //? } else {
 
         /*VertexConsumer vertexConsumer;
