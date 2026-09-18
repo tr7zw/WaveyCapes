@@ -1,0 +1,23 @@
+{
+    "text.wc.title": "Impostazioni WaveyCapes",
+    "text.wc.setting.capestyle": "Stile Mantello",
+    "text.wc.setting.capestyle.tooltip": "Passa da un mantello liscio e pieghevole a uno squadrato",
+    "text.wc.setting.capestyle.BLOCKY": "Squadrato",
+    "text.wc.setting.capestyle.SMOOTH": "Liscio",
+    "text.wc.setting.windmode": "Modalità Vento",
+    "text.wc.setting.windmode.tooltip": "Aggiungi movimento extra al mantello.",
+    "text.wc.setting.windmode.NONE": "Nessun vento",
+    "text.wc.setting.windmode.WAVES": "Onde",
+    "text.wc.setting.capemovement": "Movimento Mantello",
+    "text.wc.setting.capemovement.tooltip": "Cambia il modo in cui il mantello si comporta.",
+    "text.wc.setting.capemovement.VANILLA": "Classico",
+    "text.wc.setting.capemovement.BASIC_SIMULATION": "Simulazione",
+    "text.wc.setting.capemovement.BASIC_SIMULATION_3D": "Simulazione V2",
+    "text.wc.setting.capemovement.DUNGEONS": "Dungeons",
+    "text.wc.setting.gravity": "Gravità",
+    "text.wc.setting.gravity.tooltip": "Cambia la quantità di gravità applicata al mantello.",
+    "text.wc.setting.heightMultiplier": "Moltiplicatore di Altezza",
+    "text.wc.setting.heightMultiplier.tooltip": "Modifica l'intensità della reazione del mantello al movimento sull'asse Y.",
+    "text.wc.setting.computeGravityVector": "Calcola il Vettore Gravitazionale",
+    "text.wc.setting.computeGravityVector.tooltip": "Prova a calcolare la direzione corretta della gravità per la simulazione del mantello. Potrebbe causare problemi con alcune mod, come Iris shaders o PaperDoll."
+} 
