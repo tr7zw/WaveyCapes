@@ -100,6 +100,16 @@ public class CustomCapeRenderLayer
         if (!capeRenderInfo.isCapeVisible()) {
             return;
         }
+        // Fallback for avatars not backed by an entity, like the player preview in the main menu
+        //? if >= 1.21.9 {
+        if (capeRenderInfo.getAvatar() == null && renderState.skin.cape() != null && renderState.showCape
+                && WaveyCapesBase.getINSTANCE().getCapeLayer() != null) {
+            WaveyCapesBase.getINSTANCE().getCapeLayer().submit(poseStack, submitNodeCollector, packedLight, renderState,
+                    f, g);
+            return;
+        }
+
+        //? }
 
         poseStack.pushPose();
         //? if >= 1.21.2 {

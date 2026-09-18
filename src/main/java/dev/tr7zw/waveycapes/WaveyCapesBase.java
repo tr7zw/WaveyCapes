@@ -8,7 +8,8 @@ import dev.tr7zw.waveycapes.support.SupportManager;
 import dev.tr7zw.waveycapes.versionless.ModBase;
 import dev.tr7zw.waveycapes.versionless.nms.MinecraftPlayer;
 import dev.tr7zw.waveycapes.versionless.util.Vector3;
-import lombok.Getter;
+import lombok.*;
+import net.minecraft.client.renderer.entity.layers.*;
 
 public abstract class WaveyCapesBase extends ModBase {
 
@@ -17,6 +18,10 @@ public abstract class WaveyCapesBase extends ModBase {
 
     @Getter
     private final CapeNodeCollector capeNodeCollector = new CapeNodeCollector();
+
+    @Getter
+    @Setter
+    private CapeLayer capeLayer;
 
     public void init() {
         INSTANCE = this;
