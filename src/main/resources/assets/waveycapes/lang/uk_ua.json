@@ -1,0 +1,23 @@
+{
+    "text.wc.title": "Налаштування WaveyCapes",
+    "text.wc.setting.capestyle": "Стиль плаща",
+    "text.wc.setting.capestyle.tooltip": "Перемикайтеся між плавним і блоковим плащем.",
+    "text.wc.setting.capestyle.BLOCKY": "Блоковий",
+    "text.wc.setting.capestyle.SMOOTH": "Плавний",
+    "text.wc.setting.windmode": "Режим вітру",
+    "text.wc.setting.windmode.tooltip": "Додає плащу додаткового руху.",
+    "text.wc.setting.windmode.NONE": "Без вітру",
+    "text.wc.setting.windmode.WAVES": "Хвилі",
+    "text.wc.setting.capemovement": "Рух плаща",
+    "text.wc.setting.capemovement.tooltip": "Змінює поведінку плаща.",
+    "text.wc.setting.capemovement.VANILLA": "Класичний",
+    "text.wc.setting.capemovement.BASIC_SIMULATION": "Симуляція",
+    "text.wc.setting.capemovement.BASIC_SIMULATION_3D": "Симуляція V2",
+    "text.wc.setting.capemovement.DUNGEONS": "Dungeons",
+    "text.wc.setting.gravity": "Гравітація",
+    "text.wc.setting.gravity.tooltip": "Змінює силу гравітації, що застосовується до плаща.",
+    "text.wc.setting.heightMultiplier": "Множник висоти",
+    "text.wc.setting.heightMultiplier.tooltip": "Змінює екстрему реакції плаща на рух по осі Y.",
+    "text.wc.setting.computeGravityVector": "Розрахунок вектора гравітації",
+    "text.wc.setting.computeGravityVector.tooltip": "Спробувати розрахувати правильний напрямок гравітації для симуляції плаща. Може мати проблеми з деякими модами, такими як Iris shaders або PaperDoll."
+}
