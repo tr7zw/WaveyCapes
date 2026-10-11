@@ -1,5 +1,7 @@
 package dev.tr7zw.waveycapes.render;
 
+import java.util.List;
+
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 
@@ -16,8 +18,16 @@ public interface CapeRenderer {
 
     CapeInfos getCapeInfo(PlayerWrapper capeRenderInfo);
 
+    default List<CapePass> getCapePasses(PlayerWrapper capeRenderInfo) {
+        return List.of();
+    }
+
     default boolean vanillaUvValues() {
         return true;
+    }
+
+    default boolean singleSidedTexture() {
+        return false;
     }
 
     default int uvSheetWidth() {

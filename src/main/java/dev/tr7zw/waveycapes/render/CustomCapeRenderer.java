@@ -120,11 +120,13 @@ public class CustomCapeRenderer {
             }
 
             if (part == PART_COUNT - 1) {
-                float minU = 11 * texelU;
-                float maxU = 21 * texelU;
+                boolean singleSided = renderer.singleSidedTexture();
 
-                float minV = 0;
-                float maxV = texelV;
+                float minU = (singleSided ? 1 : 11) * texelU;
+                float maxU = (singleSided ? 11 : 21) * texelU;
+
+                float minV = singleSided ? texelV * PART_COUNT : 0;
+                float maxV = minV + texelV;
 
                 Vector3 normalVec = getNormalVec(positionMatrices[part], positionMatrices[part], positionMatrices[part],
                         new Vector3(CAPE_WIDTH / 2F, CAPE_HEIGHT, -CAPE_DEPTH),

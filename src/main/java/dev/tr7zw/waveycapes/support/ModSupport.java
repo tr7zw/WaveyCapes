@@ -23,6 +23,11 @@ public interface ModSupport {
 
     public CapeRenderer getRenderer();
 
+    // higher wins when several supports apply
+    default int priority() {
+        return 0;
+    }
+
     public boolean blockFeatureRenderer(Object feature);
 
 }

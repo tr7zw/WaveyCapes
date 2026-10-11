@@ -30,6 +30,14 @@ public class WaveyCapesMod extends WaveyCapesBase implements ClientModInitialize
             LabyCloak.init();
         }
 
+        //? if fabric && >= 1.21.11 {
+
+        if (doesClassExist("dev.svrt.domiirl.mbf.api.BannerCapeApi")) {
+            SupportManager.mods.add(new MoreBannerFeaturesSupport());
+            LOGGER.info("Wavey Capes loaded More Banner Features support!");
+        }
+        //? }
+
         if (doesClassExist("com.unascribed.ears.common.EarsVersion")) {
             SupportManager.mods.add(new EarsSupport());
             LOGGER.info("Wavey Capes loaded Ears support!");

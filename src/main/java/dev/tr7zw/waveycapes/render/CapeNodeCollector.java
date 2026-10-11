@@ -36,6 +36,26 @@ public class CapeNodeCollector {
         if (renderer == null) {
             return;
         }
+        var capePasses = renderer.getCapePasses(playerWrapper);
+        for (CapePass layer : capePasses) {
+            //? if >= 1.21.9 {
+
+            submitNodeCollector.submitCustomGeometry(stack, layer.renderType(), (pose, vertexConsumer) -> {
+                PoseStack sharedStack = new PoseStack();
+                sharedStack.last().set(pose);
+                customCapeRenderer.render(playerWrapper, renderer, layer.wrapper().apply(vertexConsumer), sharedStack,
+                        packedLight, delta);
+            });
+            //? } else {
+
+            /*customCapeRenderer.render(playerWrapper, renderer,
+                    layer.wrapper().apply(multiBufferSource.getBuffer(layer.renderType())), stack, packedLight, delta);
+            *///? }
+        }
+        if (!capePasses.isEmpty()) {
+            return;
+        }
+
         var capeInfo = renderer.getCapeInfo(playerWrapper);
         if (capeInfo == null) {
             return;
