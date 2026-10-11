@@ -12,7 +12,8 @@ import lombok.Setter;
 public class SupportManager {
 
     public static Set<ModSupport> mods = new TreeSet<>(Comparator.comparingInt(ModSupport::priority)
-            .reversed().thenComparing(support -> support.getClass().getName()));
+            .reversed().thenComparing(support -> support.getClass().getName())
+            .thenComparingInt(System::identityHashCode));
 
     public static Set<AnimationSupport> animationSupport = new HashSet<>();
 
