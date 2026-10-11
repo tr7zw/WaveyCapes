@@ -50,13 +50,37 @@ public abstract class PlayerMixin extends Entity implements CapeHolder {
     @Unique
     private boolean canUpdateGravityVector = false;
 
+    @Unique
+    private static final int CAPE_IDLE_TICKS = 100;
+
+    @Unique
+    private int capeIdleTicks = CAPE_IDLE_TICKS;
+
     @Override
     public void setDirty() {
         this.dirty = true;
     }
 
+    @Override
+    public void markCapeRendered() {
+        capeIdleTicks = 0;
+        if (simulation == null) {
+            simulateCape();
+        }
+    }
+
     @Inject(method = "tick", at = @At("TAIL"))
     private void moveCloakUpdate(CallbackInfo info) {
+        if (capeIdleTicks >= CAPE_IDLE_TICKS) {
+            simulation = null;
+            return;
+        }
+        capeIdleTicks++;
+        simulateCape();
+    }
+
+    @Unique
+    private void simulateCape() {
         //? if >= 1.21.9 {
 
         if (!((Object) this instanceof net.minecraft.world.entity.Avatar)) {

@@ -3,7 +3,6 @@ package dev.tr7zw.waveycapes.versionless;
 import dev.tr7zw.waveycapes.versionless.nms.MinecraftPlayer;
 import dev.tr7zw.waveycapes.versionless.sim.BasicSimulation;
 import dev.tr7zw.waveycapes.versionless.sim.StickSimulation;
-import dev.tr7zw.waveycapes.versionless.sim.StickSimulation.Vector2;
 import dev.tr7zw.waveycapes.versionless.sim.StickSimulation3d;
 import dev.tr7zw.waveycapes.versionless.sim.StickSimulationDungeons;
 import dev.tr7zw.waveycapes.versionless.util.Mth;
@@ -23,6 +22,8 @@ public interface CapeHolder {
     UUID getWCUUID();
 
     void setDirty();
+
+    void markCapeRendered();
 
     void setGravityVectorRequest(boolean canUpdate);
 
@@ -94,14 +95,14 @@ public interface CapeHolder {
         }
 
         Vector3 gravity = new Vector3(0, -1, 0);
-        Vector2 strave = new Vector2((float) (abstractClientPlayer.getX() - abstractClientPlayer.getXo()),
-                (float) (abstractClientPlayer.getZ() - abstractClientPlayer.getZo()));
-        strave.rotateDegrees(-abstractClientPlayer.getYRot());
+        float yaw = (float) Math.toRadians(-abstractClientPlayer.getYRot());
+        float strave = Mth.cos(yaw) * (float) (abstractClientPlayer.getX() - abstractClientPlayer.getXo())
+                - Mth.sin(yaw) * (float) (abstractClientPlayer.getZ() - abstractClientPlayer.getZo());
         double changeX = (d * o + m * p) + fallHack
                 + (abstractClientPlayer.isCrouching() && !simulation.isSneaking() ? 3 : 0);
         double changeY = ((abstractClientPlayer.getY() - abstractClientPlayer.getYo()) * heightMul)
                 + (abstractClientPlayer.isCrouching() && !simulation.isSneaking() ? 1 : 0);
-        double changeZ = -strave.x * straveMul;
+        double changeZ = -strave * straveMul;
         simulation.setSneaking(abstractClientPlayer.isCrouching());
         Vector3 change = new Vector3((float) changeX, (float) changeY, (float) changeZ);
         if (!ModBase.config.computeGravityVector) {
