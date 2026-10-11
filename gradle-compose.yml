@@ -16,7 +16,7 @@ replacements:
   versionlessname: "WCVersionless"
   fabric_dependencies: "
       if (stonecutter.eval(\"${project.minecraft_version}\", '>= 26.1')) {\n
-      compileOnly 'maven.modrinth:more-banner-features:Bct0rkCH'\n
+      compileOnly 'maven.modrinth:more-banner-features:XmYvfBO0'\n
       compileOnly 'maven.modrinth:ears:1.4.6+fabric-1.20.2'\n
       compileOnly 'maven.modrinth:minecraftcapes:fabric-26.1-1.0.1'\n
       compileOnly 'maven.modrinth:shoulder-surfing-reloaded:MCDpnF47'\n
@@ -24,7 +24,7 @@ replacements:
 
       } else {\n
       modCompileOnly 'maven.modrinth:dU5Gb9Ab:bdIOz8t1'\n
-      modCompileOnly 'maven.modrinth:more-banner-features:Bct0rkCH'\n
+      modCompileOnly 'maven.modrinth:more-banner-features:s5ZbpvFq'\n
       modCompileOnly 'maven.modrinth:ears:1.4.6+fabric-1.20.2'\n
       modCompileOnly 'maven.modrinth:playeranimator:1.0.2-rc1+1.20.4-fabric'\n
       modCompileOnly 'maven.modrinth:minecraftcapes:fabric-1.21.11-1.0.1'\n
