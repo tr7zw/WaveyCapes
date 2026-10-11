@@ -1,4 +1,4 @@
-//? if >= 1.21.11 {
+//? if fabric && >= 1.21.11 {
 package dev.tr7zw.waveycapes.support;
 
 import java.util.EnumSet;
