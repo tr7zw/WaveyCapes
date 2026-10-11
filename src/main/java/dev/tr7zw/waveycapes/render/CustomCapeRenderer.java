@@ -29,7 +29,6 @@ import dev.tr7zw.transition.mc.entitywrapper.PlayerWrapper;
 import dev.tr7zw.waveycapes.versionless.*;
 import dev.tr7zw.waveycapes.versionless.sim.BasicSimulation;
 import dev.tr7zw.waveycapes.versionless.util.Vector3;
-import dev.tr7zw.waveycapes.versionless.util.Vector4;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 
@@ -41,6 +40,18 @@ public class CustomCapeRenderer {
     private static final float CAPE_WIDTH = 10F / 16F;
     private static final float CAPE_HEIGHT = 1F;
     private static final float CAPE_DEPTH = 1F / 16F;
+
+    private final Matrix4f[] positionMatrices = new Matrix4f[PART_COUNT];
+    private final Vector3[] frontNormalVecs = new Vector3[PART_COUNT];
+    private final Vector3[] backNormalVecs = new Vector3[PART_COUNT];
+
+    public CustomCapeRenderer() {
+        for (int part = 0; part < PART_COUNT; part++) {
+            positionMatrices[part] = new Matrix4f();
+            frontNormalVecs[part] = new Vector3();
+            backNormalVecs[part] = new Vector3();
+        }
+    }
 
     public void render(PlayerWrapper capeRenderInfo, CapeRenderer renderer, VertexConsumer vertexConsumer,
             PoseStack poseStack, int packedLight, float delta) {
@@ -76,23 +87,26 @@ public class CustomCapeRenderer {
         float capeHeight = 1.0F;
         float capeDepth = 1F / 16F;*/
 
-        Matrix4f[] positionMatrices = new Matrix4f[PART_COUNT];
-        Vector3[] frontNormalVecs = new Vector3[PART_COUNT];
-        Vector3[] backNormalVecs = new Vector3[PART_COUNT];
         for (int part = 0; part < PART_COUNT; part++) {
             modifyPoseStack(poseStack, capeRenderInfo, delta, part);
-            positionMatrices[part] = new Matrix4f(poseStack.last().pose());
+            //? if >= 1.19.3 {
+
+            positionMatrices[part].set(poseStack.last().pose());
+            //? } else {
+            /*
+             positionMatrices[part] = new Matrix4f(poseStack.last().pose());
+            *///? }
             frontNormalVecs[part] = getNormalVec(positionMatrices[Math.max(part - 1, 0)],
                     positionMatrices[Math.max(part - 1, 0)], positionMatrices[part],
-                    new Vector3(CAPE_WIDTH / 2F, part * (CAPE_HEIGHT / PART_COUNT), -CAPE_DEPTH),
-                    new Vector3(-CAPE_WIDTH / 2F, part * (CAPE_HEIGHT / PART_COUNT), -CAPE_DEPTH),
-                    new Vector3(CAPE_WIDTH / 2F, (part + 1) * (CAPE_HEIGHT / PART_COUNT), -CAPE_DEPTH),
-                    light == 15728880);
+                    CAPE_WIDTH / 2F, part * (CAPE_HEIGHT / PART_COUNT), -CAPE_DEPTH,
+                    -CAPE_WIDTH / 2F, part * (CAPE_HEIGHT / PART_COUNT), -CAPE_DEPTH,
+                    CAPE_WIDTH / 2F, (part + 1) * (CAPE_HEIGHT / PART_COUNT), -CAPE_DEPTH,
+                    light == 15728880, frontNormalVecs[part]);
             backNormalVecs[part] = getNormalVec(positionMatrices[Math.max(part - 1, 0)],
                     positionMatrices[Math.max(part - 1, 0)], positionMatrices[part],
-                    new Vector3(CAPE_WIDTH / 2F, (part + 1) * (CAPE_HEIGHT / PART_COUNT), 0),
-                    new Vector3(-CAPE_WIDTH / 2F, (part + 1) * (CAPE_HEIGHT / PART_COUNT), 0),
-                    new Vector3(CAPE_WIDTH / 2F, part * (CAPE_HEIGHT / PART_COUNT), 0), light == 15728880);
+                    CAPE_WIDTH / 2F, (part + 1) * (CAPE_HEIGHT / PART_COUNT), 0,
+                    -CAPE_WIDTH / 2F, (part + 1) * (CAPE_HEIGHT / PART_COUNT), 0,
+                    CAPE_WIDTH / 2F, part * (CAPE_HEIGHT / PART_COUNT), 0, light == 15728880, backNormalVecs[part]);
 
             poseStack.popPose();
         }
@@ -106,8 +120,8 @@ public class CustomCapeRenderer {
                 float maxV = texelV;
 
                 Vector3 normalVec = getNormalVec(positionMatrices[0], positionMatrices[0], positionMatrices[0],
-                        new Vector3(CAPE_WIDTH / 2, 0, 0), new Vector3(-CAPE_WIDTH / 2, 0, 0),
-                        new Vector3(CAPE_WIDTH / 2, 0, CAPE_DEPTH), light == 15728880);
+                        CAPE_WIDTH / 2, 0, 0, -CAPE_WIDTH / 2, 0, 0,
+                        CAPE_WIDTH / 2, 0, CAPE_DEPTH, light == 15728880, NORMAL_FACE);
 
                 VertexConsumerUtil.addVertex(bufferBuilder, positionMatrices[0], CAPE_WIDTH / 2, 0, 0, maxU, maxV,
                         OverlayTexture.NO_OVERLAY, light, normalVec.x, normalVec.y, normalVec.z, alpha);
@@ -127,9 +141,9 @@ public class CustomCapeRenderer {
                 float maxV = texelV;
 
                 Vector3 normalVec = getNormalVec(positionMatrices[part], positionMatrices[part], positionMatrices[part],
-                        new Vector3(CAPE_WIDTH / 2F, CAPE_HEIGHT, -CAPE_DEPTH),
-                        new Vector3(-CAPE_WIDTH / 2F, CAPE_HEIGHT, -CAPE_DEPTH),
-                        new Vector3(CAPE_WIDTH / 2F, CAPE_HEIGHT, 0), light == 15728880);
+                        CAPE_WIDTH / 2F, CAPE_HEIGHT, -CAPE_DEPTH,
+                        -CAPE_WIDTH / 2F, CAPE_HEIGHT, -CAPE_DEPTH,
+                        CAPE_WIDTH / 2F, CAPE_HEIGHT, 0, light == 15728880, NORMAL_FACE);
 
                 VertexConsumerUtil.addVertex(bufferBuilder, positionMatrices[part], CAPE_WIDTH / 2F, CAPE_HEIGHT,
                         -CAPE_DEPTH, maxU, minV, OverlayTexture.NO_OVERLAY, light, normalVec.x, normalVec.y,
@@ -151,9 +165,9 @@ public class CustomCapeRenderer {
 
             Vector3 normalVec = getNormalVec(positionMatrices[part], positionMatrices[part],
                     positionMatrices[Math.max(part - 1, 0)],
-                    new Vector3(-CAPE_WIDTH / 2F, (part + 1) * (CAPE_HEIGHT / PART_COUNT), 0),
-                    new Vector3(-CAPE_WIDTH / 2F, (part + 1) * (CAPE_HEIGHT / PART_COUNT), -CAPE_DEPTH),
-                    new Vector3(-CAPE_WIDTH / 2F, part * (CAPE_HEIGHT / PART_COUNT), 0), light == 15728880);
+                    -CAPE_WIDTH / 2F, (part + 1) * (CAPE_HEIGHT / PART_COUNT), 0,
+                    -CAPE_WIDTH / 2F, (part + 1) * (CAPE_HEIGHT / PART_COUNT), -CAPE_DEPTH,
+                    -CAPE_WIDTH / 2F, part * (CAPE_HEIGHT / PART_COUNT), 0, light == 15728880, NORMAL_FACE);
 
             VertexConsumerUtil.addVertex(bufferBuilder, positionMatrices[part], -CAPE_WIDTH / 2F,
                     (part + 1) * (CAPE_HEIGHT / PART_COUNT), 0, minU, maxV, OverlayTexture.NO_OVERLAY, light,
@@ -173,9 +187,9 @@ public class CustomCapeRenderer {
 
             normalVec = getNormalVec(positionMatrices[part], positionMatrices[part],
                     positionMatrices[Math.max(part - 1, 0)],
-                    new Vector3(CAPE_WIDTH / 2F, (part + 1) * (CAPE_HEIGHT / PART_COUNT), -CAPE_DEPTH),
-                    new Vector3(CAPE_WIDTH / 2F, (part + 1) * (CAPE_HEIGHT / PART_COUNT), 0),
-                    new Vector3(CAPE_WIDTH / 2F, part * (CAPE_HEIGHT / PART_COUNT), -CAPE_DEPTH), light == 15728880);
+                    CAPE_WIDTH / 2F, (part + 1) * (CAPE_HEIGHT / PART_COUNT), -CAPE_DEPTH,
+                    CAPE_WIDTH / 2F, (part + 1) * (CAPE_HEIGHT / PART_COUNT), 0,
+                    CAPE_WIDTH / 2F, part * (CAPE_HEIGHT / PART_COUNT), -CAPE_DEPTH, light == 15728880, NORMAL_FACE);
 
             VertexConsumerUtil.addVertex(bufferBuilder, positionMatrices[part], CAPE_WIDTH / 2F,
                     (part + 1) * (CAPE_HEIGHT / PART_COUNT), -CAPE_DEPTH, minU, maxV, OverlayTexture.NO_OVERLAY, light,
@@ -193,9 +207,9 @@ public class CustomCapeRenderer {
             minU = 1 * texelU;
             maxU = 11 * texelU;
 
-            Vector3 normalVecTop = frontNormalVecs[part].clone().add(frontNormalVecs[Math.max(part - 1, 0)]).div(2);
-            Vector3 normalVecBottom = frontNormalVecs[part].clone()
-                    .add(frontNormalVecs[Math.min(part + 1, PART_COUNT - 1)]).div(2);
+            Vector3 normalVecTop = average(frontNormalVecs[part], frontNormalVecs[Math.max(part - 1, 0)], NORMAL_TOP);
+            Vector3 normalVecBottom = average(frontNormalVecs[part],
+                    frontNormalVecs[Math.min(part + 1, PART_COUNT - 1)], NORMAL_BOTTOM);
 
             VertexConsumerUtil.addVertex(bufferBuilder, positionMatrices[Math.max(part - 1, 0)], CAPE_WIDTH / 2,
                     part * (CAPE_HEIGHT / PART_COUNT), -CAPE_DEPTH, maxU, minV, OverlayTexture.NO_OVERLAY, light,
@@ -213,9 +227,9 @@ public class CustomCapeRenderer {
             minU = 12 * texelU;
             maxU = 22 * texelU;
 
-            normalVecTop = backNormalVecs[part].clone().add(backNormalVecs[Math.max(part - 1, 0)]).div(2);
-            normalVecBottom = backNormalVecs[part].clone().add(backNormalVecs[Math.min(part + 1, PART_COUNT - 1)])
-                    .div(2);
+            normalVecTop = average(backNormalVecs[part], backNormalVecs[Math.max(part - 1, 0)], NORMAL_TOP);
+            normalVecBottom = average(backNormalVecs[part], backNormalVecs[Math.min(part + 1, PART_COUNT - 1)],
+                    NORMAL_BOTTOM);
 
             VertexConsumerUtil.addVertex(bufferBuilder, positionMatrices[Math.max(part - 1, 0)], CAPE_WIDTH / 2,
                     part * (CAPE_HEIGHT / PART_COUNT), 0, minU, minV, OverlayTexture.NO_OVERLAY, light, normalVecTop.x,
@@ -289,13 +303,14 @@ public class CustomCapeRenderer {
         poseStack.pushPose();
         poseStack.translate(0.0D, 0.0D, 0.125D);
 
-        float x = simulation.getPoints().get(part).getLerpX(delta) - simulation.getPoints().get(0).getLerpX(delta);
+        var first = simulation.getPoints().get(0);
+        var current = simulation.getPoints().get(part);
+        float x = current.getLerpX(delta) - first.getLerpX(delta);
         if (x > 0) {
             x = 0;
         }
-        float y = simulation.getPoints().get(0).getLerpY(delta) - part
-                - simulation.getPoints().get(part).getLerpY(delta);
-        float z = simulation.getPoints().get(0).getLerpZ(delta) - simulation.getPoints().get(part).getLerpZ(delta);
+        float y = first.getLerpY(delta) - part - current.getLerpY(delta);
+        float z = first.getLerpZ(delta) - current.getLerpZ(delta);
 
         float sidewaysRotationOffset = 0;
         float partRotation = getRotation(delta, part, simulation);
@@ -345,13 +360,13 @@ public class CustomCapeRenderer {
         if (part == PART_COUNT - 1) {
             return getRotation(delta, part - 1, simulation);
         }
-        return (float) getAngle(simulation.getPoints().get(part).getLerpedPos(delta),
-                simulation.getPoints().get(part + 1).getLerpedPos(delta));
+        var a = simulation.getPoints().get(part);
+        var b = simulation.getPoints().get(part + 1);
+        return (float) getAngle(b.getLerpX(delta) - a.getLerpX(delta), b.getLerpY(delta) - a.getLerpY(delta));
     }
 
-    private double getAngle(Vector3 a, Vector3 b) {
-        Vector3 angle = b.subtract(a);
-        return Math.toDegrees(Math.atan2(angle.x, angle.y)) + 180;
+    private double getAngle(float x, float y) {
+        return Math.toDegrees(Math.atan2(x, y)) + 180;
     }
 
     //? if < 1.21.2 {
@@ -396,39 +411,59 @@ public class CustomCapeRenderer {
     *///? }
 
     private float getNatrualWindSwing(int part, boolean underwater) {
+        if (WaveyCapesBase.config.windMode != WindMode.WAVES) {
+            return 0;
+        }
         long highlightedPart = (System.currentTimeMillis() / (underwater ? 9 : 3)) % 360;
         float relativePart = (float) (part + 1) / PART_COUNT;
-        if (WaveyCapesBase.config.windMode == WindMode.WAVES) {
-            return (float) (Math.sin(Math.toRadians((relativePart) * 360 - (highlightedPart))) * 3);
-        }
-        return 0;
+        return (float) (Math.sin(Math.toRadians((relativePart) * 360 - (highlightedPart))) * 3);
     }
 
-    private static Vector3 getNormalVec(Matrix4f matrix1, Matrix4f matrix2, Matrix4f matrix3, Vector3 vector1,
-            Vector3 vector2, Vector3 vector3, boolean inverse) {
-        Vector3 vector1Transformed = transform(matrix1, new Vector4(vector1.x, vector1.y, vector1.z, 1)).toVec3();
-        Vector3 vector2Transformed = transform(matrix2, new Vector4(vector2.x, vector2.y, vector2.z, 1)).toVec3();
-        Vector3 vector3Transformed = transform(matrix3, new Vector4(vector3.x, vector3.y, vector3.z, 1)).toVec3();
+    // scratch space for getNormalVec, capes are only ever built on the render thread
+    private static final Vector3 NORMAL_ORIGIN = new Vector3();
+    private static final Vector3 NORMAL_EDGE = new Vector3();
+    private static final Vector3 NORMAL_FACE = new Vector3();
+    private static final Vector3 NORMAL_TOP = new Vector3();
+    private static final Vector3 NORMAL_BOTTOM = new Vector3();
+    //? if >= 1.19.3 {
 
-        vector2Transformed.subtract(vector1Transformed);
-        vector3Transformed.subtract(vector1Transformed);
+    private static final Vector4f TRANSFORM_SCRATCH = new Vector4f();
+    //? }
 
-        vector2Transformed.cross(vector3Transformed);
-        vector2Transformed.normalize();
-        return inverse ? vector2Transformed.mul(-1) : vector2Transformed;
+    private static Vector3 getNormalVec(Matrix4f matrix1, Matrix4f matrix2, Matrix4f matrix3, float x1, float y1,
+            float z1, float x2, float y2, float z2, float x3, float y3, float z3, boolean inverse, Vector3 dest) {
+        Vector3 origin = transform(matrix1, x1, y1, z1, NORMAL_ORIGIN);
+        Vector3 normal = transform(matrix2, x2, y2, z2, dest);
+        Vector3 edge = transform(matrix3, x3, y3, z3, NORMAL_EDGE);
+
+        normal.subtract(origin);
+        edge.subtract(origin);
+
+        normal.cross(edge);
+        normal.normalize();
+        return inverse ? normal.mul(-1) : normal;
     }
 
-    private static Vector4 transform(Matrix4f matrix, Vector4 vector) {
+    private static Vector3 average(Vector3 a, Vector3 b, Vector3 dest) {
+        dest.x = (a.x + b.x) / 2;
+        dest.y = (a.y + b.y) / 2;
+        dest.z = (a.z + b.z) / 2;
+        return dest;
+    }
+
+    private static Vector3 transform(Matrix4f matrix, float x, float y, float z, Vector3 dest) {
         //? if >= 1.19.3 {
 
-        Vector4f vector4f = matrix.transform(new Vector4f(vector.x, vector.y, vector.z, vector.w));
-        return new Vector4(vector4f.x, vector4f.y, vector4f.z, vector4f.w);
+        Vector4f vector4f = matrix.transform(TRANSFORM_SCRATCH.set(x, y, z, 1));
         //? } else {
         /*
-         Vector4f vector4f = new Vector4f(vector.x, vector.y, vector.z, vector.w);
+         Vector4f vector4f = new Vector4f(x, y, z, 1);
          vector4f.transform(matrix);
-         return new Vector4(vector4f.x(), vector4f.y(), vector4f.z(), vector4f.w());
         *///? }
+        dest.x = vector4f.x();
+        dest.y = vector4f.y();
+        dest.z = vector4f.z();
+        return dest;
     }
 
 }
