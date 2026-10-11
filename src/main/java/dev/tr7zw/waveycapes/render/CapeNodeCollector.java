@@ -43,8 +43,8 @@ public class CapeNodeCollector {
             submitNodeCollector.submitCustomGeometry(stack, layer.renderType(), (pose, vertexConsumer) -> {
                 PoseStack sharedStack = new PoseStack();
                 sharedStack.last().set(pose);
-                customCapeRenderer.render(playerWrapper, renderer, layer.wrapper().apply(vertexConsumer),
-                        sharedStack, packedLight, delta);
+                customCapeRenderer.render(playerWrapper, renderer, layer.wrapper().apply(vertexConsumer), sharedStack,
+                        packedLight, delta);
             });
             //? } else {
 

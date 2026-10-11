@@ -46,7 +46,7 @@ public class MoreBannerFeaturesSupport implements ModSupport {
 
     private class BannerCapeRenderer implements CapeRenderer {
 
-      private final ModelPart[] customCape = buildBannerCape();
+        private final ModelPart[] customCape = buildBannerCape();
 
         @Override
         public List<CapePass> getCapePasses(PlayerWrapper capeRenderInfo) {
@@ -87,8 +87,8 @@ public class MoreBannerFeaturesSupport implements ModSupport {
         ModelPart[] parts = new ModelPart[16];
 
         for (int i = 0; i < parts.length; i++) {
-            ModelPart.Cube cube = new ModelPart.Cube(0, i, -5.0F, i, -1.0F, 10.0F, 1.0F, 1.0F, 0.0F, 0.0F, 0.0F,
-                    false, BannerCapeApi.TEXTURE_WIDTH, BannerCapeApi.TEXTURE_HEIGHT, sides);
+            ModelPart.Cube cube = new ModelPart.Cube(0, i, -5.0F, i, -1.0F, 10.0F, 1.0F, 1.0F, 0.0F, 0.0F, 0.0F, false,
+                    BannerCapeApi.TEXTURE_WIDTH, BannerCapeApi.TEXTURE_HEIGHT, sides);
             parts[i] = new ModelPart(List.of(cube), Map.of());
         }
 
