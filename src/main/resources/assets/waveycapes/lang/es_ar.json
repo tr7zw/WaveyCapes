@@ -1,0 +1,23 @@
+{
+    "text.wc.title": "Configuración de WaveyCapes",
+    "text.wc.setting.capestyle": "Estilo de capa",
+    "text.wc.setting.capestyle.tooltip": "Alterná entre una capa con movimiento suave y otra con movimiento en bloques.",
+    "text.wc.setting.capestyle.BLOCKY": "En bloques",
+    "text.wc.setting.capestyle.SMOOTH": "Suave",
+    "text.wc.setting.windmode": "Modo de viento",
+    "text.wc.setting.windmode.tooltip": "Agregá movimiento adicional a la capa.",
+    "text.wc.setting.windmode.NONE": "Sin viento",
+    "text.wc.setting.windmode.WAVES": "Ondas",
+    "text.wc.setting.capemovement": "Movimiento de la capa",
+    "text.wc.setting.capemovement.tooltip": "Cambiá cómo se comporta la capa.",
+    "text.wc.setting.capemovement.VANILLA": "Clásico",
+    "text.wc.setting.capemovement.BASIC_SIMULATION": "Simulación básica",
+    "text.wc.setting.capemovement.BASIC_SIMULATION_3D": "Simulación 3D",
+    "text.wc.setting.capemovement.DUNGEONS": "Dungeons",
+    "text.wc.setting.gravity": "Gravedad",
+    "text.wc.setting.gravity.tooltip": "Cambiá la intensidad de la gravedad aplicada a la capa.",
+    "text.wc.setting.heightMultiplier": "Multiplicador de altura",
+    "text.wc.setting.heightMultiplier.tooltip": "Cambiá cuánto reacciona la capa a los movimientos en el eje Y.",
+    "text.wc.setting.computeGravityVector": "Calcular vector de gravedad",
+    "text.wc.setting.computeGravityVector.tooltip": "Intentá calcular la dirección correcta de la gravedad en la simulación de la capa. Puede causar problemas con algunos mods, como Iris Shaders o PaperDoll."
+}
