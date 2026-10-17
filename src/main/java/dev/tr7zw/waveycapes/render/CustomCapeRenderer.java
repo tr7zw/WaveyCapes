@@ -97,16 +97,15 @@ public class CustomCapeRenderer {
              positionMatrices[part] = new Matrix4f(poseStack.last().pose());
             *///? }
             frontNormalVecs[part] = getNormalVec(positionMatrices[Math.max(part - 1, 0)],
-                    positionMatrices[Math.max(part - 1, 0)], positionMatrices[part],
-                    CAPE_WIDTH / 2F, part * (CAPE_HEIGHT / PART_COUNT), -CAPE_DEPTH,
-                    -CAPE_WIDTH / 2F, part * (CAPE_HEIGHT / PART_COUNT), -CAPE_DEPTH,
-                    CAPE_WIDTH / 2F, (part + 1) * (CAPE_HEIGHT / PART_COUNT), -CAPE_DEPTH,
+                    positionMatrices[Math.max(part - 1, 0)], positionMatrices[part], CAPE_WIDTH / 2F,
+                    part * (CAPE_HEIGHT / PART_COUNT), -CAPE_DEPTH, -CAPE_WIDTH / 2F, part * (CAPE_HEIGHT / PART_COUNT),
+                    -CAPE_DEPTH, CAPE_WIDTH / 2F, (part + 1) * (CAPE_HEIGHT / PART_COUNT), -CAPE_DEPTH,
                     light == 15728880, frontNormalVecs[part]);
             backNormalVecs[part] = getNormalVec(positionMatrices[Math.max(part - 1, 0)],
-                    positionMatrices[Math.max(part - 1, 0)], positionMatrices[part],
-                    CAPE_WIDTH / 2F, (part + 1) * (CAPE_HEIGHT / PART_COUNT), 0,
-                    -CAPE_WIDTH / 2F, (part + 1) * (CAPE_HEIGHT / PART_COUNT), 0,
-                    CAPE_WIDTH / 2F, part * (CAPE_HEIGHT / PART_COUNT), 0, light == 15728880, backNormalVecs[part]);
+                    positionMatrices[Math.max(part - 1, 0)], positionMatrices[part], CAPE_WIDTH / 2F,
+                    (part + 1) * (CAPE_HEIGHT / PART_COUNT), 0, -CAPE_WIDTH / 2F,
+                    (part + 1) * (CAPE_HEIGHT / PART_COUNT), 0, CAPE_WIDTH / 2F, part * (CAPE_HEIGHT / PART_COUNT), 0,
+                    light == 15728880, backNormalVecs[part]);
 
             poseStack.popPose();
         }
@@ -120,8 +119,8 @@ public class CustomCapeRenderer {
                 float maxV = texelV;
 
                 Vector3 normalVec = getNormalVec(positionMatrices[0], positionMatrices[0], positionMatrices[0],
-                        CAPE_WIDTH / 2, 0, 0, -CAPE_WIDTH / 2, 0, 0,
-                        CAPE_WIDTH / 2, 0, CAPE_DEPTH, light == 15728880, NORMAL_FACE);
+                        CAPE_WIDTH / 2, 0, 0, -CAPE_WIDTH / 2, 0, 0, CAPE_WIDTH / 2, 0, CAPE_DEPTH, light == 15728880,
+                        NORMAL_FACE);
 
                 VertexConsumerUtil.addVertex(bufferBuilder, positionMatrices[0], CAPE_WIDTH / 2, 0, 0, maxU, maxV,
                         OverlayTexture.NO_OVERLAY, light, normalVec.x, normalVec.y, normalVec.z, alpha);
@@ -143,8 +142,7 @@ public class CustomCapeRenderer {
                 float maxV = minV + texelV;
 
                 Vector3 normalVec = getNormalVec(positionMatrices[part], positionMatrices[part], positionMatrices[part],
-                        CAPE_WIDTH / 2F, CAPE_HEIGHT, -CAPE_DEPTH,
-                        -CAPE_WIDTH / 2F, CAPE_HEIGHT, -CAPE_DEPTH,
+                        CAPE_WIDTH / 2F, CAPE_HEIGHT, -CAPE_DEPTH, -CAPE_WIDTH / 2F, CAPE_HEIGHT, -CAPE_DEPTH,
                         CAPE_WIDTH / 2F, CAPE_HEIGHT, 0, light == 15728880, NORMAL_FACE);
 
                 VertexConsumerUtil.addVertex(bufferBuilder, positionMatrices[part], CAPE_WIDTH / 2F, CAPE_HEIGHT,
@@ -166,10 +164,9 @@ public class CustomCapeRenderer {
             float maxV = minV + texelV;
 
             Vector3 normalVec = getNormalVec(positionMatrices[part], positionMatrices[part],
-                    positionMatrices[Math.max(part - 1, 0)],
-                    -CAPE_WIDTH / 2F, (part + 1) * (CAPE_HEIGHT / PART_COUNT), 0,
-                    -CAPE_WIDTH / 2F, (part + 1) * (CAPE_HEIGHT / PART_COUNT), -CAPE_DEPTH,
-                    -CAPE_WIDTH / 2F, part * (CAPE_HEIGHT / PART_COUNT), 0, light == 15728880, NORMAL_FACE);
+                    positionMatrices[Math.max(part - 1, 0)], -CAPE_WIDTH / 2F, (part + 1) * (CAPE_HEIGHT / PART_COUNT),
+                    0, -CAPE_WIDTH / 2F, (part + 1) * (CAPE_HEIGHT / PART_COUNT), -CAPE_DEPTH, -CAPE_WIDTH / 2F,
+                    part * (CAPE_HEIGHT / PART_COUNT), 0, light == 15728880, NORMAL_FACE);
 
             VertexConsumerUtil.addVertex(bufferBuilder, positionMatrices[part], -CAPE_WIDTH / 2F,
                     (part + 1) * (CAPE_HEIGHT / PART_COUNT), 0, minU, maxV, OverlayTexture.NO_OVERLAY, light,
@@ -188,10 +185,9 @@ public class CustomCapeRenderer {
             maxU = 12 * texelU;
 
             normalVec = getNormalVec(positionMatrices[part], positionMatrices[part],
-                    positionMatrices[Math.max(part - 1, 0)],
-                    CAPE_WIDTH / 2F, (part + 1) * (CAPE_HEIGHT / PART_COUNT), -CAPE_DEPTH,
-                    CAPE_WIDTH / 2F, (part + 1) * (CAPE_HEIGHT / PART_COUNT), 0,
-                    CAPE_WIDTH / 2F, part * (CAPE_HEIGHT / PART_COUNT), -CAPE_DEPTH, light == 15728880, NORMAL_FACE);
+                    positionMatrices[Math.max(part - 1, 0)], CAPE_WIDTH / 2F, (part + 1) * (CAPE_HEIGHT / PART_COUNT),
+                    -CAPE_DEPTH, CAPE_WIDTH / 2F, (part + 1) * (CAPE_HEIGHT / PART_COUNT), 0, CAPE_WIDTH / 2F,
+                    part * (CAPE_HEIGHT / PART_COUNT), -CAPE_DEPTH, light == 15728880, NORMAL_FACE);
 
             VertexConsumerUtil.addVertex(bufferBuilder, positionMatrices[part], CAPE_WIDTH / 2F,
                     (part + 1) * (CAPE_HEIGHT / PART_COUNT), -CAPE_DEPTH, minU, maxV, OverlayTexture.NO_OVERLAY, light,

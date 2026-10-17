@@ -3,7 +3,7 @@ source: "https://github.com/tr7zw/ProcessedModTemplate/tree/master"
 replacements:
   name: "WaveyCapes"
   id: "waveycapes"
-  version: "1.11.2"
+  version: "1.11.3"
   description: "The cape shouldn't be a static slab!"
   homepageUrl: "https://modrinth.com/mod/wavey-capes"
   sourcesUrl: "https://github.com/tr7zw/WaveyCapes"
@@ -16,7 +16,6 @@ replacements:
   versionlessname: "WCVersionless"
   fabric_dependencies: "
       if (stonecutter.eval(\"${project.minecraft_version}\", '>= 26.1')) {\n
-      compileOnly 'maven.modrinth:more-banner-features:XmYvfBO0'\n
       compileOnly 'maven.modrinth:ears:1.4.6+fabric-1.20.2'\n
       compileOnly 'maven.modrinth:minecraftcapes:fabric-26.1-1.1.0'\n
       compileOnly 'maven.modrinth:shoulder-surfing-reloaded:MCDpnF47'\n
@@ -24,7 +23,6 @@ replacements:
 
       } else {\n
       modCompileOnly 'maven.modrinth:dU5Gb9Ab:bdIOz8t1'\n
-      modCompileOnly 'maven.modrinth:more-banner-features:s5ZbpvFq'\n
       modCompileOnly 'maven.modrinth:ears:1.4.6+fabric-1.20.2'\n
       modCompileOnly 'maven.modrinth:playeranimator:1.0.2-rc1+1.20.4-fabric'\n
       modCompileOnly 'maven.modrinth:minecraftcapes:fabric-1.21.11-1.1.0'\n
